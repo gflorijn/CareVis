@@ -1,0 +1,15 @@
+﻿from;to;label;linktype;weight
+Sananet;i-eHealth;;system;25
+Zorgplatform;i-Ziekenhuiszorg;;system;25
+Luscii;i-eHealth;;system;25
+Minddistrict;i-eHealth;;system;25
+Ziekenhuis;Covid-19 Portaal;;system;25
+Ziekenhuis2;Covid-19 Portaal;;system;25
+Covid-19 Portaal;Beelden;;object;
+Covid-19 Portaal;Dossier;;object;
+Patient;PGO;;use;25
+Mantelzorger;PGO;;use;25
+Huisarts;PGO;;use;25
+Ziekenhuis;PGO;;use;25
+VVT;PGO;;use;25
+PGO;Autorisaties;;object;

@@ -1,0 +1,5 @@
+﻿id;domein;nodetype;lijn;belang;url
+_Leveranciers;Leveranciers;category;;;
+EPIC;Leveranciers;party;;2;
+Chipsoft;Leveranciers;party;;2;
+Enovation;Leveranciers;party;;2;

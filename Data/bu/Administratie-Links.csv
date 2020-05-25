@@ -1,0 +1,23 @@
+﻿from;to;label;richting;linktype;verspreiding;weight;volume
+_administratie;_administratie;;;;;;
+Patient;CIZ;Aanvraag;out;link;;;
+Patient;Gemeente;Aanvraag;out;link;;;
+CIZ;Patient;Toewijzing;out;link;;10;4
+Gemeente;Patient;Toewijzing;out;link;;10;
+Ziekenhuis;Vecozo;COV;both;link;;;
+Ziekenhuis2;Vecozo;COV;both;link;;;
+Huisarts;Vecozo;COV;both;link;;;
+Apotheek;Vecozo;COV;both;link;;;
+VVT;Vecozo;COV;both;link;;;
+GGZ;Vecozo;COV;both;link;;;
+Fysiotherapeut;Vecozo;COV;both;link;;;
+Ziekenhuis;Vecozo;Declaraties;out;link;;;
+Ziekenhuis2;Vecozo;Declaraties;out;link;;;
+Huisarts;Vecozo;Declaraties;out;link;;;
+Apotheek;Vecozo;Declaraties;out;link;;;
+VVT;Vecozo;Declaraties;out;link;;;
+GGZ;Vecozo;Declaraties;out;link;;;
+Fysiotherapeut;Vecozo;Declaraties;out;link;;;
+Vecozo;Zorgverzekeraar;Check verzekerde;both;link;;;
+Vecozo;Zorgverzekeraar;Declaraties;out;link;;;
+Vecozo;Zorgkantoor;Declaraties;out;link;;;

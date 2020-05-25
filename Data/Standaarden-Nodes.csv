@@ -1,0 +1,14 @@
+﻿id;domein;nodetype;lijn;belang;url
+_Standaarden;Standaarden;category;;;
+FHIR;Standaarden;standard;;2;
+HL7;Standaarden;standard;;3;
+MedMij;Standaarden;standard;;4;https://www.medmij.nl
+XDS;Standaarden;standard;;5;
+ZIBS;Standaarden;standard;;6;
+eOverdracht;Standaarden;standard;;7;
+BgZ;Standaarden;standard;;;
+MedicatieOverdracht;Standaarden;standard;;;
+Labuitwisseling;Standaarden;standard;;;
+Huisartswaarneming;Standaarden;standard;;;
+Edifact;Standaarden;standard;;;
+Richtlijn HASP;Standaarden;standard;;;

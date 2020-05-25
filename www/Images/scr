@@ -1,0 +1,12 @@
+﻿!/bin/sh
+cp DomeinSysteem.png p-Zorgmail.png
+cp DomeinSysteem.png p-Zorgdomein.png
+cp DomeinSysteem.png p-Point.png
+cp DomeinSysteem.png p-Vitalhealth.png
+cp DomeinSysteem.png p-Sananet.png
+cp DomeinSysteem.png p-Luscii.png
+cp DomeinSysteem.png p-LSP.png
+cp DomeinSysteem.png p-PGO.png
+cp DomeinSysteem.png p-Zorgplatform.png
+cp DomeinSysteem.png p-Covid-19 Portaal.png
+cp DomeinSysteem.png p-Minddistrict.png

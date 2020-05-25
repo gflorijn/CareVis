@@ -1,0 +1,15 @@
+﻿id;domein;nodetype;lijn;belang;url
+_platformen;;;;;
+Zorgmail;Platformen;hub;;;
+Zorgdomein;Platformen;hub;;;
+Point;Platformen;hub;;;
+Vitalhealth;Platformen;hub;;;
+Sananet;Platformen;hub;;;
+Luscii;Platformen;hub;;;
+LSP;Platformen;hub;;;
+PGO;Platformen;hub;;;
+KIS;Platformen;hub;;;
+Zorgplatform;Platformen;hub;;;
+Covid-19 Portaal;Platformen;hub;;;
+Minddistrict;Platformen;hub;;;
+Platform;Platformen;abstract;;;

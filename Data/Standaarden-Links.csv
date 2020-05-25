@@ -1,0 +1,16 @@
+﻿from;to;label;linktype;weight
+Edifact;Verstrekkingsbericht;;standard;
+Edifact;Recept;;standard;
+Edifact;Waarneming;;standard;
+Huisartswaarneming;Waarneembericht;;standard;
+Huisartswaarneming;Professionele samenvatting;;standard;
+Labuitwisseling;Uitslagen;;standard;
+Richtlijn HASP;Verwijzing;;standard;10
+Edifact;Opname-Ontslagmelding;;standard;
+Edifact;Voortgangsmelding;;standard;
+PGO;MedMij;;standard;
+BgZ;ZIBS;;standard;
+EPD-z;BgZ;;standard;
+EPD-z2;BgZ;;standard;
+Labuitwisseling;HL7;;standard;
+i-Waarnemen;Huisartswaarneming;;standard;
