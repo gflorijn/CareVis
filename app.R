@@ -102,7 +102,8 @@ ui <- fluidPage(theme=shinytheme("simplex"),
           ),
           tags$hr(),
           fluidRow(
-            verbatimTextOutput("generalmessage"),
+            column(9, verbatimTextOutput("generalmessage")),
+            column(3, actionButton("launchbrowser", "Launch browser"))
           )
         ),
           
@@ -120,6 +121,7 @@ server <- function(input, output, session) {
       thevisgraph = NULL, 
       thegraphproxy = NULL,
       thenodeselected = NULL, 
+      theurl = "",
       themessage = NULL,
       theviewcounter = 0,
       focusshowsall = FALSE, # True als de huidige weergave de hele database is.
@@ -201,9 +203,14 @@ server <- function(input, output, session) {
       rv$themessage = " "
       toggleState("hidefromview", rv$thenodeselected != "")
       toggleState("switchfocus", rv$thenodeselected != "")
-
-      if (rv$thenodeselected != "" && V(rv$theigraph)[rv$thenodeselected] != "")
-        rv$themessage = paste0("Zie voor meer informatie ", V(rv$theigraph)[rv$thenodeselected]$url)
+      rv$theurl = ""
+      haveurl = rv$thenodeselected != "" && V(rv$theigraph)[rv$thenodeselected]$url != ""
+      
+      if (haveurl) {
+        rv$theurl = V(rv$theigraph)[rv$thenodeselected]$url
+        rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
+      }
+      toggleState("launchbrowser", haveurl)
     })
     
 
@@ -281,6 +288,11 @@ server <- function(input, output, session) {
     observeEvent(input$showall, {
       rv$theigraph = znops.toonAllesInView(rv$theigraph, rv$thecurrentview)
     }) 
+    
+    observeEvent(input$launchbrowser, {
+      browseURL(rv$theurl)
+    })
+    
 
     observeEvent(input$switchtoview, {
       node = rv$thecurrentnode
