@@ -56,29 +56,32 @@ ui <- fluidPage(theme=shinytheme("simplex"),
         sidebarPanel(width=2,
                fluidRow(
                  column(12, 
-                      selectInput("startingpoint", label="Startpunten", 
+                      actionButton("showabout", "About"),
+                      actionButton("showhelp", "Help"),
+                      tags$hr(),
+                      selectInput("startingpoint", label="View...", 
                                    choices=znapp.mogelijkestartpunten, selected=znapp.defaultnavrootnode),
                       # checkboxGroupInput("linksel", "Link types", zndef.linksoorten, selected = znapp.defaultlinks),
                       # checkboxGroupInput("nodesel", "Node types", zndef.nodetypes),
                       # tags$hr(),
                       # selectInput("layout", "Layout opties", znvis.layouts, "layout_nicely"),
                       tags$hr(),
-                      actionButton(inputId="showgraph", "Update"),
+                      actionButton(inputId="showgraph", "Redraw"),
                       tags$hr(),
                       downloadButton("export", "Export"),
                       tags$hr(),
-                      actionButton(inputId="quit", "Stoppen")
+                      actionButton(inputId="quit", "Quit")
                    )
                  ),
         ),
         
         mainPanel(
           fluidRow(
-            column(2, checkboxInput("navigatie", "Navigatie", TRUE)),
-            column(2, checkboxInput("ongericht", "Ongericht", value=TRUE)),
-            column(2, checkboxInput("images", "Iconen", TRUE)),
+            column(2, checkboxInput("navigatie", "Navigation", TRUE)),
+            column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
+            column(2, checkboxInput("images", "Icons", TRUE)),
             column(2, checkboxInput("showlinks", "Links", TRUE)),
-            column(2, checkboxInput("linklabels", "Link namen", FALSE)),
+            column(2, checkboxInput("linklabels", "Link names", FALSE)),
             column(2, checkboxInput("smooth", "Smooth")),
           ),
           fluidRow(
@@ -150,6 +153,21 @@ server <- function(input, output, session) {
       stopApp()
     })
   
+    observeEvent(input$showabout, {
+      showModal(modalDialog(
+        title = "About",
+        tags$p("Een experimentele browser van informatieuitwisseling in de zorg"),
+        tags$p("Gert Florijn, 2020")
+      ))
+    })
+
+    observeEvent(input$showhelp, {
+      showModal(modalDialog(
+        title = "Help",
+        "Todo"
+      ))
+    })
+    
     # 
     # Dit is de event handler als de grafiek getekend is.
     # Goede plek om the bevriezen? Dat kan via de proxy
