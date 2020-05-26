@@ -66,7 +66,8 @@ ui <- fluidPage(theme=shinytheme("simplex"),
                       # tags$hr(),
                       # selectInput("layout", "Layout opties", znvis.layouts, "layout_nicely"),
                       tags$hr(),
-                      actionButton(inputId="showgraph", "Redraw"),
+                      actionButton("showgraph", "Redraw"),
+                      actionButton("restart", "Restart"),
                       tags$hr(),
                       downloadButton("export", "Export"),
                       tags$hr(),
@@ -132,19 +133,32 @@ server <- function(input, output, session) {
       thecurrentview = NULL
     )
     
-    #
-    # Initialiseer de data die de view bepaalt.
-    isolate ({
-      # rv$thecurrentfocus = znapp.defaultnavrootnode
+    restartAll <- function() {
       rv$thenodeselected = ""
       rv$thecurrentview = "main"
       rv$theigraph = znapp.basenetall
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
       #  cat('initin\n')
       # print(rv$theigraph)
-    
+      
       nodes = V(rv$theigraph)[V(rv$theigraph)$domein == znapp.defaultnavrootnode]$name
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
+    }
+    
+    #
+    # Initialiseer de data die de view bepaalt.
+    isolate ({
+      restartAll()
+      # # rv$thecurrentfocus = znapp.defaultnavrootnode
+      # rv$thenodeselected = ""
+      # rv$thecurrentview = "main"
+      # rv$theigraph = znapp.basenetall
+      # rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
+      # #  cat('initin\n')
+      # # print(rv$theigraph)
+      # 
+      # nodes = V(rv$theigraph)[V(rv$theigraph)$domein == znapp.defaultnavrootnode]$name
+      # rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
       })
     
     # Quit button
@@ -152,7 +166,15 @@ server <- function(input, output, session) {
       js$closeWindow()
       stopApp()
     })
+    
+    #restart - load everything from the start
+    #
+    observeEvent(input$restart, {
+      restartAll()
+    })
   
+
+    
     observeEvent(input$showabout, {
       showModal(modalDialog(
         title = "About",
