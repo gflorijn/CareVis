@@ -99,7 +99,7 @@ ui <- fluidPage(theme=shinytheme("simplex"),
             )
           ),
           tabsetPanel(id="visTabSet",
-                    tabPanel("Graaf", 
+                    tabPanel("Main", 
                              visNetworkOutput("graph_panel", height="600px", width="100%")
                     ) 
           ),
