@@ -289,7 +289,7 @@ server <- function(input, output, session) {
         rv$theurl = V(rv$theigraph)[rv$thenodeselected]$url
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
       }
-      toggleState("launchbrowser", haveurl)
+      toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
     
 
@@ -369,7 +369,8 @@ server <- function(input, output, session) {
     }) 
     
     observeEvent(input$launchbrowser, {
-      browseURL(rv$theurl)
+      rv$themessage("not available yet")
+      #browseURL(rv$theurl)
     })
     
 
