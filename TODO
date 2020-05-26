@@ -1,9 +1,7 @@
 TODO
 
-- Github!
 - About knop met informatie
 - Help knop met korte toelichting
-- URL linken/clickbaar maken waar beschikbaar
 - Info tekst over selectie kunnen displayen
 - Zoeken naar node
 - Moet nog iets met hierarchie van interacties
@@ -12,3 +10,12 @@ TODO
 - Nodes dynamisch toevoegen
 - Code opschonen
 - Undo mogelijkheid
+- Voeg het concept functionaliteit toe. Handig voor systemen en platformen Voorbeelden: mailen, chat, teleconsult, ...
+- Voeg organisaties toe die in de keten opereren? HINQ bijvoorbeeld?
+- Iets doen met edge labels (volgorde)
+- Export van de actieve pane
+- Schone start - knop om weer aan begin te beginnen
+
+- Github
+- URL linken/clickbaar maken waar beschikbaar
+

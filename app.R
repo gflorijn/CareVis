@@ -13,6 +13,7 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 
 znapp.mogelijkestartpunten = zndef.domeinen
 znapp.defaultnavrootnode = "Patienten"
+znapp.mainPaneName = "Main"
 
 znapp.basenetall = zndef.netall
 
@@ -69,8 +70,6 @@ ui <- fluidPage(theme=shinytheme("simplex"),
                       actionButton("showgraph", "Redraw"),
                       actionButton("restart", "Restart"),
                       tags$hr(),
-                      downloadButton("export", "Export"),
-                      tags$hr(),
                       actionButton(inputId="quit", "Quit")
                    )
                  ),
@@ -87,22 +86,12 @@ ui <- fluidPage(theme=shinytheme("simplex"),
           ),
           fluidRow(
             column(3, verbatimTextOutput("nodemessage")),
-            column(9,
-              HTML(
-                 znapp.defaultNodeSelectMenu()
-              ),
-              # actionButton("hidefromview", "Hide"),
-              # actionButton("switchfocus", "Focus"),
-              HTML("&nbsp;&nbsp;   Network: "),
-              actionButton("growfocusall", "Grow"),
-              actionButton("showall", "All"),
-              actionButton("switchtoview", "> View"),
-            )
-          ),
+            column(9, uiOutput("graphbrowsemenu")) #only visible when the main view is active
+          ),          
           tabsetPanel(id="visTabSet",
-                    tabPanel("Main", 
-                             visNetworkOutput("graph_panel", height="600px", width="100%")
-                    ) 
+                tabPanel(znapp.mainPaneName, 
+                         visNetworkOutput("graph_panel", height="600px", width="100%")
+                ) 
           ),
           tags$hr(),
           fluidRow(
@@ -135,7 +124,7 @@ server <- function(input, output, session) {
     
     restartAll <- function() {
       rv$thenodeselected = ""
-      rv$thecurrentview = "main"
+      rv$thecurrentview = znapp.mainPaneName
       rv$theigraph = znapp.basenetall
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
       #  cat('initin\n')
@@ -149,16 +138,6 @@ server <- function(input, output, session) {
     # Initialiseer de data die de view bepaalt.
     isolate ({
       restartAll()
-      # # rv$thecurrentfocus = znapp.defaultnavrootnode
-      # rv$thenodeselected = ""
-      # rv$thecurrentview = "main"
-      # rv$theigraph = znapp.basenetall
-      # rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
-      # #  cat('initin\n')
-      # # print(rv$theigraph)
-      # 
-      # nodes = V(rv$theigraph)[V(rv$theigraph)$domein == znapp.defaultnavrootnode]$name
-      # rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
       })
     
     # Quit button
@@ -173,7 +152,34 @@ server <- function(input, output, session) {
       restartAll()
     })
   
-
+    # handle tabpanel selection event
+    #
+    observeEvent(input$visTabSet, {
+      rv$thecurrentview = input$visTabSet
+    })
+    
+    output$graphbrowsemenu <- renderUI({
+      if (rv$thecurrentview == znapp.mainPaneName) {
+         tagList(
+           column(9,
+                 HTML(
+                   znapp.defaultNodeSelectMenu()
+                 ),
+                 # actionButton("hidefromview", "Hide"),
+                 # actionButton("switchfocus", "Focus"),
+                 HTML("&nbsp;&nbsp;   Network: "),
+                 actionButton("growfocusall", "Grow"),
+                 actionButton("showall", "All"),
+                 actionButton("switchtoview", "> View"),
+                 downloadButton("export", "Export")
+            )
+         )
+      }
+      else {
+        ""
+      }
+    })
+    
     
     observeEvent(input$showabout, {
       showModal(modalDialog(
@@ -363,10 +369,14 @@ server <- function(input, output, session) {
     })
     
     
+    
     aparteViewUI <- function(id) {
       ns <- NS(id)
       { 
-        visNetworkOutput(ns("viewdrawnet"), height="500px", width="100%") 
+        tagList(
+          visNetworkOutput(ns("viewdrawnet"), height="500px", width="100%"),
+          downloadButton(ns("viewexport"), "Export this view")
+        )
       }
     }
     
@@ -375,6 +385,16 @@ server <- function(input, output, session) {
       # browser()
       # cat("in aparte view viewid = ", viewid, " graaf =\n")
       # print(graaf)
+      
+      output$viewexport <- downloadHandler(
+        filename = function() {
+          f = paste('view-', Sys.Date(), '.html', sep='')
+          f
+        },
+        content = function(con) {
+          visSave(visnet, file=con)      
+        }
+      )
       
        output$viewdrawnet <- renderVisNetwork({
           g3 = visnet
@@ -389,7 +409,7 @@ server <- function(input, output, session) {
   output$export <- downloadHandler(
     filename = function() {
       f = paste('network-', Sys.Date(), '.html', sep='')
-      rv$themessage = paste0("Exporteer naar ", f)
+      rv$themessage = paste0("Export to ", f)
       f
     },
     content = function(con) {
@@ -405,6 +425,7 @@ server <- function(input, output, session) {
     rv$themessage
   })
 
+     
   # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
   # visNetwork(nodes, edges) %>%
   #   visEvents(type = "once", startStabilizing = "function() {
