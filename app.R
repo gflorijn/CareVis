@@ -17,8 +17,12 @@ znapp.mainPaneName = "Main"
 
 znapp.basenetall = zndef.netall
 
+getLinkColor <- function(l) {
+  znvis.linksoorten.kleuren[znvis.linksoorten == l]
+}
+
 getNodeMenuEntryScriptFor <- function(linkname, actionlabel) {
-  color = znvis.linksoorten.kleuren[znvis.linksoorten == linkname]
+  color = getLinkColor(linkname)
   getNodeMenuEntryScriptForColor(linkname, actionlabel, color, "nodemenuclick")
 }
 
@@ -29,6 +33,7 @@ getNodeMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputev
             );'>", actionlabel, "</button>")
   buttext
 }
+
 
 
 znapp.defaultNodeSelectMenu <- function() {
@@ -184,7 +189,7 @@ server <- function(input, output, session) {
     observeEvent(input$showabout, {
       showModal(modalDialog(
         title = "About",
-        tags$p("Een experimentele browser van informatieuitwisseling in de zorg"),
+        tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
         tags$p("Gert Florijn, 2020")
       ))
     })
@@ -192,7 +197,35 @@ server <- function(input, output, session) {
     observeEvent(input$showhelp, {
       showModal(modalDialog(
         title = "Help",
-        "Todo"
+        tagList(
+          tags$p("Via de browser kun je navigeren door een netwerk van 
+                  gegevens over informatie-uitwisseling in de zorg in Nederland.
+                  De iconen (nodes) representeren personen, systemen, objecten, partijen, et cetera. 
+                  De lijnen (links) geven verbanden aan.
+                 "),
+          tags$p("Browsen is simpel: selecteer een node en kies welke verbanden (soorten links) je 
+                  wilt toevoegen aan de view. De kleuren/letters van de knopjes geven de mogelijke 
+                 verbanden aan:"),
+          
+          tags$ul(
+            tags$li("a(ctor) links"), 
+            tags$li("u(se) links"), 
+            tags$li("s(ystem) links"), 
+            tags$li("o(bject) links"), 
+            tags$li("* alle soorten links")
+          ),
+          tags$p("De betekenis van andere knoppen:"),
+          tags$ul(
+            tags$li("H(ide) verwijdert de node uit de view"),
+            tags$li("F(ocus) focusseert de view op deze node"),
+            tags$li("Grow - voeg alle verbanden toe voor alle nodes in de view"),
+            tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
+            tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
+            tags$li("Export - exporteer de view naar een HTML bestand"),
+            tags$li("Redraw - teken de view opnieuw (leidt tot andere layout)"),
+            tags$li("Restart - breng de view terug naar de begintoestand")
+          )
+        )
       ))
     })
     
