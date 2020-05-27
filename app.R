@@ -95,15 +95,30 @@ ui <- fluidPage(theme=shinytheme("simplex"),
           ),          
           tabsetPanel(id="visTabSet",
                 tabPanel(znapp.mainPaneName, 
-                         visNetworkOutput("graph_panel", height="600px", width="100%")
-                ) 
+                         visNetworkOutput("graph_panel", height="600px", width="100%"),
+                         tags$hr(),
+                         fluidRow(
+                           column(9, verbatimTextOutput("generalmessage")),
+                           column(3, actionButton("launchbrowser", "Launch browser"))
+                         )
+                         
+                ),
+                tabPanel("loadpanel",
+                     fluidRow(
+                       fileInput("uploadnodes", "Load Nodes", multiple=TRUE),
+                       tags$hr(),
+                       tableOutput("nodecontents"),
+                       tags$hr(),
+                       fileInput("uploadlinks", "Load Links", multiple=TRUE),
+                       tags$hr(),
+                       tableOutput("linkcontents"),
+                       tags$hr(),
+                       actionButton("adduploadednodes", "Add nodes"),
+                       actionButton("adduploadedlinks", "Add links")
+                     )
+                )
           ),
-          tags$hr(),
-          fluidRow(
-            column(9, verbatimTextOutput("generalmessage")),
-            column(3, actionButton("launchbrowser", "Launch browser"))
-          )
-        ),
+       ),
           
     )
 )
@@ -124,7 +139,9 @@ server <- function(input, output, session) {
       theviewcounter = 0,
       focusshowsall = FALSE, # True als de huidige weergave de hele database is.
       forcerepaint = FALSE,
-      thecurrentview = NULL
+      thecurrentview = NULL,
+      thenodesread = NULL,
+      thelinksread = NULL
     )
     
     restartAll <- function() {
@@ -156,7 +173,55 @@ server <- function(input, output, session) {
     observeEvent(input$restart, {
       restartAll()
     })
-  
+    
+    output$nodecontents <- renderTable({
+      # input$file1 will be NULL initially. After the user selects
+      # and uploads a file, it will be a data frame with 'name',
+      # 'size', 'type', and 'datapath' columns. The 'datapath'
+      # column will contain the local filenames where the data can
+      # be found.
+      inFile <- input$uploadnodes
+      if (is.null(inFile))
+        return(NULL)
+      
+      rv$thenodesread = read.csv2(inFile$datapath, header=T, colClasses="character", sep=";")
+      rv$thenodesread
+    })
+
+    output$linkcontents <- renderTable({
+      # input$file1 will be NULL initially. After the user selects
+      # and uploads a file, it will be a data frame with 'name',
+      # 'size', 'type', and 'datapath' columns. The 'datapath'
+      # column will contain the local filenames where the data can
+      # be found.
+      inFile <- input$uploadlinks
+      if (is.null(inFile))
+        return(NULL)
+      
+      rv$thelinksread = read.csv2(inFile$datapath, header=T, colClasses="character", sep=";")
+      rv$thelinksread
+    })
+    
+    observeEvent(input$adduploadednodes, {
+      r = rv$thenodesread
+      r$naam = r$id
+#browser()
+      g = rv$theigraph
+      for (i in 1:nrow(r)) {
+        n=r[i,]
+        cat('add ', n$id, '\n')
+browser()
+      g = add_vertices(g, 1, id=n$id, domein=n$domein, nodetype=n$nodetype, lijn=n$lijn, belang=n$belang, url=n$url, naam=n$naam)
+      }
+      browser()
+      rv$theigraph = g
+    })
+
+    observeEvent(input$adduploadedlinks, {
+      
+    })
+    
+    
     # handle tabpanel selection event
     #
     observeEvent(input$visTabSet, {
