@@ -1,30 +1,4 @@
-
-# definieer bepaalde begrippen/lijstjes uit de data
-#
-zndef.netall <- zndata.netall
-zndef.netUD <- zndata.netUD
-
-# geef de basisgraaf voor visualisatie
-zndef.basisgraaf <- function(ongericht=TRUE) {
-  if (ongericht)
-    zndef.netUD
-  else
-    zndef.netall
-}
-
-#Voor de default visualisatie van de nodes gebruiken de domeinen als basis
-#
-zndef.domeinen = unique(V(zndef.netall)$domein)
-
-#perspectieven == domeinen?
-zndef.perspectieven = unique(V(zndef.netall)$domein)
-zndef.perspectieven = zndef.perspectieven[zndef.perspectieven != ""]
-
-zndef.linksoorten = unique(E(zndef.netall)$linktype)
-zndef.linksoorten = zndef.linksoorten[zndef.linksoorten != ""]
-zndef.nodetypes = unique(V(zndef.netall)$nodetype)
-zndef.nodetypes = zndef.nodetypes[zndef.nodetypes != ""]
-
+# 
 
 
 # verwijder onverbonden nodes 
@@ -34,58 +8,13 @@ znops.zonderOnverbondenNodes <- function(g) {
   y
 }
 
-
-# maak een graaf voor de geselecteerde perspectieven, linktypes en wel of niet verbonden nodes
-# TODO:
-#
-znops.maakGraafVoorPerspectieven <- function(net, perspectives, linktypes, dounconnected) {
-  
-  vnet = net - V(net)[!(V(net)$domein %in% perspectives)]
-  vnet = vnet - E(vnet)[!(E(vnet)$linktype %in% linktypes)]
-  
-  if (!dounconnected) {
-    vnet = znops.zonderOnverbondenNodes(vnet)
-  }
-  
-  # cat("vnet\n")
-  # print(V(vnet)[[]])
-  # print(E(vnet)[[]])
-  vnet
-}
-
-
-
+# lever de links op vanuit nodes met type in linktypes
 znops.focusLinks <- function(g, nodes, linktypes) {
   els = incident_edges(g, nodes)
   res = el
   z = E(z)[E(z)$linktype %in% linktypes]
   z
 }
-
-znops.maakViewgraaf <-  function(g, view, focusnodes, linktypes, blacklist) {
-  # cat("mv ", focusnodes, "\n")
-  newg = znops.voegNodesToeAanView(g, view, focusnodes)
-  print(newg)
-  newg
-}
-
-
-
-# znops.maakViewgraaf <-  function(g, view, focusnodes, linktypes, blacklist) {
-#   friendnodes = znops.friendNodes(g, focusnodes, linktypes, blacklist)
-#   totalnodes = c(focusnodes, friendnodes)
-#   cat("totalnodes= ", totalnodes, "\n")
-#   newg = g
-#   newg = znops.voegNodesToeAanView(newg, view, totalnodes)
-#   links = znops.focusLinks(newg, totalnodes, linktypes)
-#   print(class(links))
-#   newg = znops.voegLinksToeAanView(newg, view, E(links))
-#   # 
-#   # newg = g - V(g)[!(V(g)$name %in% totalnodes)]
-#   # newg = newg - E(newg)[!(E(newg)$linktype %in% linktypes)]
-#   newg
-# }
-
 
 # Voeg een view toe aan de graaf. includeall geeft aan of alle nodes/links erbij horen
 znops.startViewOpGraaf <- function(graaf, viewnaam) {
@@ -117,6 +46,7 @@ znops.friendNodes <-  function(g, nodes, linktypes, blacklist) {
   res
 }
 
+# Focus de view op de aangegeven nodes
 znops.herstartViewOpNodes <- function(g, view, nodes) {
   # cat("herstart\n")
   # print(g)
@@ -126,6 +56,7 @@ znops.herstartViewOpNodes <- function(g, view, nodes) {
   g2
 }
 
+#
 znops.voegVriendenToeAanView <- function(graaf, view, node, linktypes) {
   #browser()
   #cat("voeg vrienden ", node, " toe aan ", view, '\n')
@@ -140,6 +71,7 @@ znops.voegVriendenToeAanView <- function(graaf, view, node, linktypes) {
   g
 }
 
+#
 znops.voegNodesToeAanView <-  function(graaf, view, nodes) {
   # cat("voeg toe ", nodes, " aan ", view, '\n')
   vertex_attr(graaf, view, V(graaf)[nodes]) <- TRUE
@@ -188,17 +120,5 @@ znops.copyViewInfo <- function(graaf, fromview, toview) {
   g
 }
 
-
-
-# # maak aparte groepen voor de nodes in de perspectieven
-# # TODO!
-# znops.maakGroepenVoor <- function(g, perspectieven) {
-#   pnodes = V(g)$name[V(g)$domein %in% perspectieven]
-#   pgroups = lapply(pnodes, function(i) {
-#                      list(i, neighbors(g, i, mode="out"))
-#                      })
-# #  list(pnodes, neighbors(g, pnodes, mode="out"))
-#   pgroups
-# }
 
 

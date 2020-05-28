@@ -1,5 +1,7 @@
 ﻿id;domein;nodetype;lijn;belang;url
 _Leveranciers;Leveranciers;category;;;
+Hinq;Leveranciers;party;;;
 EPIC;Leveranciers;party;;2;
 Chipsoft;Leveranciers;party;;2;
 Enovation;Leveranciers;party;;2;
+Ivido;Leveranciers;party;;;http://www.ivido.nl
