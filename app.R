@@ -6,107 +6,79 @@ library(shinyjs)
 source("ZorgnetData.R")
 source("ZorgnetOps.R")
 source("ZorgnetVisualisatie.R")
+source("frozenview.R")
+source("uploaddata.R")
 
 # Nodig om het browser window te sluiten
 #
 jscode <- "shinyjs.closeWindow = function() { window.close(); }"
-
-znapp.mogelijkestartpunten = zndef.domeinen
-znapp.defaultnavrootnode = "Patienten"
-znapp.mainPaneName = "Main"
-
-znapp.basenetall = zndef.netall
-
-getLinkColor <- function(l) {
-  znvis.linksoorten.kleuren[znvis.linksoorten == l]
-}
-
-getNodeMenuEntryScriptFor <- function(linkname, actionlabel) {
-  color = getLinkColor(linkname)
-  getNodeMenuEntryScriptForColor(linkname, actionlabel, color, "nodemenuclick")
-}
-
-getNodeMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputevent) {
-  buttext = 
-    paste0("<button id='",linkname,"' style='border: none;display: inline-block; color: white; background-color:", color, "' type='button'
-            onclick ='Shiny.setInputValue(\"", inputevent, "\",\"",linkname, "\", {priority: \"event\"}
-            );'>", actionlabel, "</button>")
-  buttext
-}
-
-
-
-znapp.defaultNodeSelectMenu <- function() {
-  res =  c(getNodeMenuEntryScriptFor("actor", "a"), getNodeMenuEntryScriptFor("use", "u"), 
-                           getNodeMenuEntryScriptFor("system", "s"),getNodeMenuEntryScriptFor("object", "o"),
-                           getNodeMenuEntryScriptForColor("all", "*", "black", "nodemenuclick"),
-                           getNodeMenuEntryScriptForColor("all", "H", "grey", "hidefromview"),
-                           getNodeMenuEntryScriptForColor("all", "F", "grey", "switchfocus")
-           )
-  
-}
-
-
-
 #
 # De shiny app voor visualisaties
 #
-ui <- fluidPage(theme=shinytheme("simplex"),
-      #shinythemes::themeSelector(),
-      
-      useShinyjs(),
-      extendShinyjs(text = jscode, functions = c("closeWindow")),
-      
-      titlePanel("Visualisatie van Zorgcommunicatie"),
-      sidebarLayout(
-        sidebarPanel(width=2,
-               fluidRow(
-                 column(12, 
-                      actionButton("showabout", "About"),
-                      actionButton("showhelp", "Help"),
-                      tags$hr(),
-                      selectInput("startingpoint", label="View...", 
-                                   choices=znapp.mogelijkestartpunten, selected=znapp.defaultnavrootnode),
-                      # checkboxGroupInput("linksel", "Link types", zndef.linksoorten, selected = znapp.defaultlinks),
-                      # checkboxGroupInput("nodesel", "Node types", zndef.nodetypes),
-                      # tags$hr(),
-                      # selectInput("layout", "Layout opties", znvis.layouts, "layout_nicely"),
-                      tags$hr(),
-                      actionButton("showgraph", "Redraw"),
-                      actionButton("restart", "Restart"),
-                      tags$hr(),
-                      actionButton(inputId="quit", "Quit")
+ui <- fluidPage(
+  theme=shinytheme("simplex"),
+  #shinythemes::themeSelector(),
+  
+  useShinyjs(),
+  extendShinyjs(text = jscode, functions = c("closeWindow")),
+  
+  titlePanel("Visualisatie van Zorgcommunicatie"),
+  sidebarLayout(
+    sidebarPanel(width=2,
+                 fluidRow(
+                   column(12, 
+                          actionButton("showabout", "About"),
+                          actionButton("showhelp", "Help"),
+                          # tags$hr(),
+                          # selectInput("startingpoint", label="View...", 
+                          #             choices=znapp.mogelijkestartpunten),
+                          tags$hr(),
+                          actionButton("showgraph", "Redraw"),
+                          actionButton("restart", "Restart"),
+                          tags$hr(),
+                          actionButton("startupload", "Upload data"),
+                          tags$hr(),
+                          actionButton(inputId="quit", "Quit")
                    )
-                 ),
-        ),
-        
-        mainPanel(
-          fluidRow(
-            column(2, checkboxInput("navigatie", "Navigation", TRUE)),
-            column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
-            column(2, checkboxInput("images", "Icons", TRUE)),
-            column(2, checkboxInput("showlinks", "Links", TRUE)),
-            column(2, checkboxInput("linklabels", "Link names", FALSE)),
-            column(2, checkboxInput("smooth", "Smooth")),
-          ),
-          fluidRow(
-            column(3, verbatimTextOutput("nodemessage")),
-            column(9, uiOutput("graphbrowsemenu")) #only visible when the main view is active
-          ),          
-          tabsetPanel(id="visTabSet",
-                tabPanel(znapp.mainPaneName, 
-                         visNetworkOutput("graph_panel", height="600px", width="100%")
-                ) 
-          ),
-          tags$hr(),
-          fluidRow(
-            column(9, verbatimTextOutput("generalmessage")),
-            column(3, actionButton("launchbrowser", "Launch browser"))
-          )
-        ),
-          
+                 )
+    ),
+    
+    mainPanel(
+      tabsetPanel(id="visTabSet",
+                  tabPanel("Main", 
+                           fluidRow(
+                             column(2, checkboxInput("navigatie", "Navigation", TRUE)),
+                             column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
+                             column(2, checkboxInput("images", "Icons", TRUE)),
+                             column(2, checkboxInput("showlinks", "Links", TRUE)),
+                             column(2, checkboxInput("linklabels", "Link names", FALSE)),
+                             column(2, checkboxInput("smooth", "Smooth"))
+                           ),
+                           tags$hr(),
+                           fluidRow(
+                             column(4, verbatimTextOutput("nodemessage")),
+                             column(4, uiOutput("nodeselectmenu")),
+                             column(4,
+                                    actionButton("growfocusall", "Grow"),
+                                    actionButton("showall", "All"),
+                                    actionButton("switchtoview", "> View"),
+                                    downloadButton("export", "Export")
+                             )
+                           ), 
+                           tags$hr(),
+                           visNetworkOutput("graph_panel", height="600px", width="100%"),
+                           tags$hr(),
+                           fluidRow(
+                             column(9, verbatimTextOutput("generalmessage")),
+                             column(3, actionButton("launchbrowser", "Launch browser"))
+                           )
+                  )
+      )
     )
-)
+    
+  )
+  
+  )
 
 
 server <- function(input, output, session) {
@@ -115,6 +87,7 @@ server <- function(input, output, session) {
     # De "state" variabelen van de applicatie
    
     rv <- reactiveValues(
+      thenetworkinfo = NULL,
       theigraph=NULL, 
       thevisgraph = NULL, 
       thegraphproxy = NULL,
@@ -124,25 +97,51 @@ server <- function(input, output, session) {
       theviewcounter = 0,
       focusshowsall = FALSE, # True als de huidige weergave de hele database is.
       forcerepaint = FALSE,
-      thecurrentview = NULL
+      thecurrentview = NULL,
+      haveuploadpane = FALSE,
+      thenodesread = NULL,
+      thelinksread = NULL,
+      theuploadeddata = NULL
     )
     
-    restartAll <- function() {
+    #layerstoload = c("Patienten")
+    layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
+                     "Interactie", "Systemen","Platformen",  "Standaarden",
+                     "Leveranciers")
+    
+    loadNetworkInfo <- function(netinfo, additionaldata) {
+      if (is.null(additionaldata)) {
+        n =  readNetworkData(layerstoload)
+      }
+      else { # in case of extending with uploaded data
+        n = addAdditionalData(netinfo, additionaldata)
+      }
+      n = addDerivedNetworkData(n)
+      n = extendNetworkInfoForVisualisation(n)
+#      browser()
+      n
+    }
+    
+    restartAll <- function(additionaldata) {
+      ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
+      rv$thenetworkinfo = ni
       rv$thenodeselected = ""
-      rv$thecurrentview = znapp.mainPaneName
-      rv$theigraph = znapp.basenetall
+      rv$thecurrentview = "Main"
+      rv$theigraph = ni$network
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
       #  cat('initin\n')
       # print(rv$theigraph)
       
-      nodes = V(rv$theigraph)[V(rv$theigraph)$domein == znapp.defaultnavrootnode]$name
+      nodes = c("Patient")
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
+      updateTabsetPanel(session, "visTabSet", selected = "Main")
+      
     }
     
     #
     # Initialiseer de data die de view bepaalt.
     isolate ({
-      restartAll()
+      restartAll(NULL)
       })
     
     # Quit button
@@ -152,40 +151,19 @@ server <- function(input, output, session) {
     })
     
     #restart - load everything from the start
-    #
+    # Todo - hoeft niet de hele graaf opnieuw te lezen
     observeEvent(input$restart, {
-      restartAll()
+      restartAll(NULL)
     })
-  
+
     # handle tabpanel selection event
     #
     observeEvent(input$visTabSet, {
-      rv$thecurrentview = input$visTabSet
+ #     rv$thecurrentview = input$visTabSet
     })
+
     
-    output$graphbrowsemenu <- renderUI({
-      if (rv$thecurrentview == znapp.mainPaneName) {
-         tagList(
-           column(9,
-                 HTML(
-                   znapp.defaultNodeSelectMenu()
-                 ),
-                 # actionButton("hidefromview", "Hide"),
-                 # actionButton("switchfocus", "Focus"),
-                 HTML("&nbsp;&nbsp;   Network: "),
-                 actionButton("growfocusall", "Grow"),
-                 actionButton("showall", "All"),
-                 actionButton("switchtoview", "> View"),
-                 downloadButton("export", "Export")
-            )
-         )
-      }
-      else {
-        ""
-      }
-    })
-    
-    
+ 
     observeEvent(input$showabout, {
       showModal(modalDialog(
         title = "About",
@@ -229,16 +207,16 @@ server <- function(input, output, session) {
       ))
     })
     
-    # 
-    # Dit is de event handler als de grafiek getekend is.
-    # Goede plek om the bevriezen? Dat kan via de proxy
-    # 
-    observeEvent(input$graph_panel_initialized, {
-        p = visNetworkProxy(input$graph_panel)
-#        cat('Initialized proxy \n')
-        rv$thegraphproxy = p
-    })
-
+#     # 
+#     # Dit is de event handler als de grafiek getekend is.
+#     # Goede plek om the bevriezen? Dat kan via de proxy
+#     # 
+#     observeEvent(input$graph_panel_initialized, {
+#         p = visNetworkProxy(input$graph_panel)
+# #        cat('Initialized proxy \n')
+#         rv$thegraphproxy = p
+#     })
+# 
    
     # ==========
     # Selectie van een node - twee methodes. dubbelop?
@@ -258,11 +236,9 @@ server <- function(input, output, session) {
     #    cat("Observe-graph_panel_selectedBy ", input$graph_panel_selectedBy, "\n")
     #  })
     
-    
-    
-    # Rechter muis knop. Nu nog geen actie aan verbonden
-    observeEvent(input$oncontext, {
-    }) 
+    # # Rechter muis knop. Nu nog geen actie aan verbonden
+    # observeEvent(input$oncontext, {
+    # }) 
     
     # Double click ==> focus op de betreffende node
     observeEvent(input$doubleClick, {
@@ -289,7 +265,7 @@ server <- function(input, output, session) {
         rv$theurl = V(rv$theigraph)[rv$thenodeselected]$url
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
       }
-      toggleState("launchbrowser", haveurl)
+      toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
     
 
@@ -302,10 +278,10 @@ server <- function(input, output, session) {
     handleSelectedNodeMenuClick <- function(label) {
 #browser()
       # cat('Grow current selection with links of type <', label, '>\n')
-      nodes = c(label)
+      linknodes = c(label)
       if (label == "all")
-        nodes = znvis.linksoorten
-      rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph,rv$thecurrentview, rv$thenodeselected, nodes)
+        linknodes = rv$thenetworkinfo$linktypes
+      rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph,rv$thecurrentview, rv$thenodeselected, linknodes)
     }
     
     
@@ -356,7 +332,7 @@ server <- function(input, output, session) {
       cns = znops.nodesInView(rv$theigraph, rv$thecurrentview)
       for (n in cns) {
         rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
-                                                    zndef.linksoorten)
+                                                    rv$thenetworkinfo$linktypes)
         
       }
       rv$forcerepaint = TRUE
@@ -369,29 +345,58 @@ server <- function(input, output, session) {
     }) 
     
     observeEvent(input$launchbrowser, {
-      browseURL(rv$theurl)
+      rv$themessage("not available yet")
+      #browseURL(rv$theurl)
     })
     
+    observeEvent(input$startupload, {
+      #Todo check first whether pane is already there
+      if (!rv$haveuploadpane) {
+        tabpid = "upload"
+        tabp = tabPanel("Upload data", value=tabpid, {
+          tagList( 
+            uploadDataUI(tabpid),
+            tags$hr(),
+            actionButton("adduploadeddata", "Add data to network"))
+        })
+        # Voeg de tab toeg
+        appendTab("visTabSet", tabp, select=TRUE)  
+        rv$haveuploadpane = TRUE
+        
+        # the is the reactive variable from the module that will produce the data to load
+        # a list of nodes and links
+        rv$theuploadeddata = callModule(uploadData, tabpid)
+      }
+    })
 
+    # Try to add the loaded nodes and links to the network and restart all
+    #
+    observeEvent(input$adduploadeddata, {
+      #get the data from the module
+      thedata = rv$theuploadeddata() 
+                        
+      restartAll(thedata)
+    })
+      
+    
+    # Spawn a frozen viewpane from the main view
     observeEvent(input$switchtoview, {
       node = rv$thecurrentnode
       
       rv$theviewcounter = rv$theviewcounter + 1
       viewid = paste0("view", rv$theviewcounter)
-      tabpid = paste0("View ", rv$theviewcounter)
+      tabplabel = paste0("View ", rv$theviewcounter)
 
-      tabp = tabPanel(tabpid, {
-                      tagList( aparteViewUI(viewid)
+      tabp = tabPanel(tabplabel, value=viewid, {
+                      tagList( frozenViewUI(viewid)
                       )}
       )
       
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, viewid)
       rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
       
-      gr <- callModule(aparteView, 
+      gr <- callModule(frozenView, 
                        viewid,   # module id
-                       "",
-                       session,  # nodig om visualisatiesettings te kunnen gebruiken in de viewmodule
                        viewid,
                        rv$thevisgraph
       )
@@ -401,39 +406,6 @@ server <- function(input, output, session) {
       
     })
     
-    
-    
-    aparteViewUI <- function(id) {
-      ns <- NS(id)
-      { 
-        tagList(
-          visNetworkOutput(ns("viewdrawnet"), height="500px", width="100%"),
-          downloadButton(ns("viewexport"), "Export this view")
-        )
-      }
-    }
-    
-    aparteView <- function(input, output, session, parentsession, graaf, viewid, visnet) {
-      
-      # browser()
-      # cat("in aparte view viewid = ", viewid, " graaf =\n")
-      # print(graaf)
-      
-      output$viewexport <- downloadHandler(
-        filename = function() {
-          f = paste('view-', Sys.Date(), '.html', sep='')
-          f
-        },
-        content = function(con) {
-          visSave(visnet, file=con)      
-        }
-      )
-      
-       output$viewdrawnet <- renderVisNetwork({
-          g3 = visnet
-          g3
-      })
-    }
     
   #==========  
   #
@@ -458,6 +430,46 @@ server <- function(input, output, session) {
     rv$themessage
   })
 
+  
+
+# Visual menu settings for node manipulation ------------------------------
+  
+  getLinkColor <- function(l) {
+    rv$thenetworkinfo$linktypecolors[rv$thenetworkinfo$linktypes == l]
+  }
+  
+  getNodeMenuEntryScriptFor <- function(linkname, actionlabel) {
+    color = getLinkColor(linkname)
+    getNodeMenuEntryScriptForColor(linkname, actionlabel, color, "nodemenuclick")
+  }
+  
+  getNodeMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputevent) {
+    buttext = 
+      paste0("<button id='",linkname,"' style='border: none;display: inline-block; color: white; background-color:", color, "' type='button'
+            onclick ='Shiny.setInputValue(\"", inputevent, "\",\"",linkname, "\", {priority: \"event\"}
+            );'>", actionlabel, "</button>")
+    buttext
+  }
+  
+  
+  defaultNodeSelectMenu <- function() {
+    res =  c(getNodeMenuEntryScriptFor("actor", "a"), getNodeMenuEntryScriptFor("use", "u"), 
+             getNodeMenuEntryScriptFor("system", "s"),getNodeMenuEntryScriptFor("object", "o"),
+             getNodeMenuEntryScriptForColor("all", "*", "black", "nodemenuclick"),
+             getNodeMenuEntryScriptForColor("all", "H", "grey", "hidefromview"),
+             getNodeMenuEntryScriptForColor("all", "F", "grey", "switchfocus")
+    )
+  }
+  
+  output$nodeselectmenu <- renderUI({
+    tagList(
+      HTML(
+        defaultNodeSelectMenu()
+      )
+    )
+    
+  })
+  
      
   # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
   # visNetwork(nodes, edges) %>%
@@ -480,7 +492,7 @@ server <- function(input, output, session) {
       if (input$ongericht) 
         visual3 = as.undirected(visual3, mode="each")
 
-      visual3 = znvis.visNetworkVisualisatieSettings(visual3, input$images, 
+      visual3 = znvis.visNetworkVisualisatieSettings(visual3, rv$thenetworkinfo, input$images, 
                                                      input$showlinks, input$linklabels)
 
       # see https://www.w3schools.com/howto/howto_css_text_buttons.asp
@@ -488,7 +500,7 @@ server <- function(input, output, session) {
       #cat(znapp.defaultNodeSelectMenu())
       
       V(visual3)$title = HTML( 
-        znapp.defaultNodeSelectMenu()
+        defaultNodeSelectMenu()
       )
       # V(visual3)$title = HTML(
       #   "<button id='l1' style='border: none;display: inline-block;' type='button'

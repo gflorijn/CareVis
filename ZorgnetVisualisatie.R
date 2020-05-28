@@ -1,9 +1,7 @@
-
-
 #
 # Visualisatie settings
 #
-# Kleurinstellingen: we gebruiken brewer, zie colorbrewer.org
+# See colorbrewer.org for the color stuff
 #
 require("igraph", quietly=T)
 require("RColorBrewer", quietly=T)
@@ -13,47 +11,48 @@ require("RCurl", quietly=T)
 require("visNetwork", quietly=T)
 require("shiny", quietly=T)
 
-
-# gebruik brewer om kleuren te kiezen
-znvis.domeinen = zndef.domeinen
-znvis.domeinen.kleuren = brewer.pal(length(znvis.domeinen),"Set3")
-
-# de default shape is circle.
-znvis.domeinen.shapes = rep("circle", length(znvis.domeinen))
-
-#voor de eigenschappen van de links (de kleuren) gebruikebn we de linktypes
-znvis.linksoorten = zndef.linksoorten
-znvis.linksoorten.kleuren = brewer.pal(length(znvis.linksoorten), "Set1")
-znvis.linkslegenda = data.frame(label=znvis.linksoorten, color=znvis.linksoorten.kleuren)
-
-
-#We gaan ervanuit dat voor elke node een png bestand is voor visualisatie
-#Hier moeten de urls van de images staan - vereist opstarten van een webserver bij lokaal gebruik
-
-znvis.imagepath <- "http://localhost:8001/www/"
+# Add visualisation settings to network structure (list)
+extendNetworkInfoForVisualisation <-  function(nstruct) {
+  ns = nstruct
+  
+#  znvis.domeinen = zndef.domeinen
+  dcolors = brewer.pal(length(ns$domains),"Set3")
+  dshapes = rep("circle", length(ns$domains))
+  ltcolors = brewer.pal(length(ns$linktypes), "Set1")
+  #ip <- "http://localhost:8001/www/"
+  ip <- ""
+  
+  ns[["domaincolors"]] = dcolors
+  ns[["domainshapes"]] = dshapes
+  ns[["linktypecolors"]] = ltcolors
+  ns[["imagepath"]] = ip
+  
+  ns
+}
 
 #
-#Zet basis settings voor visualisatie van iGraph graphs 
-znvis.defaultVisualisatieSettingsVoorGraaf <- function(lnet) {
+#Zet basis settings voor visualisatie van graaf, gegeven settubgs
+znvis.defaultVisualisatieSettingsVoorGraaf <- function(lnet, netinfo) {
   #cat('Defaultvisualisatiesettings voor graaf\n')
   llnet = lnet
-  
-  #Todo: dit geeft nu waarschuwingen als domeinen niet gebruikt worden.
-  V(llnet)$color = mapvalues(V(llnet)$domein, from=znvis.domeinen, to=znvis.domeinen.kleuren, warn_missing = FALSE)
-  V(llnet)$shape = mapvalues(V(llnet)$domein, from=znvis.domeinen, to=znvis.domeinen.shapes, warn_missing = FALSE)
+  ns = netinfo
 
-  E(llnet)$color = mapvalues(E(llnet)$linktype, from=znvis.linksoorten, to=znvis.linksoorten.kleuren, warn_missing = FALSE)
+  V(llnet)$color = mapvalues(V(llnet)$domein, from=ns$domains, to=ns$domaincolors, warn_missing = FALSE)
+  V(llnet)$shape = mapvalues(V(llnet)$domein, from=ns$domains, to=ns$domainshapes, warn_missing = FALSE)
+
+  E(llnet)$color = mapvalues(E(llnet)$linktype, from=ns$linktypes, to=ns$linktypecolors, warn_missing = FALSE)
 
   #Het image attribuut wordt gebruikt door visNetwork
   #
-  V(llnet)$image = paste0(znvis.imagepath, "Images/", V(llnet)$naam, ".png")
+  V(llnet)$image = paste0(ns$imagepath, "Images/", V(llnet)$naam, ".png")
+  V(llnet)$brokenImage = paste0(ns$imagepath, "Images/NotFound", ".png")
   llnet 
 }
 
 #Zet de settings voor visNetwork
-znvis.visNetworkVisualisatieSettings <- function(lnet, doimages, dolinks, dolinklabels) {
+znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolinks, dolinklabels) {
   
-  vnet = znvis.defaultVisualisatieSettingsVoorGraaf(lnet)  
+  vnet = znvis.defaultVisualisatieSettingsVoorGraaf(lnet, netinfo)  
   donodesize = 20  
   
   if (doimages) {
@@ -84,72 +83,74 @@ znvis.visNetworkVisualisatieSettings <- function(lnet, doimages, dolinks, dolink
   vnet
 }
 
-#
-# Maak een plot versie van een igraph
-# Instellingen voor visualisatie
-zorgvis.maakPlotGraaf <- function(g, doimages) {
-  V(g)$shape = "circle"
-  if (doimages) {
-    g = znvis.laadRastersVoorGraaf(g)
-  }
-  g
-}
 
-
-znvis.getnodesize <- function(name) { 20 }
-
-
-
-# Bepaal welke layouts gebruikt kunnen worden
-# Zie voor achtergrond: ?igraph::layout_
-znvis.layouts <- grep("^layout_", ls("package:igraph"), value=TRUE)[-1]
-znvis.layouts <- znvis.layouts[!grepl("bipartite|merge|norm|sugiyama|tree", znvis.layouts)]
-
-
-#
-# Definities voor plots van rasters
-#
-
-# Voor plots: laad raster file voor een node
-znvis.laadRasterVanURL <- function(imageurl) {
-  result = ""
-  if (url.exists(imageurl)) {
-    result = readPNG(getURLContent(imageurl))
-  }
-  result
-}
-
-
-# laad rasters van lokale schijf
-#
-znvis.localimagepath <- "./Data/Images/"
-
-#laad rasterfile uit lokale file.
-#
-znvis.laadRasterLokaal <- function(name) {
-  fname = paste0(znvis.localimagepath, name, ".png")
-  readPNG(fname)
-}
-
-
-znvis.laadRastersVoorGraaf <- function(lnet) {
-  xnet = lnet
-  lnamen = V(xnet)$naam
-  limages = lapply(lnamen, znvis.laadRasterLokaal)
-  V(xnet)$raster = limages[match(V(xnet)$naam, lnamen)]
-  xnet
-}
-
-# Oud spul
-
-#plot(netsystemen, vertex.shape="raster", vertex.label.dist=2, vertex.label.degree=pi/2, #vertex.label=NA,
-#      vertex.size=12, vertex.size2=12, edge.width=2, edge.label=NA, edge.arrow.mode="")
-
-# #Maak een graaf voor een bepaald systeem
 # 
-# sid="Zorgdomein"
-# basen = netsystemen
-# netZD = basen - V(basen)[V(basen)$naam != sid & V(basen)$domein=="Systeem"]
-# plot(netZD, vertex.label.dist=1, vertex.label.degree=pi/2, #vertex.shape="raster", #vertex.label=NA,
-#      vertex.size=12, vertex.size2=12, edge.width=2, edge.label=NA, edge.arrow.mode="")
+# ======== OLD STUFF
+# 
+# 
+# #
+# # Maak een plot versie van een igraph
+# # Instellingen voor visualisatie
+# zorgvis.maakPlotGraaf <- function(g, doimages) {
+#   V(g)$shape = "circle"
+#   if (doimages) {
+#     g = znvis.laadRastersVoorGraaf(g)
+#   }
+#   g
+# }
+# 
+# 
+# znvis.getnodesize <- function(name) { 20 }
+# # Bepaal welke layouts gebruikt kunnen worden
+# # Zie voor achtergrond: ?igraph::layout_
+# znvis.layouts <- grep("^layout_", ls("package:igraph"), value=TRUE)[-1]
+# znvis.layouts <- znvis.layouts[!grepl("bipartite|merge|norm|sugiyama|tree", znvis.layouts)]
+# 
+# 
+# #
+# # Definities voor plots van rasters
+# #
+# 
+# # Voor plots: laad raster file voor een node
+# znvis.laadRasterVanURL <- function(imageurl) {
+#   result = ""
+#   if (url.exists(imageurl)) {
+#     result = readPNG(getURLContent(imageurl))
+#   }
+#   result
+# }
+# 
+# 
+# # laad rasters van lokale schijf
+# #
+# znvis.localimagepath <- "./Data/Images/"
+# 
+# #laad rasterfile uit lokale file.
+# #
+# znvis.laadRasterLokaal <- function(name) {
+#   fname = paste0(znvis.localimagepath, name, ".png")
+#   readPNG(fname)
+# }
+# 
+# 
+# znvis.laadRastersVoorGraaf <- function(lnet) {
+#   xnet = lnet
+#   lnamen = V(xnet)$naam
+#   limages = lapply(lnamen, znvis.laadRasterLokaal)
+#   V(xnet)$raster = limages[match(V(xnet)$naam, lnamen)]
+#   xnet
+# }
+# 
+# # Oud spul
+# 
+# #plot(netsystemen, vertex.shape="raster", vertex.label.dist=2, vertex.label.degree=pi/2, #vertex.label=NA,
+# #      vertex.size=12, vertex.size2=12, edge.width=2, edge.label=NA, edge.arrow.mode="")
+# 
+# # #Maak een graaf voor een bepaald systeem
+# # 
+# # sid="Zorgdomein"
+# # basen = netsystemen
+# # netZD = basen - V(basen)[V(basen)$naam != sid & V(basen)$domein=="Systeem"]
+# # plot(netZD, vertex.label.dist=1, vertex.label.degree=pi/2, #vertex.shape="raster", #vertex.label=NA,
+# #      vertex.size=12, vertex.size2=12, edge.width=2, edge.label=NA, edge.arrow.mode="")
 

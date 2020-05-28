@@ -9,11 +9,10 @@ require("igraph", quietly=T)
 #aan de meegegeven argumenten zodat er uiteindelijk 1 graaf ontstaat
 #
 zndata.laadPerspectief <- function(nodeslinks=NULL, naam) {
-  cat('laadPerspectief: ', naam, "\n")
+#  cat('laadPerspectief: ', naam, "\n")
 
   lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
   llinks <- read.csv2(paste0("Data/", naam, "-Links.csv"), header=T, colClasses="character", sep=";")
-
   #   #Voeg links toe voor de categorieen
   # categorie = lnodes$id[1]
   # targets = lnodes$id[2:nrow(lnodes)]
@@ -32,25 +31,25 @@ zndata.laadPerspectief <- function(nodeslinks=NULL, naam) {
 
   nodenames = lnodes$naam
   if (!is.null(nodeslinks)) {
-    oln = nodeslinks[[1]]
+    oln = nodeslinks$nodes #[[1]]
     nodenames = c(nodenames, oln$naam)
   }
 
   n = zndata.checkLinks(nodenames, llinks)
   
   if (length(n) > 0) {
-    cat("Laag ", naam, " ontbrekende node definities: ", n, "\n")
+    cat("Laag ", naam, " ontbrekende node definities in links file: ", n, "\n")
   }
   
   if (is.null(nodeslinks)) {
-    result = list(lnodes, llinks)
+    result = list(nodes=lnodes, links=llinks)
   }
   else {
-    olinks = nodeslinks[[2]]
-    onodes = nodeslinks[[1]]
+    olinks = nodeslinks$links #[[2]]
+    onodes = nodeslinks$nodes #[[1]]
     rnodes = rbind(onodes, lnodes)
     rlinks = rbind(olinks, llinks)
-    result = list(rnodes, rlinks)
+    result = list(nodes=rnodes, links=rlinks)
   }
   result
 }
@@ -75,37 +74,53 @@ zndata.leesPerspectieven <- function(namen) {
   lnl
 }
 
-#Voeg nodes en links voor de categorieen (dus de domeinen) aan een graaf
-zndata.voegCategorienToe <- function(g) {
-  doms = unique(V(g)$domein)
-  g2 = add_vertices(g, length(doms), doms, nodetype = "category", lijn)
-  # 
-  # for (d %in% doms) {
-  #   g2 = add_vertices
-  # }
-  g2
-} 
 
-#===
-# lees de data
+# Read the network data and collect all info in a list. -------------------
+# The list has three entries:
+# $nodes - the vertices
+# $links - the edges
+# $network - the igraph
+# $layers - the layers loaded
+readNetworkData <-  function(perspectives) {
+  nls = zndata.leesPerspectieven(perspectives)
+  #browser()
+  nodes = nls$nodes
+  links = nls$links
+  network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
+  list(nodes=nodes, links=links, network=network, layers=perspectives)
+}
+
+#add additional data to an existing network structure
+#Avoids rereading all data
+addAdditionalData <- function(netinfo, additionaldata) {
+  nodes = netinfo$nodes
+  links = netinfo$links
+  nd2 = additionaldata$nodes
+  lk2 = additionaldata$links
+  nd2$naam = nd2$id
+  lk2$van = lk2$from
+  lk2$naar = lk2$to
+  #browser()
+  netinfo$nodes = rbind(nodes, nd2)
+  netinfo$links = rbind(links, lk2)
+  netinfo$network = graph_from_data_frame(d=netinfo$links, vertices=netinfo$nodes, directed=T)
+  netinfo
+}
+
+# Add derived information to the basic network data
 #
-zndata.perspectiefnamen = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",  
-                             "Interactie", "Systemen","Platformen",  "Standaarden", 
-                            "Leveranciers")
-
-nls = zndata.leesPerspectieven(zndata.perspectiefnamen)
-
-
-#definieer de basis graafstructuren voor de rest van de applicatie:
-zndata.netall.nodes = nls[[1]]
-zndata.netall.links = nls[[2]]
-zndata.geladengraaf = graph_from_data_frame(d=zndata.netall.links, vertices=zndata.netall.nodes, directed=T)
-#zndata.verrijktegraaf = zndata.voegCategorienToe(zndata.geladengraaf)
-
-zndata.netall = zndata.geladengraaf
-zndata.netUD = as.undirected(zndata.netall, mode=c("each"))
-
-#De graaf zonder nodes die geen verbinding hebben met de graaf.
-#netall.connected = netall - V(netall)[degree(netall, V(netall)) == 0]
-#todo: gebruik "ZonderOndervbondn
-
+addDerivedNetworkData <-  function(nstruct) {
+  ns = nstruct
+  
+  ds = unique(V(ns$network)$domein)
+  ds = ds[ds != ""]
+  lt = unique(E(ns$network)$linktype)
+  lt = lt[lt != ""]
+  nt = unique(V(ns$network)$nodetype)
+  nt = nt[nt != ""]
+  
+  ns[["domains"]] = ds
+  ns[["linktypes"]] = lt
+  ns[["nodetypes"]] = nt
+  ns
+}
