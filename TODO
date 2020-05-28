@@ -1,11 +1,8 @@
 TODO
 
-- About knop met informatie
-- Help knop met korte toelichting
 - Info tekst over selectie kunnen displayen
 - Zoeken naar node
 - Moet nog iets met hierarchie van interacties
-- Uploaden van eigen data
 - Instantiatie van nodes, bijv huisarts1, huisarts2 - en isa relatie
 - Nodes dynamisch toevoegen
 - Code opschonen
@@ -13,9 +10,15 @@ TODO
 - Voeg het concept functionaliteit toe. Handig voor systemen en platformen Voorbeelden: mailen, chat, teleconsult, ...
 - Voeg organisaties toe die in de keten opereren? HINQ bijvoorbeeld?
 - Iets doen met edge labels (volgorde)
-- Export van de actieve pane
-- Schone start - knop om weer aan begin te beginnen
+- Errors
 
+Done
 - Github
 - URL linken/clickbaar maken waar beschikbaar
+- About knop met informatie
+- Help knop met korte toelichting
+- Export van de actieve pane
+- Schone start - knop om weer aan begin te beginnen
+- Uploaden van eigen data
+- fall-back voor ontbrekende images
 

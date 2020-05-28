@@ -29,9 +29,6 @@ ui <- fluidPage(
                    column(12, 
                           actionButton("showabout", "About"),
                           actionButton("showhelp", "Help"),
-                          # tags$hr(),
-                          # selectInput("startingpoint", label="View...", 
-                          #             choices=znapp.mogelijkestartpunten),
                           tags$hr(),
                           actionButton("showgraph", "Redraw"),
                           actionButton("restart", "Restart"),
@@ -56,8 +53,9 @@ ui <- fluidPage(
                            ),
                            tags$hr(),
                            fluidRow(
-                             column(4, verbatimTextOutput("nodemessage")),
-                             column(4, uiOutput("nodeselectmenu")),
+                             column(3, uiOutput("startpointsmenu")),
+                             column(2, verbatimTextOutput("nodemessage")),
+                             column(3, uiOutput("nodeselectmenu")),
                              column(4,
                                     actionButton("growfocusall", "Grow"),
                                     actionButton("showall", "All"),
@@ -179,9 +177,10 @@ server <- function(input, output, session) {
           tags$p("Via de browser kun je navigeren door een netwerk van 
                   gegevens over informatie-uitwisseling in de zorg in Nederland.
                   De iconen (nodes) representeren personen, systemen, objecten, partijen, et cetera. 
-                  De lijnen (links) geven verbanden aan.
+                  De lijnen (links) geven verbanden aan. 
                  "),
-          tags$p("Browsen is simpel: selecteer een node en kies welke verbanden (soorten links) je 
+          tags$p("Browsen is simpel. Als je de nodes van een bepaalde soort wilt zien, selecteer die soort dan uit de lijst.
+                  Klik vervolgens op een node en kies welke verbanden (soorten links) je 
                   wilt toevoegen aan de view. De kleuren/letters van de knopjes geven de mogelijke 
                  verbanden aan:"),
           
@@ -195,7 +194,7 @@ server <- function(input, output, session) {
           tags$p("De betekenis van andere knoppen:"),
           tags$ul(
             tags$li("H(ide) verwijdert de node uit de view"),
-            tags$li("F(ocus) focusseert de view op deze node"),
+            tags$li("F(ocus) focusseert de view op deze node (dubbel-klik op de node doet dit ook)"),
             tags$li("Grow - voeg alle verbanden toe voor alle nodes in de view"),
             tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
             tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
@@ -286,12 +285,6 @@ server <- function(input, output, session) {
     
     
      
-    # Focus de graaf op een set van nodes uit een domein
-    observeEvent(input$startingpoint, {
-      #browser()
-      nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
-      rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
-    })
 
     observeEvent(input$focusopnodetype, {
       nodes = V(rv$theigraph)[V(rv$theigraph)$nodetype == input$focusopnodetype]$name
@@ -430,6 +423,21 @@ server <- function(input, output, session) {
     rv$themessage
   })
 
+  #Starting point menu for showing nodes from different domains.
+  output$startpointsmenu <- renderUI({
+    tagList(
+      selectInput("startingpoint", label=NULL,
+                   choices=rv$thenetworkinfo$domains)
+      
+    )
+  })
+  
+  # Focus de graaf op een set van nodes uit een domein
+  observeEvent(input$startingpoint, {
+    #browser()
+    nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
+    rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
+  })
   
 
 # Visual menu settings for node manipulation ------------------------------
