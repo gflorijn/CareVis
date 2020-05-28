@@ -6,6 +6,7 @@ library(shinyjs)
 source("ZorgnetData.R")
 source("ZorgnetOps.R")
 source("ZorgnetVisualisatie.R")
+source("frozenview.R")
 
 # Nodig om het browser window te sluiten
 #
@@ -33,7 +34,6 @@ getNodeMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputev
             );'>", actionlabel, "</button>")
   buttext
 }
-
 
 
 znapp.defaultNodeSelectMenu <- function() {
@@ -67,10 +67,6 @@ ui <- fluidPage(theme=shinytheme("simplex"),
                       tags$hr(),
                       selectInput("startingpoint", label="View...", 
                                    choices=znapp.mogelijkestartpunten, selected=znapp.defaultnavrootnode),
-                      # checkboxGroupInput("linksel", "Link types", zndef.linksoorten, selected = znapp.defaultlinks),
-                      # checkboxGroupInput("nodesel", "Node types", zndef.nodetypes),
-                      # tags$hr(),
-                      # selectInput("layout", "Layout opties", znvis.layouts, "layout_nicely"),
                       tags$hr(),
                       actionButton("showgraph", "Redraw"),
                       actionButton("restart", "Restart"),
@@ -447,17 +443,15 @@ browser()
       tabpid = paste0("View ", rv$theviewcounter)
 
       tabp = tabPanel(tabpid, {
-                      tagList( aparteViewUI(viewid)
+                      tagList( frozenViewUI(viewid)
                       )}
       )
       
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, viewid)
       rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
       
-      gr <- callModule(aparteView, 
+      gr <- callModule(frozenView, 
                        viewid,   # module id
-                       "",
-                       session,  # nodig om visualisatiesettings te kunnen gebruiken in de viewmodule
                        viewid,
                        rv$thevisgraph
       )
@@ -467,39 +461,6 @@ browser()
       
     })
     
-    
-    
-    aparteViewUI <- function(id) {
-      ns <- NS(id)
-      { 
-        tagList(
-          visNetworkOutput(ns("viewdrawnet"), height="500px", width="100%"),
-          downloadButton(ns("viewexport"), "Export this view")
-        )
-      }
-    }
-    
-    aparteView <- function(input, output, session, parentsession, graaf, viewid, visnet) {
-      
-      # browser()
-      # cat("in aparte view viewid = ", viewid, " graaf =\n")
-      # print(graaf)
-      
-      output$viewexport <- downloadHandler(
-        filename = function() {
-          f = paste('view-', Sys.Date(), '.html', sep='')
-          f
-        },
-        content = function(con) {
-          visSave(visnet, file=con)      
-        }
-      )
-      
-       output$viewdrawnet <- renderVisNetwork({
-          g3 = visnet
-          g3
-      })
-    }
     
   #==========  
   #
