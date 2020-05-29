@@ -169,7 +169,9 @@ server <- function(input, output, session) {
  #     rv$thecurrentview = input$visTabSet
     })
 
-    
+
+# About and Help ----------------------------------------------------------
+
  
     observeEvent(input$showabout, {
       showModal(modalDialog(
@@ -209,6 +211,7 @@ server <- function(input, output, session) {
           tags$ul(
             tags$li("H(ide) verwijdert de node uit de view"),
             tags$li("F(ocus) focusseert de view op deze node (dubbel-klik op de node doet dit ook)"),
+            
             tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
             tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
             tags$li("Export - exporteer de view naar een HTML bestand"),
@@ -230,7 +233,8 @@ server <- function(input, output, session) {
 #     })
 # 
    
-    # ==========
+   
+     # ==========
     # Selectie van een node - twee methodes. dubbelop?
     
     observeEvent(input$current_node_id,  {
@@ -259,7 +263,6 @@ server <- function(input, output, session) {
       #cat('switch focus', rv$thenodeselected, '\n')
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
-    
     
     # ===
     #
@@ -303,22 +306,27 @@ server <- function(input, output, session) {
       }
       rv$forcerepaint = TRUE
     }
-    
-    
-     
-
-    observeEvent(input$focusopnodetype, {
-      nodes = V(rv$theigraph)[V(rv$theigraph)$nodetype == input$focusopnodetype]$name
-      rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
-    })
-    
+   
     # Creeer en teken de graaf opnieuw
     #
     observeEvent(input$showgraph, {
       rv$forcerepaint = TRUE
     })
     
-    # # Expand node 
+    
+    # Search node to add to view ----------------------------------------------
+    
+    observeEvent(input$searchnode, {
+      showModal(modalDialog(
+        title = "Search node",
+        tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
+        tags$p("Gert Florijn, 2020")
+      ))
+      
+    }) 
+    
+    
+       # # Expand node 
     # observeEvent(input$expandnodeall, {
     #   cat('expandall ', rv$thenodeselected, '\n')
     #   rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, rv$thenodeselected, 
@@ -327,7 +335,6 @@ server <- function(input, output, session) {
 
     # Verstop node
     observeEvent(input$hidefromview, {
-      #cat('hide', rv$thenodeselected, '\n')
       rv$theigraph = znops.verwijderNodesUitView(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     })
   

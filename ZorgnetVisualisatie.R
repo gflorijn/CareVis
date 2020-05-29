@@ -1,8 +1,6 @@
 #
 # Visualisatie settings
 #
-# See colorbrewer.org for the color stuff
-#
 require("igraph", quietly=T)
 require("RColorBrewer", quietly=T)
 require("plyr", quietly=T)
@@ -15,10 +13,11 @@ require("shiny", quietly=T)
 extendNetworkInfoForVisualisation <-  function(nstruct) {
   ns = nstruct
   
-#  znvis.domeinen = zndef.domeinen
-  dcolors = brewer.pal(length(ns$domains),"Set1")
+  # See display.brewer.all() for examples
+  #
+  dcolors = brewer.pal(length(ns$domains),"Set3")
   dshapes = rep("circle", length(ns$domains))
-  ltcolors = brewer.pal(length(ns$linktypes), "Paired")
+  ltcolors = brewer.pal(length(ns$linktypes), "Dark2")
   #ip <- "http://localhost:8001/www/"
   ip <- ""
   
@@ -42,9 +41,15 @@ znvis.defaultVisualisatieSettingsVoorGraaf <- function(lnet, netinfo) {
 
   E(llnet)$color = mapvalues(E(llnet)$linktype, from=ns$linktypes, to=ns$linktypecolors, warn_missing = FALSE)
 
-  #Het image attribuut wordt gebruikt door visNetwork
-  #
+  # Default attempt for imagefile is the node name.
+  # Can be overriden by the icon attribute
   V(llnet)$image = paste0(ns$imagepath, "Images/", V(llnet)$naam, ".png")
+  iconnodes = V(llnet)[V(llnet)$icon != ""]
+  
+  for (i in iconnodes) {
+    V(llnet)[i]$image = paste0(ns$imagepath, "Images/", V(llnet)[i]$icon, ".png")
+  }
+
   V(llnet)$brokenImage = paste0(ns$imagepath, "Images/NotFound", ".png")
   llnet 
 }
