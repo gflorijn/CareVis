@@ -61,7 +61,12 @@ uploadData <- function(input, output, session, viewid, networkinfo) {
     nodenames = c(nodesData()[["id"]], networkinfo$nodes$naam)
     missing = !(nfl %in% nodenames)
     result = nfl[missing]
-    checkresult(paste0("Unknown nodes: [", result, "]"))
+    if (result == "") {
+      checkresult("No issues found")
+    }
+    else {
+      checkresult(paste0("Unknown nodes: ", result))
+    }
   })
   
   output$checklinkmessage <- renderText ({
