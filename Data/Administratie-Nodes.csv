@@ -1,6 +1,6 @@
-﻿id;domein;nodetype;lijn;belang;url
-_Administratie;Administratie;category;;;
-CIZ;Administratie;;;2;http://www.ciz.nl
-Gemeente;Administratie;;;2;
-Zorgverzekeraar;Administratie;;;;
-Zorgkantoor;Administratie;;;;
+﻿id;domein;nodetype;icon;url
+_Administratie;Administratie;category;;
+CIZ;Administratie;party;;http://www.ciz.nl
+Gemeente;Administratie;party;;
+Zorgverzekeraar;Administratie;party;;
+Zorgkantoor;Administratie;party;;

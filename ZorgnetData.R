@@ -8,7 +8,7 @@ require("igraph", quietly=T)
 #als het argument nodeslinks niet null is worden de ingelezen nodes en links toegevoegd 
 #aan de meegegeven argumenten zodat er uiteindelijk 1 graaf ontstaat
 #
-zndata.laadPerspectief <- function(nodeslinks=NULL, naam) {
+loadNetworkLayer <- function(nodeslinks=NULL, naam) {
 #  cat('laadPerspectief: ', naam, "\n")
 
   lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
@@ -35,7 +35,7 @@ zndata.laadPerspectief <- function(nodeslinks=NULL, naam) {
     nodenames = c(nodenames, oln$naam)
   }
 
-  n = zndata.checkLinks(nodenames, llinks)
+  n = checkNodesInLinks(nodenames, llinks)
   
   if (length(n) > 0) {
     cat("Laag ", naam, " ontbrekende node definities in links file: ", n, "\n")
@@ -58,18 +58,18 @@ zndata.laadPerspectief <- function(nodeslinks=NULL, naam) {
 #todo: accepteer onbekende nodes, maak er forward references van.
 # of doe de checklinks pas aan het eind.
 #
-zndata.checkLinks <- function(nodenames, links) {
+checkNodesInLinks <- function(nodenames, links) {
   nofrom = !(links$from %in% nodenames)
   noto = !(links$to %in% nodenames)
   c(links$from[nofrom], links$to[noto])
 }
 
 # Lees alle aangegeven perspectieven. Produceer een lijst bestaande uit nodes en links voor de graaf.
-zndata.leesPerspectieven <- function(namen) {
+readLayers <- function(namen) {
   #cat("n = ", namen)
   lnl = NULL
   for (i in namen) {
-    lnl = zndata.laadPerspectief(lnl, naam=i)
+    lnl = loadNetworkLayer(lnl, naam=i)
   }
   lnl
 }
@@ -82,7 +82,7 @@ zndata.leesPerspectieven <- function(namen) {
 # $network - the igraph
 # $layers - the layers loaded
 readNetworkData <-  function(perspectives) {
-  nls = zndata.leesPerspectieven(perspectives)
+  nls = readLayers(perspectives)
   #browser()
   nodes = nls$nodes
   links = nls$links

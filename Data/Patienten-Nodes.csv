@@ -1,4 +1,4 @@
-﻿id;domein;nodetype;lijn;belang;url
-_Patienten;Patienten;category;;;
-Patient;Patienten;actor;0;10;
-Mantelzorger;Patienten;actor;0;6;
+﻿id;domein;nodetype;icon;url
+_Patienten;Patienten;category;;
+Patient;Patienten;actor;;
+Mantelzorger;Patienten;actor;;

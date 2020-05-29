@@ -6,19 +6,26 @@
 uploadDataUI <- function(id, label="Upload Data") {
   ns <- NS(id)
   { 
-    fluidRow(
-      fileInput(ns("uploadnodesfile"), "Load Nodes", multiple=TRUE),
-      fileInput(ns("uploadlinksfile"), "Load Links", multiple=TRUE),
+    tagList(
+      fluidRow(
+        column(6, fileInput(ns("uploadnodesfile"), "Load Nodes", multiple=TRUE)),
+        column(6, fileInput(ns("uploadlinksfile"), "Load Links", multiple=TRUE))
+      ),
       tags$hr(),
-      tableOutput(ns("nodecontents")),
+      fluidRow(
+        column(6, tableOutput(ns("nodecontents"))),
+        column(6, tableOutput(ns("linkcontents")))
+      ),
       tags$hr(),
-      tableOutput(ns("linkcontents")),
-    )
+      fluidRow(
+        column(3, actionButton(ns("chlinks"), "Check links")),
+        column(9, textOutput(ns("checklinkmessage")))
+      )
+    ) 
   }
 }
 
-uploadData <- function(input, output, session, viewid) {
-
+uploadData <- function(input, output, session, viewid, networkinfo) {
   nodesFile <- reactive({
     # If no file is selected, don't do anything
     validate(need(input$uploadnodesfile, message = FALSE))
@@ -47,9 +54,25 @@ uploadData <- function(input, output, session, viewid) {
     linksData()
   })
   
+  checkresult <- reactiveVal()
+  
+  observeEvent(input$chlinks, {
+    nfl = unique(c(linksData()[["from"]], linksData()[["to"]]))
+    nodenames = c(nodesData()[["id"]], networkinfo$nodes$naam)
+    missing = !(nfl %in% nodenames)
+    result = nfl[missing]
+    checkresult(paste0("Unknown nodes: [", result, "]"))
+  })
+  
+  output$checklinkmessage <- renderText ({
+    checkresult()
+  })
+  
   loadedData <- reactive({
     list(nodes=nodesData(), links=linksData())
   })
+  
+  
   
   return(loadedData)
   

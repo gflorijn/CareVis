@@ -35,8 +35,10 @@ ui <- fluidPage(
                           tags$hr(),
                           actionButton("startupload", "Upload data"),
                           tags$hr(),
-                          actionButton(inputId="quit", "Quit")
-                   )
+                          actionButton(inputId="quit", "Quit"),
+                          tags$hr(),
+                          actionButton(inputId="interrupt", "Interrupt")
+                       )
                  )
     ),
     
@@ -53,14 +55,17 @@ ui <- fluidPage(
                            ),
                            tags$hr(),
                            fluidRow(
-                             column(3, uiOutput("startpointsmenu")),
+                             column(2, uiOutput("startpointsmenu")),
                              column(2, verbatimTextOutput("nodemessage")),
-                             column(3, uiOutput("nodeselectmenu")),
-                             column(4,
-                                    actionButton("growfocusall", "Grow"),
-                                    actionButton("showall", "All"),
-                                    actionButton("switchtoview", "> View"),
-                                    downloadButton("export", "Export")
+                             column(3, uiOutput("singlenodeselectmenu")),
+                             column(3, uiOutput("viewnodeselectmenu")),
+                             column(2,
+                                    uiOutput("viewselectmenu"),
+                                    #downloadLink("export", "Xp")
+                                    # actionButton("growfocusall", "Grow"),
+                                    # actionButton("showall", "All"),
+                                    # actionButton("switchtoview", ">Vw"),
+
                              )
                            ), 
                            tags$hr(),
@@ -154,6 +159,10 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
+    observeEvent(input$interrupt, {
+      browser()
+    })
+    
     # handle tabpanel selection event
     #
     observeEvent(input$visTabSet, {
@@ -189,7 +198,9 @@ server <- function(input, output, session) {
             tags$li("u(se) links"), 
             tags$li("s(ystem) links"), 
             tags$li("o(bject) links"), 
-            tags$li("* alle soorten links")
+            tags$li("p(art) links"),
+            tags$li("r(efer) links"),
+            tags$li("* alle  links")
           ),
           tags$p("De betekenis van andere knoppen:"),
           tags$ul(
@@ -267,20 +278,28 @@ server <- function(input, output, session) {
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
     
-
+    #click on linkmenu for selected node
     observeEvent(input$nodemenuclick, {
       if (rv$thenodeselected != "")
-        handleSelectedNodeMenuClick(input$nodemenuclick)
+        growViewByLinks(c(rv$thenodeselected, input$nodemenuclick))
+    } )
+    
+    #click on linkmenu for all nodes in view
+    observeEvent(input$viewmenuclick, {
+        growViewByLinks(znops.nodesInView(rv$theigraph, rv$thecurrentview), input$viewmenuclick)
     } )
     
     
-    handleSelectedNodeMenuClick <- function(label) {
+    growViewByLinks <- function(nodes, l) {
 #browser()
-      # cat('Grow current selection with links of type <', label, '>\n')
-      linknodes = c(label)
-      if (label == "all")
-        linknodes = rv$thenetworkinfo$linktypes
-      rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph,rv$thecurrentview, rv$thenodeselected, linknodes)
+      linktypes = c(l)
+      if (l == "all")
+        linktypes = rv$thenetworkinfo$linktypes
+      for (n in nodes) {
+        rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
+                                                    linktypes)
+      }
+      rv$forcerepaint = TRUE
     }
     
     
@@ -312,25 +331,22 @@ server <- function(input, output, session) {
   
     # Focus de view op een node
     observeEvent(input$switchfocus, {
-      # cat('switch focus', rv$thenodeselected, '\n')
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
-      # cat('new graph\n')
-      # print(rv$theigraph)
     }) 
     
-    # Breid de view uit met 1 niveau extra nodes verbonden met links van bepaalde types
-    #
-    observeEvent(input$growfocusall, {
-      #cat('grow focus all', '\n')
-      cns = znops.nodesInView(rv$theigraph, rv$thecurrentview)
-      for (n in cns) {
-        rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
-                                                    rv$thenetworkinfo$linktypes)
-        
-      }
-      rv$forcerepaint = TRUE
-    })
-    
+    # # Breid de view uit met 1 niveau extra nodes verbonden met links van bepaalde types
+    # #
+    # observeEvent(input$growfocusall, {
+    #   #cat('grow focus all', '\n')
+    #   cns = znops.nodesInView(rv$theigraph, rv$thecurrentview)
+    #   for (n in cns) {
+    #     rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
+    #                                                 rv$thenetworkinfo$linktypes)
+    #     
+    #   }
+    #   rv$forcerepaint = TRUE
+    # })
+    # 
 
      # Toon de hele graaf
     observeEvent(input$showall, {
@@ -358,7 +374,7 @@ server <- function(input, output, session) {
         
         # the is the reactive variable from the module that will produce the data to load
         # a list of nodes and links
-        rv$theuploadeddata = callModule(uploadData, tabpid)
+        rv$theuploadeddata = callModule(uploadData, tabpid, tabpid, rv$thenetworkinfo)
       }
     })
 
@@ -446,12 +462,7 @@ server <- function(input, output, session) {
     rv$thenetworkinfo$linktypecolors[rv$thenetworkinfo$linktypes == l]
   }
   
-  getNodeMenuEntryScriptFor <- function(linkname, actionlabel) {
-    color = getLinkColor(linkname)
-    getNodeMenuEntryScriptForColor(linkname, actionlabel, color, "nodemenuclick")
-  }
-  
-  getNodeMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputevent) {
+  getMenuEntryScriptForColor <- function(linkname, actionlabel, color, inputevent) {
     buttext = 
       paste0("<button id='",linkname,"' style='border: none;display: inline-block; color: white; background-color:", color, "' type='button'
             onclick ='Shiny.setInputValue(\"", inputevent, "\",\"",linkname, "\", {priority: \"event\"}
@@ -459,27 +470,80 @@ server <- function(input, output, session) {
     buttext
   }
   
+  getNodeMenuEntryScriptFor <- function(linkname, actionlabel) {
+    color = getLinkColor(linkname)
+    getMenuEntryScriptForColor(linkname, actionlabel, color, "nodemenuclick")
+  }
   
-  defaultNodeSelectMenu <- function() {
-    res =  c(getNodeMenuEntryScriptFor("actor", "a"), getNodeMenuEntryScriptFor("use", "u"), 
-             getNodeMenuEntryScriptFor("system", "s"),getNodeMenuEntryScriptFor("object", "o"),
-             getNodeMenuEntryScriptForColor("all", "*", "black", "nodemenuclick"),
-             getNodeMenuEntryScriptForColor("all", "H", "grey", "hidefromview"),
-             getNodeMenuEntryScriptForColor("all", "F", "grey", "switchfocus")
+  getViewMenuEntryScriptFor <- function(linkname, actionlabel) {
+    color = getLinkColor(linkname)
+    getMenuEntryScriptForColor(linkname, actionlabel, color, "viewmenuclick")
+  }
+  
+  singleNodeSelectMenu <- function() {
+    res =  c(getNodeMenuEntryScriptFor("actor", "a"), 
+             getNodeMenuEntryScriptFor("system", "s"),
+             getNodeMenuEntryScriptFor("use", "u"), 
+             getNodeMenuEntryScriptFor("object", "o"),
+             getNodeMenuEntryScriptFor("part", "p"), 
+             getNodeMenuEntryScriptFor("refer", "r"),
+             getMenuEntryScriptForColor("all", "*", "black", "nodemenuclick"),
+             getMenuEntryScriptForColor("all", "H", "grey", "hidefromview"),
+             getMenuEntryScriptForColor("all", "F", "grey", "switchfocus")
     )
   }
   
-  output$nodeselectmenu <- renderUI({
+  viewNodesSelectMenu <- function() {
+    res =  c(getViewMenuEntryScriptFor("actor", "a"), 
+             getViewMenuEntryScriptFor("system", "s"),
+             getViewMenuEntryScriptFor("use", "u"), 
+             getViewMenuEntryScriptFor("object", "o"),
+             getViewMenuEntryScriptFor("part", "p"), 
+             getViewMenuEntryScriptFor("refer", "r"),
+             getMenuEntryScriptForColor("all", "*", "black", "viewmenuclick")
+    )
+  }
+    
+  viewSelectMenu  <- function() {
+      res = c(
+        getMenuEntryScriptForColor("all", "All", "grey", "showall"),
+        getMenuEntryScriptForColor("all", ">View", "grey", "switch to view")
+      )
+  }
+  
+  output$singlenodeselectmenu <- renderUI({
     tagList(
       HTML(
-        defaultNodeSelectMenu()
-      )
+           singleNodeSelectMenu()
+        ),      
+      tags$br(),
+      tags$small("Selected node")
     )
-    
   })
   
-     
-  # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
+  output$viewnodeselectmenu <- renderUI({
+    tagList(
+      HTML(
+        viewNodesSelectMenu()
+      ),
+      tags$br(),
+      tags$small("Nodes in view")
+    )
+  })
+  
+  output$viewselectmenu <- renderUI({
+    tagList(
+      HTML(
+        viewSelectMenu()
+      ),
+      tags$small(" "),
+      downloadLink("export", "Export"),
+      tags$br(),
+      tags$small(" "),
+    )
+  })
+
+    # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
   # visNetwork(nodes, edges) %>%
   #   visEvents(type = "once", startStabilizing = "function() {
   #           this.moveTo({scale:0.1})}") %>%
@@ -505,10 +569,10 @@ server <- function(input, output, session) {
 
       # see https://www.w3schools.com/howto/howto_css_text_buttons.asp
       
-      #cat(znapp.defaultNodeSelectMenu())
+      #cat(znapp.singleNodeSelectMenu())
       
       V(visual3)$title = HTML( 
-        defaultNodeSelectMenu()
+        singleNodeSelectMenu()
       )
       # V(visual3)$title = HTML(
       #   "<button id='l1' style='border: none;display: inline-block;' type='button'

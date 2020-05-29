@@ -16,9 +16,9 @@ extendNetworkInfoForVisualisation <-  function(nstruct) {
   ns = nstruct
   
 #  znvis.domeinen = zndef.domeinen
-  dcolors = brewer.pal(length(ns$domains),"Set3")
+  dcolors = brewer.pal(length(ns$domains),"Set1")
   dshapes = rep("circle", length(ns$domains))
-  ltcolors = brewer.pal(length(ns$linktypes), "Set1")
+  ltcolors = brewer.pal(length(ns$linktypes), "Paired")
   #ip <- "http://localhost:8001/www/"
   ip <- ""
   

@@ -1,5 +1,5 @@
-﻿from;to;label;linktype;weight
-EPIC;EPD-z;;vendor;
-Chipsoft;EPD-z;;vendor;
-EPIC;EPD-z2;;vendor;
-Chipsoft;EPD-z2;;vendor;
+﻿from;to;label;linktype
+EPIC;EPD-z;;refer
+Chipsoft;EPD-z;;refer
+EPIC;EPD-z2;;refer
+Chipsoft;EPD-z2;;refer
