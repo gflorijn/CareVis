@@ -202,11 +202,13 @@ server <- function(input, output, session) {
             tags$li("r(efer) links"),
             tags$li("* alle  links")
           ),
+          tags$p(
+            "Je kunt deze knoppen ook toepassen op alle nodes die zichtbaar zijn in de view."
+          ),
           tags$p("De betekenis van andere knoppen:"),
           tags$ul(
             tags$li("H(ide) verwijdert de node uit de view"),
             tags$li("F(ocus) focusseert de view op deze node (dubbel-klik op de node doet dit ook)"),
-            tags$li("Grow - voeg alle verbanden toe voor alle nodes in de view"),
             tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
             tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
             tags$li("Export - exporteer de view naar een HTML bestand"),
