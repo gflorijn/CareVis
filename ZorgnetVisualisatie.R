@@ -17,7 +17,8 @@ extendNetworkInfoForVisualisation <-  function(nstruct) {
   #
   dcolors = brewer.pal(length(ns$domains),"Set3")
   dshapes = rep("circle", length(ns$domains))
-  ltcolors = brewer.pal(length(ns$linktypes), "Dark2")
+  ltcolors = brewer.pal(length(ns$linktypes), "Accent")
+  ltcolors[4] = ltcolors[8]
   #ip <- "http://localhost:8001/www/"
   ip <- ""
   

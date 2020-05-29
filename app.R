@@ -2,6 +2,7 @@ library(shiny)
 library(igraph)
 library(shinythemes)
 library(shinyjs)
+library(shinyWidgets)
 
 source("ZorgnetData.R")
 source("ZorgnetOps.R")
@@ -35,9 +36,10 @@ ui <- fluidPage(
                           tags$hr(),
                           actionButton("startupload", "Upload data"),
                           tags$hr(),
-                          actionButton(inputId="quit", "Quit"),
-                          tags$hr(),
-                          actionButton(inputId="interrupt", "Interrupt")
+                          actionButton(inputId="quit", "Quit")
+                          # tags$hr(),
+                          # actionButton(inputId="interrupt", "Interrupt"),
+                          
                        )
                  )
     ),
@@ -53,18 +55,14 @@ ui <- fluidPage(
                              column(2, checkboxInput("linklabels", "Link names", FALSE)),
                              column(2, checkboxInput("smooth", "Smooth"))
                            ),
-                           tags$hr(),
                            fluidRow(
                              column(2, uiOutput("startpointsmenu")),
-                             column(2, verbatimTextOutput("nodemessage")),
+                             column(2, textInput("nodefield", label=NULL)), 
+                             column(1, uiOutput("nodefieldops")),
                              column(3, uiOutput("singlenodeselectmenu")),
-                             column(3, uiOutput("viewnodeselectmenu")),
+                             column(2, uiOutput("viewnodeselectmenu")),
                              column(2,
                                     uiOutput("viewselectmenu"),
-                                    #downloadLink("export", "Xp")
-                                    # actionButton("growfocusall", "Grow"),
-                                    # actionButton("showall", "All"),
-                                    # actionButton("switchtoview", ">Vw"),
 
                              )
                            ), 
@@ -244,6 +242,8 @@ server <- function(input, output, session) {
     observeEvent(input$graph_panel_selected, {
       #cat("Node selected ", input$graph_panel_selected, "\n")
       rv$thenodeselected = input$graph_panel_selected
+ #     browser()
+      updateTextInput(session, "nodefield", value = rv$thenodeselected)
     })
     
     
@@ -286,7 +286,7 @@ server <- function(input, output, session) {
     #click on linkmenu for selected node
     observeEvent(input$nodemenuclick, {
       if (rv$thenodeselected != "")
-        growViewByLinks(c(rv$thenodeselected, input$nodemenuclick))
+        growViewByLinks(c(rv$thenodeselected), input$nodemenuclick)
     } )
     
     #click on linkmenu for all nodes in view
@@ -314,24 +314,7 @@ server <- function(input, output, session) {
     })
     
     
-    # Search node to add to view ----------------------------------------------
-    
-    observeEvent(input$searchnode, {
-      showModal(modalDialog(
-        title = "Search node",
-        tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
-        tags$p("Gert Florijn, 2020")
-      ))
-      
-    }) 
-    
-    
-       # # Expand node 
-    # observeEvent(input$expandnodeall, {
-    #   cat('expandall ', rv$thenodeselected, '\n')
-    #   rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, rv$thenodeselected, 
-    #                                                 zndef.linksoorten)
-    # })
+ 
 
     # Verstop node
     observeEvent(input$hidefromview, {
@@ -343,21 +326,8 @@ server <- function(input, output, session) {
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
     
-    # # Breid de view uit met 1 niveau extra nodes verbonden met links van bepaalde types
-    # #
-    # observeEvent(input$growfocusall, {
-    #   #cat('grow focus all', '\n')
-    #   cns = znops.nodesInView(rv$theigraph, rv$thecurrentview)
-    #   for (n in cns) {
-    #     rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
-    #                                                 rv$thenetworkinfo$linktypes)
-    #     
-    #   }
-    #   rv$forcerepaint = TRUE
-    # })
-    # 
-
-     # Toon de hele graaf
+ 
+     # Show the whole underlying network
     observeEvent(input$showall, {
       rv$theigraph = znops.toonAllesInView(rv$theigraph, rv$thecurrentview)
     }) 
@@ -399,8 +369,6 @@ server <- function(input, output, session) {
     
     # Spawn a frozen viewpane from the main view
     observeEvent(input$switchtoview, {
-      node = rv$thecurrentnode
-      
       rv$theviewcounter = rv$theviewcounter + 1
       viewid = paste0("view", rv$theviewcounter)
       tabplabel = paste0("View ", rv$theviewcounter)
@@ -413,19 +381,18 @@ server <- function(input, output, session) {
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, viewid)
       rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
       
-      gr <- callModule(frozenView, 
-                       viewid,   # module id
-                       viewid,
-                       rv$thevisgraph
-      )
+      gr <- callModule(frozenView, viewid, viewid, v$thevisgraph)
 
       # Voeg de tab toeg
       appendTab("visTabSet", tabp, select=TRUE)  
       
     })
     
-    
-  #==========  
+
+
+# Export the graph --------------------------------------------------------
+
+        
   #
   # Export the graph
   #
@@ -440,9 +407,6 @@ server <- function(input, output, session) {
     }
   )
   
-  output$nodemessage <- renderText({
-    paste0(rv$thenodeselected," ")
-  })
   
   output$generalmessage <- renderText({
     rv$themessage
@@ -464,6 +428,15 @@ server <- function(input, output, session) {
     rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
   })
   
+  
+  observeEvent(input$addnodefromtext, {
+#    browser()
+    node = V(rv$thenetworkinfo$network)[input$nodefield]
+    if (!is.null(node)) {
+      rv$theigraph = znops.voegNodesToeAanView(rv$theigraph, rv$thecurrentview, node)
+     rv$forcerepaint = TRUE 
+    }
+  }) 
 
 # Visual menu settings for node manipulation ------------------------------
   
@@ -512,13 +485,29 @@ server <- function(input, output, session) {
              getMenuEntryScriptForColor("all", "*", "black", "viewmenuclick")
     )
   }
-    
+  
+  nodefieldAddMenu  <- function() {
+      res = c(
+        getMenuEntryScriptForColor("all", "Add", "grey", "addnodefromtext")
+      )  
+  }
+  
   viewSelectMenu  <- function() {
       res = c(
         getMenuEntryScriptForColor("all", "All", "grey", "showall"),
         getMenuEntryScriptForColor("all", ">View", "grey", "switch to view")
       )
   }
+  
+  output$nodefieldops <- renderUI ({
+    tagList(
+      HTML(
+        nodefieldAddMenu()
+      ),
+      tags$br(),
+      tags$small("Nodename")
+    )    
+  })
   
   output$singlenodeselectmenu <- renderUI({
     tagList(
