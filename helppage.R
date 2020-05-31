@@ -7,9 +7,10 @@ helpPageText <- function() {
                  "),
       tags$p("Browsen is simpel. Als je de nodes van een bepaalde soort wilt zien, selecteer die soort dan uit de lijst.
                   Klik vervolgens op een node en kies welke verbanden (soorten links) je 
-                  wilt toevoegen aan de view. De kleuren/letters van de knopjes geven de mogelijke 
+                  wilt toevoegen aan de view. Gebruik hiervoor het menu:"),
+      tags$p(tags$img(src="NetVismenu.png")),
+      tags$p("De kleuren/letters van de knopjes geven de mogelijke 
                  verbanden aan:"),
-      
       tags$ul(
         tags$li("a(ctor) links"), 
         tags$li("u(se) links"), 

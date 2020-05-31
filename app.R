@@ -25,16 +25,7 @@ ui <- navbarPage("NetVis",
   theme=shinytheme("simplex"),
   id = "theAppPage",
   inverse = TRUE,
-  # position = "static-top",
-  # # 
-  # header = tagList(
-  #   tags$b("Header")
-  # ),
-  # 
-  # footer = tagList(
-  #   tags$b("Footer")
-  # ),
-  
+
   tabPanel("Main",
            sidebarLayout(
              sidebarPanel(width=1,
@@ -50,8 +41,8 @@ ui <- navbarPage("NetVis",
                             # actionButton(inputId="interrupt", "Interrupt"),
                           )
              ),
-             mainPanel(
-               fluidRow(
+             mainPanel(width = 11,
+                fluidRow(
                  column(2, checkboxInput("navigatie", "Navigation", TRUE)),
                  column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
                  column(2, checkboxInput("images", "Icons", TRUE)),
@@ -65,10 +56,7 @@ ui <- navbarPage("NetVis",
                  column(1, uiOutput("nodefieldops")),
                  column(3, uiOutput("singlenodeselectmenu")),
                  column(2, uiOutput("viewnodeselectmenu")),
-                 column(2,
-                        uiOutput("viewselectmenu"),
-
-                 )
+                 column(2, uiOutput("viewselectmenu"))
                ),
                tags$hr(),
                visNetworkOutput("graph_panel", height="600px", width="100%"),
@@ -428,7 +416,7 @@ server <- function(input, output, session) {
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, viewid)
       rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
       
-      gr <- callModule(frozenView, viewid, viewid, v$thevisgraph)
+      gr <- callModule(frozenView, viewid, viewid, rv$thevisgraph)
 
       # Voeg de tab toeg
       appendTab("theAppPage", tabp, select=TRUE)  
@@ -542,7 +530,7 @@ server <- function(input, output, session) {
   viewSelectMenu  <- function() {
       res = c(
         getMenuEntryScriptForColor("all", "All", "grey", "showall"),
-        getMenuEntryScriptForColor("all", ">View", "grey", "switch to view")
+        getMenuEntryScriptForColor("all", ">View", "grey", "switchtoview")
       )
   }
   
