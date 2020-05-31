@@ -9,6 +9,7 @@ source("ZorgnetOps.R")
 source("ZorgnetVisualisatie.R")
 source("frozenview.R")
 source("uploaddata.R")
+source("helppage.R")
 
 # Nodig om het browser window te sluiten
 #
@@ -16,71 +17,106 @@ jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 #
 # De shiny app voor visualisaties
 #
-ui <- fluidPage(
-  theme=shinytheme("simplex"),
-  #shinythemes::themeSelector(),
-  
-  useShinyjs(),
+ui <- navbarPage("NetVis",
   extendShinyjs(text = jscode, functions = c("closeWindow")),
+  useShinyjs(),
   
-  titlePanel("Visualisatie van Zorgcommunicatie"),
-  sidebarLayout(
-    sidebarPanel(width=2,
-                 fluidRow(
-                   column(12, 
-                          actionButton("showabout", "About"),
-                          actionButton("showhelp", "Help"),
-                          tags$hr(),
-                          actionButton("showgraph", "Redraw"),
-                          actionButton("restart", "Restart"),
-                          tags$hr(),
-                          actionButton("startupload", "Upload data"),
-                          tags$hr(),
-                          actionButton(inputId="quit", "Quit")
-                          # tags$hr(),
-                          # actionButton(inputId="interrupt", "Interrupt"),
-                          
-                       )
+  #shinythemes::themeSelector(),
+  theme=shinytheme("simplex"),
+  id = "theAppPage",
+  inverse = TRUE,
+  # position = "static-top",
+  # # 
+  # header = tagList(
+  #   tags$b("Header")
+  # ),
+  # 
+  # footer = tagList(
+  #   tags$b("Footer")
+  # ),
+  
+  tabPanel("Main",
+           sidebarLayout(
+             sidebarPanel(width=1,
+                          fluidRow(
+                            actionButton("showabout", "About"),
+                            tags$hr(),
+                            actionButton("showgraph", "Redraw"),
+                            tags$hr(),
+                            actionButton("restart", "Restart"),
+                            tags$hr(),
+                            actionButton(inputId="quit", "Quit")
+                            # tags$hr(),
+                            # actionButton(inputId="interrupt", "Interrupt"),
+                          )
+             ),
+             mainPanel(
+               fluidRow(
+                 column(2, checkboxInput("navigatie", "Navigation", TRUE)),
+                 column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
+                 column(2, checkboxInput("images", "Icons", TRUE)),
+                 column(2, checkboxInput("showlinks", "Links", TRUE)),
+                 column(2, checkboxInput("linklabels", "Link names", FALSE)),
+                 column(2, checkboxInput("smooth", "Smooth"))
+               ),
+               fluidRow(
+                 column(2, uiOutput("startpointsmenu")),
+                 column(2, textInput("nodefield", label=NULL)),
+                 column(1, uiOutput("nodefieldops")),
+                 column(3, uiOutput("singlenodeselectmenu")),
+                 column(2, uiOutput("viewnodeselectmenu")),
+                 column(2,
+                        uiOutput("viewselectmenu"),
+
                  )
-    ),
-    
-    mainPanel(
-      tabsetPanel(id="visTabSet",
-                  tabPanel("Main", 
-                           fluidRow(
-                             column(2, checkboxInput("navigatie", "Navigation", TRUE)),
-                             column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
-                             column(2, checkboxInput("images", "Icons", TRUE)),
-                             column(2, checkboxInput("showlinks", "Links", TRUE)),
-                             column(2, checkboxInput("linklabels", "Link names", FALSE)),
-                             column(2, checkboxInput("smooth", "Smooth"))
-                           ),
-                           fluidRow(
-                             column(2, uiOutput("startpointsmenu")),
-                             column(2, textInput("nodefield", label=NULL)), 
-                             column(1, uiOutput("nodefieldops")),
-                             column(3, uiOutput("singlenodeselectmenu")),
-                             column(2, uiOutput("viewnodeselectmenu")),
-                             column(2,
-                                    uiOutput("viewselectmenu"),
-
-                             )
-                           ), 
-                           tags$hr(),
-                           visNetworkOutput("graph_panel", height="600px", width="100%"),
-                           tags$hr(),
-                           fluidRow(
-                             column(9, verbatimTextOutput("generalmessage")),
-                             column(3, actionButton("launchbrowser", "Launch browser"))
-                           )
-                  )
-      )
-    )
-    
-  )
+               ),
+               tags$hr(),
+               visNetworkOutput("graph_panel", height="600px", width="100%"),
+               tags$hr(),
+               fluidRow(
+                 column(9, verbatimTextOutput("generalmessage")),
+                 column(3, actionButton("launchbrowser", "Launch browser"))
+               )
+             )
+           )
+  ),
+  tabPanel("Upload",
+           sidebarLayout(
+             sidebarPanel(width = 2,
+                          tagList(
+                            actionButton("prepareupload", "Prepare upload"),
+                            tags$hr(),
+                            actionButton("checkuploadeddata", "Verify data"),
+                            verbatimTextOutput("uploadcheckmessage"),
+                            tags$hr(),
+                            actionButton("adduploadeddata", "Add data to network")
+                          )
+             ),
+             mainPanel(
+               uploadDataUI("upload"),
+             )
+           )
+  ),
+  tabPanel("Data view - Nodes", 
+           tagList(
+              tags$h2("Nodes"),
+              tags$br(),
+              tableOutput("dataviewnodes")
+           )),
   
-  )
-
+  tabPanel("Data view - Links", 
+           tagList(
+             tags$h2("Links"),
+             tags$br(),
+             tableOutput("dataviewlinks")
+           )),
+  
+  tabPanel("Help",
+           tagList(
+             helpPageText()
+           ))
+ 
+)
 
 server <- function(input, output, session) {
   
@@ -102,6 +138,7 @@ server <- function(input, output, session) {
       haveuploadpane = FALSE,
       thenodesread = NULL,
       thelinksread = NULL,
+      thedatauploader = NULL,
       theuploadeddata = NULL
     )
     
@@ -130,12 +167,18 @@ server <- function(input, output, session) {
       rv$thecurrentview = "Main"
       rv$theigraph = ni$network
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
-      #  cat('initin\n')
-      # print(rv$theigraph)
+ #     browser()
+
+      disable("checkuploadeddata")
+      disable("adduploadeddata")
+      
+      # the is the reactive variable from the module that will produce the data to load
+      # a list of nodes and links
+      #rv$thedatauploader = callModule(uploadData, "upload", "upload")
       
       nodes = c("Patient")
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
-      updateTabsetPanel(session, "visTabSet", selected = "Main")
+      updateTabsetPanel(session, "theAppPage", selected = "Main")
       
     }
     
@@ -163,62 +206,23 @@ server <- function(input, output, session) {
     
     # handle tabpanel selection event
     #
-    observeEvent(input$visTabSet, {
- #     rv$thecurrentview = input$visTabSet
+    observeEvent(input$theAppPage, {
+ #     rv$thecurrentview = input$theAppPage
     })
 
 
-# About and Help ----------------------------------------------------------
+# About ----------------------------------------------------------
 
  
     observeEvent(input$showabout, {
       showModal(modalDialog(
-        title = "About",
+        title = "About NetVis",
         tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
         tags$p("Gert Florijn, 2020")
       ))
     })
 
-    observeEvent(input$showhelp, {
-      showModal(modalDialog(
-        title = "Help",
-        tagList(
-          tags$p("Via de browser kun je navigeren door een netwerk van 
-                  gegevens over informatie-uitwisseling in de zorg in Nederland.
-                  De iconen (nodes) representeren personen, systemen, objecten, partijen, et cetera. 
-                  De lijnen (links) geven verbanden aan. 
-                 "),
-          tags$p("Browsen is simpel. Als je de nodes van een bepaalde soort wilt zien, selecteer die soort dan uit de lijst.
-                  Klik vervolgens op een node en kies welke verbanden (soorten links) je 
-                  wilt toevoegen aan de view. De kleuren/letters van de knopjes geven de mogelijke 
-                 verbanden aan:"),
-          
-          tags$ul(
-            tags$li("a(ctor) links"), 
-            tags$li("u(se) links"), 
-            tags$li("s(ystem) links"), 
-            tags$li("o(bject) links"), 
-            tags$li("p(art) links"),
-            tags$li("r(efer) links"),
-            tags$li("* alle  links")
-          ),
-          tags$p(
-            "Je kunt deze knoppen ook toepassen op alle nodes die zichtbaar zijn in de view."
-          ),
-          tags$p("De betekenis van andere knoppen:"),
-          tags$ul(
-            tags$li("H(ide) verwijdert de node uit de view"),
-            tags$li("F(ocus) focusseert de view op deze node (dubbel-klik op de node doet dit ook)"),
-            
-            tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
-            tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
-            tags$li("Export - exporteer de view naar een HTML bestand"),
-            tags$li("Redraw - teken de view opnieuw (leidt tot andere layout)"),
-            tags$li("Restart - breng de view terug naar de begintoestand")
-          )
-        )
-      ))
-    })
+
     
 #     # 
 #     # Dit is de event handler als de grafiek getekend is.
@@ -271,8 +275,8 @@ server <- function(input, output, session) {
     observeEvent(rv$thenodeselected, {
       #cat("Selected ", rv$thenodeselected, "\n")
       rv$themessage = " "
-      toggleState("hidefromview", rv$thenodeselected != "")
-      toggleState("switchfocus", rv$thenodeselected != "")
+      # toggleState("hidefromview", rv$thenodeselected != "")
+      # toggleState("switchfocus", rv$thenodeselected != "")
       rv$theurl = ""
       haveurl = rv$thenodeselected != "" && V(rv$theigraph)[rv$thenodeselected]$url != ""
       
@@ -337,36 +341,79 @@ server <- function(input, output, session) {
       #browseURL(rv$theurl)
     })
     
-    observeEvent(input$startupload, {
-      #Todo check first whether pane is already there
-      if (!rv$haveuploadpane) {
-        tabpid = "upload"
-        tabp = tabPanel("Upload data", value=tabpid, {
-          tagList( 
-            uploadDataUI(tabpid),
-            tags$hr(),
-            actionButton("adduploadeddata", "Add data to network"))
-        })
-        # Voeg de tab toeg
-        appendTab("visTabSet", tabp, select=TRUE)  
-        rv$haveuploadpane = TRUE
-        
-        # the is the reactive variable from the module that will produce the data to load
-        # a list of nodes and links
-        rv$theuploadeddata = callModule(uploadData, tabpid, tabpid, rv$thenetworkinfo)
+ 
+
+# Data view output --------------------------------------------------------
+
+    output$dataviewnodes <- renderTable({
+      rv$thenetworkinfo$rawnodes
+    })    
+    
+    output$dataviewlinks <- renderTable({
+#      browser()
+      rv$thenetworkinfo$rawlinks
+    })    
+    
+    
+    
+# Handle uploaded data ----------------------------------------------------
+
+    prepareUploadSettings <- function() {
+      toggleState("checkuploadeddata", FALSE)
+      toggleState("adduploadeddata", FALSE)
+    }
+    
+    observeEvent(input$prepareupload, {
+      #get the data from the module
+      rv$thedatauploader = callModule(uploadData, "upload", "upload")
+      toggleState("checkuploadeddata", TRUE)
+      toggleState("adduploadeddata", FALSE)
+    })
+    
+    checkloadresult <- reactiveVal()
+    
+    # Try to add the loaded nodes and links to the network and restart all
+    #
+    observeEvent(input$checkuploadeddata, {
+      #get the data from the module
+      td = rv$thedatauploader() 
+      rv$theuploadeddata = td
+      
+      nfl = unique(c(td$links[["from"]], td$links[["to"]]))
+      nodenames = c(td$nodes[["id"]], rv$thenetworkinfo$nodes$naam)
+      missing = !(nfl %in% nodenames)
+      result = nfl[missing]
+      #    browser()
+      toggleState("adduploadeddata", length(result) == 0)
+      if (length(result) == 0) {
+        checkloadresult("No issues found")
+      }
+      else {
+        checkloadresult(paste0("Unknown nodes: ", result))
       }
     })
-
+    
+    output$uploadcheckmessage <- renderText({
+      checkloadresult()
+    })
+    
     # Try to add the loaded nodes and links to the network and restart all
     #
     observeEvent(input$adduploadeddata, {
       #get the data from the module
-      thedata = rv$theuploadeddata() 
-                        
+      thedata = rv$theuploadeddata 
+      rv$thedatauploader = NULL 
+      toggleState("checkuploadeddata", FALSE)
+      toggleState("adduploadeddata", FALSE)
+      
       restartAll(thedata)
     })
       
-    
+
+
+# Spawn current view into separate viewpane -------------------------------
+
+        
     # Spawn a frozen viewpane from the main view
     observeEvent(input$switchtoview, {
       rv$theviewcounter = rv$theviewcounter + 1
@@ -384,7 +431,7 @@ server <- function(input, output, session) {
       gr <- callModule(frozenView, viewid, viewid, v$thevisgraph)
 
       # Voeg de tab toeg
-      appendTab("visTabSet", tabp, select=TRUE)  
+      appendTab("theAppPage", tabp, select=TRUE)  
       
     })
     

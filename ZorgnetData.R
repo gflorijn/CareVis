@@ -23,16 +23,14 @@ loadNetworkLayer <- function(nodeslinks=NULL, naam) {
   # 
     # print(lnodes)
   # print(llinks) 
-  llinks$van = llinks$from
-  llinks$naar = llinks$to
-  lnodes$naam = lnodes$id
-  # lnodes$bron = naam
-  # llinks$bron = naam
+  # llinks$van = llinks$from
+  # llinks$naar = llinks$to
+  # lnodes$naam = lnodes$id
 
-  nodenames = lnodes$naam
+  nodenames = lnodes$id
   if (!is.null(nodeslinks)) {
     oln = nodeslinks$nodes #[[1]]
-    nodenames = c(nodenames, oln$naam)
+    nodenames = c(nodenames, oln$id)
   }
 
   n = checkNodesInLinks(nodenames, llinks)
@@ -84,25 +82,38 @@ readLayers <- function(namen) {
 readNetworkData <-  function(perspectives) {
   nls = readLayers(perspectives)
   #browser()
+  rawnodes = nls$nodes
+  rawlinks = nls$links
+  # add some columns for graph handling
   nodes = nls$nodes
+  nodes$naam = nodes$id
+  
   links = nls$links
+  links$van = links$from
+  links$naar = links$to
+  
   network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
-  list(nodes=nodes, links=links, network=network, layers=perspectives)
+  list(rawnodes = rawnodes, rawlinks = rawlinks, nodes=nodes, links=links, network=network, layers=perspectives)
 }
 
-#add additional data to an existing network structure
+#add additional data to an existing network structure. Should be in "raw" formate
 #Avoids rereading all data
 addAdditionalData <- function(netinfo, additionaldata) {
-  nodes = netinfo$nodes
-  links = netinfo$links
-  nd2 = additionaldata$nodes
-  lk2 = additionaldata$links
-  nd2$naam = nd2$id
-  lk2$van = lk2$from
-  lk2$naar = lk2$to
+  addrawnodes = additionaldata$nodes
+  addrawlinks = additionaldata$links
+  
+  netinfo$rawnodes = rbind(netinfo$rawnodes, addrawnodes)
+  netinfo$rawlinks = rbind(netinfo$rawlinks, addrawlinks)
+
+  addnodes = additionaldata$nodes
+  addlinks = additionaldata$links
+
+  addnodes$naam = addnodes$id
+  addlinks$van = addlinks$from
+  addlinks$naar = addlinks$to
   #browser()
-  netinfo$nodes = rbind(nodes, nd2)
-  netinfo$links = rbind(links, lk2)
+  netinfo$nodes = rbind(netinfo$nodes, addnodes)
+  netinfo$links = rbind(netinfo$links, addlinks)
   netinfo$network = graph_from_data_frame(d=netinfo$links, vertices=netinfo$nodes, directed=T)
   netinfo
 }

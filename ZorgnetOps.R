@@ -37,7 +37,7 @@ znops.friendNodes <-  function(g, nodes, linktypes, blacklist) {
   for (node in nodes) {
     es = incident(g, node)
     els = es[es$linktype %in% linktypes]
-    ns = c(els$van, els$naar)
+    ns = c(els$from, els$to)
     res = append(res, ns)
   }
   res = unique(res)
