@@ -27,29 +27,38 @@ loadNetworkLayer <- function(nodeslinks=NULL, naam) {
   # llinks$naar = llinks$to
   # lnodes$naam = lnodes$id
 
+  oln = c()
   nodenames = lnodes$id
   if (!is.null(nodeslinks)) {
-    oln = nodeslinks$nodes #[[1]]
+    oln = nodeslinks$nodes 
     nodenames = c(nodenames, oln$id)
   }
-
+ # browser()
+  dupn = oln$id[oln$id %in% lnodes$id]
+  err = FALSE
+  if (length(dupn) > 0) {
+    simpleMessage(cat("Layer ", naam, ":  duplicate node in links file: ", unique(dupn), ". Layer skipped.\n"))
+    err = TRUE
+  }
   n = checkNodesInLinks(nodenames, llinks)
-  
   if (length(n) > 0) {
-    cat("Laag ", naam, " ontbrekende node definities in links file: ", n, "\n")
+    simpleMessage(cat("Layer ", naam, ":  unknown nodes in links file: ", unique(n), ". Layer skipped.\n"))
+    err = TRUE
+  }
+  if (err) {
+    return(nodeslinks)
   }
   
   if (is.null(nodeslinks)) {
-    result = list(nodes=lnodes, links=llinks)
+    return(list(nodes=lnodes, links=llinks))
   }
   else {
     olinks = nodeslinks$links #[[2]]
     onodes = nodeslinks$nodes #[[1]]
     rnodes = rbind(onodes, lnodes)
     rlinks = rbind(olinks, llinks)
-    result = list(nodes=rnodes, links=rlinks)
+    return( list(nodes=rnodes, links=rlinks) )
   }
-  result
 }
 
 #check of links verwijzen naar bekende nodes

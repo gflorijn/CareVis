@@ -165,7 +165,6 @@ server <- function(input, output, session) {
       nodes = c("Patient")
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
       updateTabsetPanel(session, "theAppPage", selected = "Main")
-      
     }
     
     #
@@ -176,7 +175,7 @@ server <- function(input, output, session) {
     
     # Quit button
     observeEvent(input$quit, {
-      js$closeWindow()
+#      js$closeWindow()
       stopApp()
     })
     
@@ -186,9 +185,9 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
-    observeEvent(input$interrupt, {
-      browser()
-    })
+    # observeEvent(input$interrupt, {
+    #   browser()
+    # })
     
     # handle tabpanel selection event
     #
@@ -410,6 +409,7 @@ server <- function(input, output, session) {
 
   #Starting point menu for showing nodes from different domains.
   output$startpointsmenu <- renderUI({
+#    browser()
     tagList(
       selectInput("startingpoint", label=NULL,
                    choices=rv$thenetworkinfo$domains)
@@ -419,7 +419,7 @@ server <- function(input, output, session) {
   
   # Focus de graaf op een set van nodes uit een domein
   observeEvent(input$startingpoint, {
-    #browser()
+#    browser()
     nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
     rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
   })
