@@ -91,7 +91,6 @@ readNetworkData <-  function(perspectives) {
   links = nls$links
   links$van = links$from
   links$naar = links$to
-  
   network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
   list(rawnodes = rawnodes, rawlinks = rawlinks, nodes=nodes, links=links, network=network, layers=perspectives)
 }
@@ -111,7 +110,7 @@ addAdditionalData <- function(netinfo, additionaldata) {
   addnodes$naam = addnodes$id
   addlinks$van = addlinks$from
   addlinks$naar = addlinks$to
-  #browser()
+#  browser()
   netinfo$nodes = rbind(netinfo$nodes, addnodes)
   netinfo$links = rbind(netinfo$links, addlinks)
   netinfo$network = graph_from_data_frame(d=netinfo$links, vertices=netinfo$nodes, directed=T)
@@ -122,7 +121,6 @@ addAdditionalData <- function(netinfo, additionaldata) {
 #
 addDerivedNetworkData <-  function(nstruct) {
   ns = nstruct
-  
   ds = unique(V(ns$network)$domein)
   ds = ds[ds != ""]
   lt = unique(E(ns$network)$linktype)

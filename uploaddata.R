@@ -17,11 +17,14 @@ uploadDataUI <- function(id, label="Upload Data") {
         column(6, tableOutput(ns("nodecontents"))),
         column(6, tableOutput(ns("linkcontents")))
       ),
+      fluidRow(
+        column(12, tableOutput(ns("loadmsg"))),
+      ),
     ) 
   }
 }
 
-uploadData <- function(input, output, session, viewid) {
+uploadData <- function(input, output, session, viewid, netinfo) {
   nodesFile <- reactive({
     # If no file is selected, don't do anything
     validate(need(input$uploadnodesfile, message = FALSE))
@@ -50,8 +53,43 @@ uploadData <- function(input, output, session, viewid) {
     linksData()
   })
   
+
+  checkdata <- reactive({
+    newnds = nodesData()$id
+    existnds = netinfo$rawnodes$id
+    allnodes = c(newnds, existnds)
+    newlks = linksData()
+#    browser()
+    
+    haveerrors = FALSE
+    msg = ""
+    
+    dupn = existnds[existnds %in% newnds]
+    if (length(dupn) > 0) {
+      msg1 = paste0("Duplicate nodes: ")
+      msg2 = unique(dupn)
+      msg = c(msg1, msg2, ". ")
+      haveerrors = TRUE
+    }
+    mis = checkNodesInLinks(allnodes, newlks)
+    if (length(mis) > 0) {
+      msg1 = c(msg, " Missing node definitions for ")
+      msg2 = unique(mis)
+      msg = c(msg1, msg2, ".")
+      haveerrors = TRUE
+    }
+    if (!haveerrors) {
+      msg = "No issues found."
+    }
+    list(haveerrors=haveerrors, loadmsg = msg)
+  })
+  
+  output$loadmsg <- renderText({
+    checkdata()$loadmsg
+  })
+  
   loadedData <- reactive({
-    list(nodes=nodesData(), links=linksData())
+    list(nodes=nodesData(), links=linksData(), errors=checkdata()$haveerrors)
   })
   
   return(loadedData)

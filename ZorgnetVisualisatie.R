@@ -36,7 +36,6 @@ znvis.defaultVisualisatieSettingsVoorGraaf <- function(lnet, netinfo) {
   #cat('Defaultvisualisatiesettings voor graaf\n')
   llnet = lnet
   ns = netinfo
-
   V(llnet)$color = mapvalues(V(llnet)$domein, from=ns$domains, to=ns$domaincolors, warn_missing = FALSE)
   V(llnet)$shape = mapvalues(V(llnet)$domein, from=ns$domains, to=ns$domainshapes, warn_missing = FALSE)
 

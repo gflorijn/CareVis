@@ -13,18 +13,26 @@ source("helppage.R")
 
 # Nodig om het browser window te sluiten
 #
-jscode <- "shinyjs.closeWindow = function() { window.close(); }"
+#jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 #
 # De shiny app voor visualisaties
 #
 ui <- navbarPage("NetVis",
-  extendShinyjs(text = jscode, functions = c("closeWindow")),
+#  extendShinyjs(text = jscode, functions = c("closeWindow")),
   useShinyjs(),
   
   #shinythemes::themeSelector(),
   theme=shinytheme("simplex"),
   id = "theAppPage",
   inverse = TRUE,
+
+  footer = tagList(
+    fluidRow(
+      tags$hr(),
+      column(8, offset=2, textOutput("generalmessage"))
+      #column(3, actionButton("launchbrowser", "Launch browser"))
+    )
+  ),
 
   tabPanel("Main",
            sidebarLayout(
@@ -35,6 +43,8 @@ ui <- navbarPage("NetVis",
                             actionButton("showgraph", "Redraw"),
                             tags$hr(),
                             actionButton("restart", "Restart"),
+                            tags$hr(),
+                            downloadButton("export", "Export"),
                             tags$hr(),
                             actionButton(inputId="quit", "Quit")
                             # tags$hr(),
@@ -59,12 +69,7 @@ ui <- navbarPage("NetVis",
                  column(2, uiOutput("viewselectmenu"))
                ),
                tags$hr(),
-               visNetworkOutput("graph_panel", height="600px", width="100%"),
-               tags$hr(),
-               fluidRow(
-                 column(9, verbatimTextOutput("generalmessage")),
-                 column(3, actionButton("launchbrowser", "Launch browser"))
-               )
+               visNetworkOutput("graph_panel", height="600px", width="100%")
              )
            )
   ),
@@ -72,11 +77,6 @@ ui <- navbarPage("NetVis",
            sidebarLayout(
              sidebarPanel(width = 2,
                           tagList(
-                            actionButton("prepareupload", "Prepare upload"),
-                            tags$hr(),
-                            actionButton("checkuploadeddata", "Verify data"),
-                            verbatimTextOutput("uploadcheckmessage"),
-                            tags$hr(),
                             actionButton("adduploadeddata", "Add data to network")
                           )
              ),
@@ -130,7 +130,6 @@ server <- function(input, output, session) {
       theuploadeddata = NULL
     )
     
-    #layerstoload = c("Patienten")
     layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
                      "Leveranciers")
@@ -152,18 +151,17 @@ server <- function(input, output, session) {
       ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
+      rv$themessage = ""
       rv$thecurrentview = "Main"
       rv$theigraph = ni$network
       rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
- #     browser()
+#      browser()
 
-      disable("checkuploadeddata")
-      disable("adduploadeddata")
       
       # the is the reactive variable from the module that will produce the data to load
       # a list of nodes and links
-      #rv$thedatauploader = callModule(uploadData, "upload", "upload")
-      
+      rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
+
       nodes = c("Patient")
       rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
       updateTabsetPanel(session, "theAppPage", selected = "Main")
@@ -346,55 +344,18 @@ server <- function(input, output, session) {
     
 # Handle uploaded data ----------------------------------------------------
 
-    prepareUploadSettings <- function() {
-      toggleState("checkuploadeddata", FALSE)
-      toggleState("adduploadeddata", FALSE)
-    }
-    
-    observeEvent(input$prepareupload, {
-      #get the data from the module
-      rv$thedatauploader = callModule(uploadData, "upload", "upload")
-      toggleState("checkuploadeddata", TRUE)
-      toggleState("adduploadeddata", FALSE)
-    })
-    
-    checkloadresult <- reactiveVal()
-    
-    # Try to add the loaded nodes and links to the network and restart all
-    #
-    observeEvent(input$checkuploadeddata, {
-      #get the data from the module
-      td = rv$thedatauploader() 
-      rv$theuploadeddata = td
-      
-      nfl = unique(c(td$links[["from"]], td$links[["to"]]))
-      nodenames = c(td$nodes[["id"]], rv$thenetworkinfo$nodes$naam)
-      missing = !(nfl %in% nodenames)
-      result = nfl[missing]
-      #    browser()
-      toggleState("adduploadeddata", length(result) == 0)
-      if (length(result) == 0) {
-        checkloadresult("No issues found")
-      }
-      else {
-        checkloadresult(paste0("Unknown nodes: ", result))
-      }
-    })
-    
-    output$uploadcheckmessage <- renderText({
-      checkloadresult()
-    })
-    
     # Try to add the loaded nodes and links to the network and restart all
     #
     observeEvent(input$adduploadeddata, {
       #get the data from the module
-      thedata = rv$theuploadeddata 
-      rv$thedatauploader = NULL 
-      toggleState("checkuploadeddata", FALSE)
-      toggleState("adduploadeddata", FALSE)
-      
-      restartAll(thedata)
+      thedata = rv$thedatauploader()
+
+      if (thedata$errors) {
+        rv$themessage = "Issues in data - update cancelled."
+      } else {
+        rv$themessage = "Updating network."
+        restartAll(thedata)
+      }
     })
       
 
@@ -434,11 +395,11 @@ server <- function(input, output, session) {
   output$export <- downloadHandler(
     filename = function() {
       f = paste('network-', Sys.Date(), '.html', sep='')
-      rv$themessage = paste0("Export to ", f)
+      rv$themessage = paste0("Export to ", f, ". Warning: icons are not exported.")
       f
     },
     content = function(con) {
-      visSave(rv$thevisgraph, file=con)      
+      visSave(rv$thevisgraph, file=con, selfcontained=TRUE)      
     }
   )
   
@@ -569,8 +530,6 @@ server <- function(input, output, session) {
       HTML(
         viewSelectMenu()
       ),
-      tags$small(" "),
-      downloadLink("export", "Export"),
       tags$br(),
       tags$small(" "),
     )
