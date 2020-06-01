@@ -47,17 +47,15 @@ znops.friendNodes <-  function(g, nodes, linktypes, blacklist) {
 }
 
 # Focus de view op de aangegeven nodes
-znops.herstartViewOpNodes <- function(g, view, nodes) {
-  # cat("herstart\n")
-  # print(g)
+restartViewOnNodes <- function(g, view, nodes) {
   edge_attr(g, view, E(g)) <- FALSE
   vertex_attr(g, view, V(g)) <- FALSE
-  g2 = znops.voegNodesToeAanView(g, view, nodes)
+  g2 = addNodesToView(g, view, nodes)
   g2
 }
 
 #
-znops.voegVriendenToeAanView <- function(graaf, view, node, linktypes) {
+addFriendsToView <- function(graaf, view, node, linktypes) {
   #browser()
   #cat("voeg vrienden ", node, " toe aan ", view, '\n')
   
@@ -66,13 +64,13 @@ znops.voegVriendenToeAanView <- function(graaf, view, node, linktypes) {
   ns = unique(c(els$van, els$naar))
   
   # cat ('ns = ', ns, '\n')
-  g = znops.voegNodesToeAanView(graaf, view, ns)
+  g = addNodesToView(graaf, view, ns)
   g = znops.voegLinksToeAanView(g, view, els)
   g
 }
 
 #
-znops.voegNodesToeAanView <-  function(graaf, view, nodes) {
+addNodesToView <-  function(graaf, view, nodes) {
   # cat("voeg toe ", nodes, " aan ", view, '\n')
   vertex_attr(graaf, view, V(graaf)[nodes]) <- TRUE
   # print(V(graaf)[[]])
@@ -115,7 +113,7 @@ znops.copyViewInfo <- function(graaf, fromview, toview) {
   # cat('copy view from ', fromview, ' to ', toview, '\n')
   ns = znops.nodesInView(g, fromview)
   es = znops.linksInView(g, fromview)
-  g = znops.voegNodesToeAanView(g, toview, ns)
+  g = addNodesToView(g, toview, ns)
   g = znops.voegLinksToeAanView(g, toview, es)
   g
 }

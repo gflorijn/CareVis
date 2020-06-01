@@ -14,7 +14,7 @@ frozenViewUI <- function(id) {
 
 frozenView <- function(input, output, session, viewid, visnet) {
   
-  browser()
+  # browser()
   # cat("in aparte view viewid = ", viewid, " graaf =\n")
   # print(graaf)
   

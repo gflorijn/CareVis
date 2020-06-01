@@ -9,7 +9,7 @@ require("igraph", quietly=T)
 #aan de meegegeven argumenten zodat er uiteindelijk 1 graaf ontstaat
 #
 loadNetworkLayer <- function(nodeslinks=NULL, naam) {
-#  cat('laadPerspectief: ', naam, "\n")
+  cat('laadPerspectief: ', naam, "\n")
 
   lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
   llinks <- read.csv2(paste0("Data/", naam, "-Links.csv"), header=T, colClasses="character", sep=";")

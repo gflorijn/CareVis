@@ -108,7 +108,9 @@ ui <- navbarPage("NetVis",
 
 server <- function(input, output, session) {
   
-    # 
+
+# App wide state variables -------------------------------------------------
+
     # De "state" variabelen van de applicatie
    
     rv <- reactiveValues(
@@ -120,16 +122,20 @@ server <- function(input, output, session) {
       theurl = "",
       themessage = NULL,
       theviewcounter = 0,
-      focusshowsall = FALSE, # True als de huidige weergave de hele database is.
+      # focusshowsall = FALSE, # True als de huidige weergave de hele database is.
       forcerepaint = FALSE,
       thecurrentview = NULL,
-      haveuploadpane = FALSE,
-      thenodesread = NULL,
-      thelinksread = NULL,
-      thedatauploader = NULL,
-      theuploadeddata = NULL
+      # haveuploadpane = FALSE,
+      # thenodesread = NULL,
+      # thelinksread = NULL,
+      thedatauploader = NULL
+      # theuploadeddata = NULL
     )
-    
+
+
+# Initialisation ----------------------------------------------------------
+
+        
     layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
                      "Leveranciers")
@@ -163,7 +169,7 @@ server <- function(input, output, session) {
       rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
 
       nodes = c("Patient")
-      rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
+      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
       updateTabsetPanel(session, "theAppPage", selected = "Main")
     }
     
@@ -208,6 +214,9 @@ server <- function(input, output, session) {
     })
 
 
+
+# Node selection and menu handling ----------------------------------------
+
     
 #     # 
 #     # Dit is de event handler als de grafiek getekend is.
@@ -231,7 +240,6 @@ server <- function(input, output, session) {
     observeEvent(input$graph_panel_selected, {
       #cat("Node selected ", input$graph_panel_selected, "\n")
       rv$thenodeselected = input$graph_panel_selected
- #     browser()
       updateTextInput(session, "nodefield", value = rv$thenodeselected)
     })
     
@@ -249,8 +257,7 @@ server <- function(input, output, session) {
     observeEvent(input$doubleClick, {
       #browser()
       rv$thenodeselected = input$doubleClick$nodes[[1]]
-      #cat('switch focus', rv$thenodeselected, '\n')
-      rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
+      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
     
     # ===
@@ -290,7 +297,7 @@ server <- function(input, output, session) {
       if (l == "all")
         linktypes = rv$thenetworkinfo$linktypes
       for (n in nodes) {
-        rv$theigraph = znops.voegVriendenToeAanView(rv$theigraph, rv$thecurrentview, n, 
+        rv$theigraph = addFriendsToView(rv$theigraph, rv$thecurrentview, n, 
                                                     linktypes)
       }
       rv$forcerepaint = TRUE
@@ -312,7 +319,7 @@ server <- function(input, output, session) {
   
     # Focus de view op een node
     observeEvent(input$switchfocus, {
-      rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
+      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
     
  
@@ -421,7 +428,7 @@ server <- function(input, output, session) {
   observeEvent(input$startingpoint, {
 #    browser()
     nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
-    rv$theigraph = znops.herstartViewOpNodes(rv$theigraph, rv$thecurrentview, nodes)
+    rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
   })
   
   
@@ -429,7 +436,7 @@ server <- function(input, output, session) {
 #    browser()
     node = V(rv$thenetworkinfo$network)[input$nodefield]
     if (!is.null(node)) {
-      rv$theigraph = znops.voegNodesToeAanView(rv$theigraph, rv$thecurrentview, node)
+      rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, node)
      rv$forcerepaint = TRUE 
     }
   }) 
@@ -484,7 +491,7 @@ server <- function(input, output, session) {
   
   nodefieldAddMenu  <- function() {
       res = c(
-        getMenuEntryScriptForColor("all", "Add", "grey", "addnodefromtext")
+        getMenuEntryScriptForColor("all", "Show", "grey", "addnodefromtext")
       )  
   }
   
