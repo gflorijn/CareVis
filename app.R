@@ -58,7 +58,8 @@ ui <- navbarPage("NetVis",
                  column(2, checkboxInput("images", "Icons", TRUE)),
                  column(2, checkboxInput("showlinks", "Links", TRUE)),
                  column(2, checkboxInput("linklabels", "Link names", FALSE)),
-                 column(2, checkboxInput("smooth", "Smooth"))
+                 column(2, checkboxInput("igraphlayout", "iGraph layout"))
+                # column(2, checkboxInput("smooth", "Smooth"))
                ),
                fluidRow(
                  column(2, uiOutput("startpointsmenu")),
@@ -580,9 +581,16 @@ server <- function(input, output, session) {
       #    <button id='l2' style='border: none;display: inline-block;' type='button'
       #       onclick ='Shiny.setInputValue(\"nodemenuclick\",\"use\",
       #       Math.random());'>U</button>")
-      data3 <- toVisNetworkData(visual3)
-
-      vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
+      
+      if (input$igraphlayout) {
+        vnt = visIgraph(visual3) # layout=input$layout, smooth=input$smooth) 
+      } else {
+        data3 <- toVisNetworkData(visual3)
+        vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
+      }
+      
+      # Gebruik van Igraph voor layout, 
+      
       vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=FALSE)
 
       if (input$navigatie)
