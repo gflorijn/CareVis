@@ -13,14 +13,17 @@ source("helppage.R")
 
 # Nodig om het browser window te sluiten
 #
-#jscode <- "shinyjs.closeWindow = function() { window.close(); }"
+jscode <- "shinyjs.closeWindow = function() { window.close(); }"
 #
 # De shiny app voor visualisaties
 #
-ui <- navbarPage("NetVis",
-#  extendShinyjs(text = jscode, functions = c("closeWindow")),
+ui <- 
+tagList(
+  extendShinyjs(text = jscode, functions = c("closeWindow")),
   useShinyjs(),
-  
+
+  navbarPage("NetVis",
+             
   #shinythemes::themeSelector(),
   theme=shinytheme("simplex"),
   id = "theAppPage",
@@ -63,11 +66,12 @@ ui <- navbarPage("NetVis",
                ),
                fluidRow(
                  column(2, uiOutput("startpointsmenu")),
-                 column(2, textInput("nodefield", label=NULL)),
+                 column(2, uiOutput("searchnodemenu")),
                  column(1, uiOutput("nodefieldops")),
-                 column(3, uiOutput("singlenodeselectmenu")),
+                 column(2, textInput("nodefield", label=NULL)),
+                 column(2, uiOutput("singlenodeselectmenu")),
                  column(2, uiOutput("viewnodeselectmenu")),
-                 column(2, uiOutput("viewselectmenu"))
+                 column(1, uiOutput("viewselectmenu"))
                ),
                tags$hr(),
                visNetworkOutput("graph_panel", height="600px", width="100%")
@@ -106,6 +110,7 @@ ui <- navbarPage("NetVis",
            ))
  
 )
+)
 
 server <- function(input, output, session) {
   
@@ -139,7 +144,7 @@ server <- function(input, output, session) {
         
     layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
-                     "Leveranciers")
+                     "Leveranciers", "PGO-Demo")
     
     loadNetworkInfo <- function(netinfo, additionaldata) {
       if (is.null(additionaldata)) {
@@ -406,7 +411,7 @@ server <- function(input, output, session) {
       f
     },
     content = function(con) {
-      visSave(rv$thevisgraph, file=con, selfcontained=TRUE)      
+      visSave(rv$thevisgraph, file=con, selfcontained=TRUE)  
     }
   )
   
@@ -424,21 +429,34 @@ server <- function(input, output, session) {
       
     )
   })
-  
+
   # Focus de graaf op een set van nodes uit een domein
   observeEvent(input$startingpoint, {
-#    browser()
+    #    browser()
     nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
     rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
   })
   
+
+  #Starting point menu for showing nodes from different domains.
+  output$searchnodemenu <- renderUI({
+    #    browser()
+    names= V(rv$thenetworkinfo$network)$naam
+    tagList(
+        selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)
+      )
+  })
   
-  observeEvent(input$addnodefromtext, {
+  observeEvent(input$addsearchnodes, {
+    #Don't do anything, add the selected nodes after the addbutton is pressed
+  }) 
+  
+  observeEvent(input$addnodefromsearch, {
+    nodes = input$addsearchnodes
 #    browser()
-    node = V(rv$thenetworkinfo$network)[input$nodefield]
-    if (!is.null(node)) {
-      rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, node)
-     rv$forcerepaint = TRUE 
+    if (!is.null(nodes) & length(nodes) > 0) {
+      rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, nodes)
+      rv$forcerepaint = TRUE 
     }
   }) 
 
@@ -490,9 +508,9 @@ server <- function(input, output, session) {
     )
   }
   
-  nodefieldAddMenu  <- function() {
+  searchfieldAddMenu  <- function() {
       res = c(
-        getMenuEntryScriptForColor("all", "Show", "grey", "addnodefromtext")
+        getMenuEntryScriptForColor("all", "Add to view", "grey", "addnodefromsearch")
       )  
   }
   
@@ -506,7 +524,7 @@ server <- function(input, output, session) {
   output$nodefieldops <- renderUI ({
     tagList(
       HTML(
-        nodefieldAddMenu()
+        searchfieldAddMenu()
       ),
       tags$br(),
       tags$small("Nodename")
@@ -550,7 +568,13 @@ server <- function(input, output, session) {
   #   visPhysics(stabilization = FALSE)
   # 
   
+  # observeEvent(input$beforedrawing, {
+  # })
+  # 
+  # observeEvent(input$afterdrawing, {
+  # })
   
+   
   output$graph_panel <- renderVisNetwork({
        if (rv$forcerepaint)
          rv$forcerepaint = FALSE
@@ -597,11 +621,13 @@ server <- function(input, output, session) {
         vnt = visInteraction(vnt, navigationButtons = TRUE)
       if (!input$ongericht)
         vnt = visEdges(vnt, arrows="to")
-      
+
       vnt = visEvents(vnt, 
           doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
-          oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }"              
+          oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
+          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
       )
+      
       
       #visPhysics(vnt, stabilization = FALSE)
       rv$thevisgraph = vnt
