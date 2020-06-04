@@ -9,6 +9,10 @@ uploadDataUI <- function(id, label="Upload Data") {
   { 
     tagList(
       fluidRow(
+        column(12, verbatimTextOutput(ns("loadmsg"))),
+      ),
+      tags$hr(),
+      fluidRow(
         column(6, fileInput(ns("uploadnodesfile"), "Load Nodes", multiple=FALSE)),
         column(6, fileInput(ns("uploadlinksfile"), "Load Links", multiple=FALSE))
       ),
@@ -16,9 +20,6 @@ uploadDataUI <- function(id, label="Upload Data") {
       fluidRow(
         column(6, tableOutput(ns("nodecontents"))),
         column(6, tableOutput(ns("linkcontents")))
-      ),
-      fluidRow(
-        column(12, tableOutput(ns("loadmsg"))),
       ),
     ) 
   }
