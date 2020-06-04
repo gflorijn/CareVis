@@ -66,12 +66,12 @@ tagList(
                ),
                fluidRow(
                  column(2, uiOutput("startpointsmenu")),
-                 column(2, uiOutput("searchnodemenu")),
-                 column(1, uiOutput("nodefieldops")),
+                 column(3, uiOutput("searchnodemenu")),
+                 #column(2, uiOutput("nodefieldops")),
                  column(2, textInput("nodefield", label=NULL)),
                  column(2, uiOutput("singlenodeselectmenu")),
-                 column(2, uiOutput("viewnodeselectmenu")),
-                 column(1, uiOutput("viewselectmenu"))
+                 column(3, uiOutput("viewnodeselectmenu")),
+                 # column(1, uiOutput("viewselectmenu"))
                ),
                tags$hr(),
                visNetworkOutput("graph_panel", height="600px", width="100%")
@@ -228,11 +228,9 @@ server <- function(input, output, session) {
 #     # Dit is de event handler als de grafiek getekend is.
 #     # Goede plek om the bevriezen? Dat kan via de proxy
 #     # 
-#     observeEvent(input$graph_panel_initialized, {
-#         p = visNetworkProxy(input$graph_panel)
-# #        cat('Initialized proxy \n')
-#         rv$thegraphproxy = p
-#     })
+    observeEvent(input$graph_panel_initialized, {
+        cat('Initialized proxy \n')
+    })
 # 
    
    
@@ -422,19 +420,21 @@ server <- function(input, output, session) {
 
   #Starting point menu for showing nodes from different domains.
   output$startpointsmenu <- renderUI({
-#    browser()
-    tagList(
-      selectInput("startingpoint", label=NULL,
-                   choices=rv$thenetworkinfo$domains)
-      
+    domains= rv$thenetworkinfo$domains
+    selectInput("startingpoint", label=NULL, domains)
+    fixedRow(
+       selectizeInput("startingpoint", label=NULL, c("Select domain"="", domains))
     )
   })
 
   # Focus de graaf op een set van nodes uit een domein
   observeEvent(input$startingpoint, {
     #    browser()
-    nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
-    rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
+    nd = input$startingpoint
+    if (!is.null(nd) & nd!= "") {
+      nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
+      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
+    }
   })
   
 
@@ -442,8 +442,13 @@ server <- function(input, output, session) {
   output$searchnodemenu <- renderUI({
     #    browser()
     names= V(rv$thenetworkinfo$network)$naam
-    tagList(
-        selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)
+    fixedRow(
+        column(9, selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)),
+        column(3, tagList(
+          HTML(
+          searchfieldAddMenu()
+          )
+        ))
       )
   })
   
@@ -456,7 +461,7 @@ server <- function(input, output, session) {
 #    browser()
     if (!is.null(nodes) & length(nodes) > 0) {
       rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, nodes)
-      rv$forcerepaint = TRUE 
+#      rv$forcerepaint = TRUE 
     }
   }) 
 
@@ -504,13 +509,15 @@ server <- function(input, output, session) {
              getViewMenuEntryScriptFor("object", "o"),
              getViewMenuEntryScriptFor("part", "p"), 
              getViewMenuEntryScriptFor("refer", "r"),
-             getMenuEntryScriptForColor("all", "*", "black", "viewmenuclick")
+             getMenuEntryScriptForColor("all", "*", "black", "viewmenuclick"),
+#             tags$b(" -- "),
+             viewSelectMenu()
     )
   }
   
   searchfieldAddMenu  <- function() {
       res = c(
-        getMenuEntryScriptForColor("all", "Add to view", "grey", "addnodefromsearch")
+        getMenuEntryScriptForColor("all", "Add", "grey", "addnodefromsearch")
       )  
   }
   
@@ -551,16 +558,6 @@ server <- function(input, output, session) {
     )
   })
   
-  output$viewselectmenu <- renderUI({
-    tagList(
-      HTML(
-        viewSelectMenu()
-      ),
-      tags$br(),
-      tags$small(" "),
-    )
-  })
-
     # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
   # visNetwork(nodes, edges) %>%
   #   visEvents(type = "once", startStabilizing = "function() {
@@ -595,9 +592,10 @@ server <- function(input, output, session) {
       
       #cat(znapp.singleNodeSelectMenu())
       
-      V(visual3)$title = HTML( 
-        singleNodeSelectMenu()
-      )
+      # V(visual3)$title = HTML( 
+      #   singleNodeSelectMenu()
+      # )
+      
       # V(visual3)$title = HTML(
       #   "<button id='l1' style='border: none;display: inline-block;' type='button'
       #       onclick ='Shiny.setInputValue(\"nodemenuclick\",\"actor\",
@@ -610,6 +608,7 @@ server <- function(input, output, session) {
         vnt = visIgraph(visual3) # layout=input$layout, smooth=input$smooth) 
       } else {
         data3 <- toVisNetworkData(visual3)
+        browser()
         vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
       }
       
