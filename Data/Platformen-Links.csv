@@ -7,9 +7,3 @@ Ziekenhuis;Covid-19 Portaal;;system
 Ziekenhuis2;Covid-19 Portaal;;system
 Covid-19 Portaal;Beelden;;object
 Covid-19 Portaal;Dossier;;object
-Patient;PGO;;use
-Mantelzorger;PGO;;use
-Huisarts;PGO;;use
-Ziekenhuis;PGO;;use
-VVT;PGO;;use
-PGO;Autorisaties;;object

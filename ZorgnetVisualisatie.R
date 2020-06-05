@@ -8,6 +8,7 @@ require("png", quietly=T)
 require("RCurl", quietly=T)
 require("visNetwork", quietly=T)
 require("shiny", quietly=T)
+require("stringr", quietly=T)
 
 # Add visualisation settings to network structure (list)
 extendNetworkInfoForVisualisation <-  function(nstruct) {
@@ -55,7 +56,7 @@ znvis.defaultVisualisatieSettingsVoorGraaf <- function(lnet, netinfo) {
 }
 
 #Zet de settings voor visNetwork
-znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolinks, dolinklabels) {
+znvis.visNetworkVisualisatieSettingsOrig <- function(lnet, netinfo, doimages, dolinks, dolinklabels) {
   
   vnet = znvis.defaultVisualisatieSettingsVoorGraaf(lnet, netinfo)  
   donodesize = 20  
@@ -88,6 +89,64 @@ znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolink
   vnet
 }
 
+#Zet de settings voor visNetwork
+znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolinks, dolinklabels) {
+  
+  vnet = znvis.defaultVisualisatieSettingsVoorGraaf(lnet, netinfo)  
+  nodesize = 25
+  nodevalue = 20
+  nodewidthconstraint = 20
+  
+  if (doimages) {
+    V(vnet)$shape = "image" # voor visnetwork
+    # V(vnet)[V(vnet)$nodetype == "hub"]$shape = "circularImage"
+    # V(vnet)[V(vnet)$nodetype == "category"]$shape = "dot"
+    # V(vnet)[V(vnet)$nodetype == "hub"]$color = "white"
+  }
+  else {
+    V(vnet)$shape = "dot"
+    #   V(vnet)[V(vnet)$nodetype == "hub"]$shape = "diamond"
+  }
+  
+  V(vnet)$size = nodesize
+  V(vnet)$value = nodevalue
+  
+  # Verstop category nodes
+  V(vnet)[V(vnet)$nodetype=="category"]$hidden=TRUE
+  
+  V(vnet)$widthConstraint = TRUE
+  
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$value = 15
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$shape = "circularImage"
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$borderWidth = 3
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$color.border = "blue"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$shapeProperties.useBorderWithImage = TRUE
+  
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$color = "white"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$shape = "Image"
+  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$borderWidth = 3
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$color.border = "red"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$shapeProperties.useBorderWithImage = TRUE
+  
+  V(vnet)[str_detect(V(vnet)$naam, fixed("HINQ"))]$group = c("HINQ")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$group = c("VZVZ")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$group = c("Ivido")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Enovation"))]$group = c("Enovation")
+  
+  
+  
+  
+  if (!dolinklabels) {
+    E(vnet)$label = ""
+  }
+  E(vnet)$hidden = !dolinks
+  
+  
+  E(vnet)$width = 2
+#  E(vnet)$dashes[E(vnet)$linktype %in% c("_cat", "info", "is")] = TRUE  
+  
+  vnet
+}
 
 # 
 # ======== OLD STUFF
