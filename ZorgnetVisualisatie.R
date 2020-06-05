@@ -134,7 +134,8 @@ znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolink
   V(vnet)[str_detect(V(vnet)$naam, fixed("Enovation"))]$group = c("Enovation")
   
   
-  
+  V(vnet)[str_detect(V(vnet)$naam, fixed("PGO"))]$group = c("PGO")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("ZA"))]$group = c("PGO-ZA")
   
   if (!dolinklabels) {
     E(vnet)$label = ""
