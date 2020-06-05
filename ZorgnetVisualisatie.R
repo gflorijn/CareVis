@@ -114,24 +114,24 @@ znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolink
   # Verstop category nodes
   V(vnet)[V(vnet)$nodetype=="category"]$hidden=TRUE
   
-#  V(vnet)$widthConstraint = TRUE
+  V(vnet)$widthConstraint = TRUE
   
-  vivido = V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$value = 15
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$shape = "circularImage"
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$borderWidth = 3
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$color.border = "blue"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$shapeProperties.useBorderWithImage = TRUE
   
-  vivido$shape = "circularImage"
-  vivido$color = "white"
-  vivido$shapeProperties = list(useBorderWithImage = TRUE)
-  vivido$borderWidth = 3
-  vivido$color = list(border = "blue")
-  
-  vzvz = V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]
-  vzvz$shape = "circularImage"
-  vzvz$color = "white"
-  vzvz$shapeProperties = list(useBorderWithImage = TRUE)
-  vzvz$borderWidth = 3
-  vzvz$color = list(border = "blue")
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$color = "white"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$shape = "Image"
+  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$borderWidth = 3
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$color.border = "red"
+#  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$shapeProperties.useBorderWithImage = TRUE
   
   V(vnet)[str_detect(V(vnet)$naam, fixed("HINQ"))]$group = c("HINQ")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("VZVZ"))]$group = c("VZVZ")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Ivido"))]$group = c("Ivido")
+  V(vnet)[str_detect(V(vnet)$naam, fixed("Enovation"))]$group = c("Enovation")
   
   
   
@@ -143,7 +143,7 @@ znvis.visNetworkVisualisatieSettings <- function(lnet, netinfo, doimages, dolink
   
   
   E(vnet)$width = 2
-  E(vnet)$dashes[E(vnet)$linktype %in% c("_cat", "info", "is")] = TRUE  
+#  E(vnet)$dashes[E(vnet)$linktype %in% c("_cat", "info", "is")] = TRUE  
   
   vnet
 }

@@ -1,0 +1,15 @@
+﻿id;domein;nodetype;icon;url
+_PGO;PGO;category;;
+PGO;PGO;platform;Platform;
+PGO UI;PGO;system;Systeem;
+PGO Server;PGO;system;ResourceServer;
+PGO Autorisaties;PGO;system;AutorisatieServer;
+DVZA;PGO;interaction;Koppelvlak;
+ZA Zorgaanbieder;PGO;party;Ziekenhuis;
+ZA Resources;PGO;system;ResourceServer;
+ZA Autorisaties;PGO;system;AutorisatieServer;
+ZA Systeem;PGO;system;Systeem;
+ZA Data;PGO;object;Dossier;
+ZA Interface;PGO;platform;Platform;
+PGO Gebruiker;PGO;party;Patient;
+ZA Gebruiker;PGO;party;Huisarts;

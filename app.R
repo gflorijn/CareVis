@@ -67,7 +67,6 @@ tagList(
                fluidRow(
                  column(2, uiOutput("startpointsmenu")),
                  column(3, uiOutput("searchnodemenu")),
-                 #column(2, uiOutput("nodefieldops")),
                  column(2, textInput("nodefield", label=NULL)),
                  column(2, uiOutput("singlenodeselectmenu")),
                  column(3, uiOutput("viewnodeselectmenu")),
@@ -123,7 +122,8 @@ server <- function(input, output, session) {
       thenetworkinfo = NULL,
       theigraph=NULL, 
       thevisgraph = NULL, 
-      thegraphproxy = NULL,
+      # thevispositions = NULL,
+      # thegraphproxy = NULL,
       thenodeselected = NULL, 
       theurl = "",
       themessage = NULL,
@@ -144,7 +144,8 @@ server <- function(input, output, session) {
         
     layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
-                     "Leveranciers", "PGO-Demo")
+                     "Leveranciers", "PGO")
+                    
     
     loadNetworkInfo <- function(netinfo, additionaldata) {
       if (is.null(additionaldata)) {
@@ -161,6 +162,8 @@ server <- function(input, output, session) {
     
     restartAll <- function(additionaldata) {
       ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
+      rv$thevisgraph = NULL
+#      rv$thevispositions = NULL
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
       rv$themessage = ""
@@ -197,9 +200,9 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
-    # observeEvent(input$interrupt, {
-    #   browser()
-    # })
+ # observeEvent(input$interrupt, {
+ #    browser()
+ #     })
     
     # handle tabpanel selection event
     #
@@ -223,17 +226,19 @@ server <- function(input, output, session) {
 
 # Node selection and menu handling ----------------------------------------
 
-    
-#     # 
-#     # Dit is de event handler als de grafiek getekend is.
-#     # Goede plek om the bevriezen? Dat kan via de proxy
-#     # 
+
+    # the graph panel has been initialized - set up inputs to get from them
+    # 
     observeEvent(input$graph_panel_initialized, {
-        cat('Initialized proxy \n')
+      # rv$thegraphproxy = visNetworkProxy("graph_panel")
+      # rv$thegraphproxy = visGetPositions(rv$thegraphproxy, nodes=NULL, input="graph_panel_positions")
+      #rv$thegraphproxy = visGetNodes(rv$thegraphproxy,input="graph_panel_nodes")
     })
 # 
-   
-   
+
+    # observeEvent(list(input$graph_panel_positions), {
+    #   rv$thevispositions = input$graph_panel_positions
+    # })   
      # ==========
     # Selectie van een node - twee methodes. dubbelop?
     
@@ -458,7 +463,6 @@ server <- function(input, output, session) {
   
   observeEvent(input$addnodefromsearch, {
     nodes = input$addsearchnodes
-#    browser()
     if (!is.null(nodes) & length(nodes) > 0) {
       rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, nodes)
 #      rv$forcerepaint = TRUE 
@@ -528,15 +532,6 @@ server <- function(input, output, session) {
       )
   }
   
-  output$nodefieldops <- renderUI ({
-    tagList(
-      HTML(
-        searchfieldAddMenu()
-      ),
-      tags$br(),
-      tags$small("Nodename")
-    )    
-  })
   
   output$singlenodeselectmenu <- renderUI({
     tagList(
@@ -558,13 +553,7 @@ server <- function(input, output, session) {
     )
   })
   
-    # Dit ook nog eens uitproberen. Graaf niet opnieuw tekenen...
-  # visNetwork(nodes, edges) %>%
-  #   visEvents(type = "once", startStabilizing = "function() {
-  #           this.moveTo({scale:0.1})}") %>%
-  #   visPhysics(stabilization = FALSE)
-  # 
-  
+
   # observeEvent(input$beforedrawing, {
   # })
   # 
@@ -573,59 +562,56 @@ server <- function(input, output, session) {
   
    
   output$graph_panel <- renderVisNetwork({
-       if (rv$forcerepaint)
-         rv$forcerepaint = FALSE
      
       visual3 = rv$theigraph
+      
+      if (rv$forcerepaint)
+        rv$forcerepaint = FALSE
+      
 
       #Focus op de elementen in de view
       visual3 = visual3 - V(visual3)[!vertex_attr(visual3, rv$thecurrentview, V(visual3))]
       visual3 = visual3 - E(visual3)[!edge_attr(visual3, rv$thecurrentview, E(visual3))]
+      
  
       if (input$ongericht) 
         visual3 = as.undirected(visual3, mode="each")
 
       visual3 = znvis.visNetworkVisualisatieSettings(visual3, rv$thenetworkinfo, input$images, 
                                                      input$showlinks, input$linklabels)
-
-      # see https://www.w3schools.com/howto/howto_css_text_buttons.asp
-      
-      #cat(znapp.singleNodeSelectMenu())
       
       # V(visual3)$title = HTML( 
       #   singleNodeSelectMenu()
       # )
       
-      # V(visual3)$title = HTML(
-      #   "<button id='l1' style='border: none;display: inline-block;' type='button'
-      #       onclick ='Shiny.setInputValue(\"nodemenuclick\",\"actor\",
-      #       Math.random());'>A</button>
-      #    <button id='l2' style='border: none;display: inline-block;' type='button'
-      #       onclick ='Shiny.setInputValue(\"nodemenuclick\",\"use\",
-      #       Math.random());'>U</button>")
-      
       if (input$igraphlayout) {
+        # Gebruik van Igraph voor layout, 
         vnt = visIgraph(visual3) # layout=input$layout, smooth=input$smooth) 
       } else {
         data3 <- toVisNetworkData(visual3)
-        browser()
+        # browser()
         vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
       }
       
-      # Gebruik van Igraph voor layout, 
-      
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=FALSE)
+      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE
+                       , selectedBy="group")
+
+      # vnt = visPhysics(vnt, stabilization = FALSE)        
 
       if (input$navigatie)
         vnt = visInteraction(vnt, navigationButtons = TRUE)
+
       if (!input$ongericht)
         vnt = visEdges(vnt, arrows="to")
 
       vnt = visEvents(vnt, 
-          doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
-          oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
+ #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
+ #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
           # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
       )
+      
+#      groups = unique(V(visual3)$group)
+#      vnt = visClusteringByGroup(vnt, groups)
       
       
       #visPhysics(vnt, stabilization = FALSE)

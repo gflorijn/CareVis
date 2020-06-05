@@ -1,0 +1,15 @@
+﻿from;to;label;linktype
+PGO Gebruiker;PGO UI;;use
+PGO;PGO UI;;part
+PGO;PGO Server;;part
+PGO;PGO Autorisaties;;part
+PGO;DVZA;;actor
+DVZA;ZA Interface;;actor
+ZA Interface;ZA Resources;;part
+ZA Interface;ZA Autorisaties;;part
+ZA Systeem;ZA Interface;;system
+ZA Systeem;ZA Data;;object
+ZA Gebruiker;ZA Systeem;;use
+PGO;MedMij;;refer
+DVZA;MedMij;;refer
+ZA Zorgaanbieder;ZA Systeem;;system

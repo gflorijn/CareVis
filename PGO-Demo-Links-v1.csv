@@ -1,0 +1,35 @@
+﻿from;to;label;linktype
+VZVZ;VZVZ Resource Server;Resources;part
+VZVZ;VZVZ Autorisation Server;Autorisatie;part
+VZVZ;VZVZ DVZA;DigiD;actor
+VZVZ DVZA;Ivido PGO Server;Medicatie;actor
+Ivido PGO;Ivido Autorisation Server;Autorisatie;part
+Ivido PGO;Ivido PGO Server;Resources;part
+Ivido PGO;IRMA;Authenticatie;use
+Ivido PGO Server;Ivido Autorisation Server;?;refer
+Ivido PGO Server;Ivido ZNO;?;refer
+Ivido Autorisation Server;Ivido ZNO;?;refer
+Client;Ivido PGO;Gebruik;use
+Client;IRMA;Inloggen;use
+Zorgprofessional;Ivido ZNO;Gebruik;use
+Ivido PGO Server;HINQ Enovation DVZA;?;actor
+Zorgprofessional Huisarts;Pharmapartners Medicom;HIS;use
+HINQ Enovation Autorisation Server;HINQ Enovation DVZA;;actor
+HINQ Enovation Autorisation Server;HINQ Enovation Resource Server;;refer
+HINQ Enovation Autorisation Server;HINQ XDS;PDFA-Beelden;refer
+HINQ Enovation Translation Server;HINQ Enovation Resource Server;FHIR;refer
+Regio Enovation XDS;HINQ XDS;?;refer
+Pharmapartners Resource Server;HINQ Enovation Translation Server;Huisarts;refer
+Nedap Gera Med Resource Server;HINQ Enovation Translation Server;Langdurige zorg;refer
+Pink Resource Server;HINQ Enovation Translation Server;GGZ;refer
+Chipsoft Resource Server;HINQ Enovation Translation Server;Zorg;refer
+Pharmapartners Medicom;Pharmapartners Resource Server;;refer
+Fundis;Nedap Gera Med Resource Server;;refer
+Parnassia GGZ Rivierduinen Pink;Pink Resource Server;;refer
+Langeland Reinier Haga HIX;Chipsoft Resource Server;;refer
+Chipsoft Zorgplatform;Langeland Reinier Haga HIX;;refer
+Chipsoft Zorgplatform;Regio Enovation XDS;PDFA-Beelden;refer
+Ivido Autorisation Server dup;Pharmapartners Medicom;SSO;refer
+Ivido Autorisation Server dup;Fundis;SSO;refer
+Ivido Autorisation Server dup;Parnassia GGZ Rivierduinen Pink;SSO;refer
+Ivido Autorisation Server dup;Chipsoft Zorgplatform;SSO;refer

@@ -5,7 +5,7 @@ helpPageText <- function() {
                   De iconen (nodes) representeren personen, systemen, objecten, partijen, et cetera. 
                   De lijnen (links) geven verbanden aan. 
                  "),
-      tags$p("Browsen is simpel. Als je de nodes van een bepaalde soort wilt zien, selecteer die soort dan uit de lijst.
+      tags$p("Browsen is simpel. Als je de nodes van een bepaalde soort wilt zien, selecteer die soort dan uit de lijst met domeinen.
                   Klik vervolgens op een node en kies welke verbanden (soorten links) je 
                   wilt toevoegen aan de view. Gebruik hiervoor het menu:"),
       tags$p(tags$img(src="NetVismenu.png")),
@@ -23,10 +23,13 @@ helpPageText <- function() {
       tags$p(
         "Je kunt deze knoppen ook toepassen op alle nodes die zichtbaar zijn in de view."
       ),
+      tags$p(
+        "Als het aantal nodes/links wat groot wordt kun je proberen sub-grafen in te klappen door te dubbel-klikken op een node."
+      ),
       tags$p("De betekenis van andere knoppen:"),
       tags$ul(
         tags$li("H(ide) verwijdert de node uit de view"),
-        tags$li("F(ocus) focusseert de view op deze node (dubbel-klik op de node doet dit ook)"),
+        tags$li("F(ocus) focusseert de view op deze node"),
         
         tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
         tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
