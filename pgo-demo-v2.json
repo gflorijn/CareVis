@@ -212,7 +212,7 @@
       "id": "ECD Nedap",
       "domain": "PGO-Demo",
       "nodetype": "system",
-      "icon": "EPD-z",
+      "icon": "SysteemDatabases",
       "url": "",
       "groups": []
     },
@@ -220,7 +220,7 @@
       "id": "EPD Ysis - Gerimedica",
       "domain": "PGO-Demo",
       "nodetype": "system",
-      "icon": "EPD-z",
+      "icon": "SysteemDatabases",
       "url": "",
       "groups": []
     },
@@ -236,7 +236,7 @@
       "id": "ECD - Pink",
       "domain": "PGO-Demo",
       "nodetype": "system",
-      "icon": "EPD-z",
+      "icon": "SysteemDatabases",
       "url": "",
       "groups": []
     },
@@ -252,7 +252,7 @@
       "id": "EPD HIX Chipsoft",
       "domain": "PGO-Demo",
       "nodetype": "system",
-      "icon": "EPD-z",
+      "icon": "SysteemDatabases",
       "url": "",
       "groups": []
     },

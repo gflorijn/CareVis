@@ -51,6 +51,8 @@ tagList(
                             tags$hr(),
                             downloadButton("export", "Export"),
                             tags$hr(),
+                            downloadButton("downloadviewasjson", "JSON"),
+                            tags$hr(),
                             actionButton(inputId="quit", "Quit")
                             # tags$hr(),
                             # actionButton(inputId="interrupt", "Interrupt"),
@@ -249,18 +251,18 @@ server <- function(input, output, session) {
         }
       )
     
-    observeEvent("demotutorialload", {
+    observeEvent(input$demotutorialload, {
       thedata = fromJSON("Demos/tutorial-v1.json")
       restartAll(thedata)
     })
 
     output$demoPGOjson <- downloadHandler(
-      filename <- function() {
-        "demo-PGO.json"
-      },
-      content <- function(file) {
-        file.copy("Data/PGO.json", file)
-      }
+      # filename <- function() {
+      #   "demo-PGO.json"
+      # },
+      # content <- function(file) {
+      #   file.copy("Data/PGO.json", file)
+      # }
     )
     
 
@@ -433,7 +435,16 @@ server <- function(input, output, session) {
 
 # Export the graph --------------------------------------------------------
 
-        
+    
+  output$downloadviewasjson = downloadHandler(
+      filename <- function() {
+        "currentview.json"
+      },
+      content <- function(file) {
+        writeLines(toJSON(getNodesAndLinksForView(rv$theigraph, rv$thecurrentview), pretty=T), file)
+      }
+    )
+    
   #
   # Export the graph
   #
