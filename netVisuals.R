@@ -66,8 +66,8 @@ visNetworkVisualisationSettings <- function(lnet, netinfo, doimages, dolinks, do
   vnet = lnet
 
   # see the visnetwork documentation for meaning. Size is node size, value a scale factor
-  V(vnet)$size = 25
-  V(vnet)$value = 20
+  #  V(vnet)$size = 25
+  #  V(vnet)$value = 20
   
   if (doimages) {
     V(vnet)$shape = "image" 
@@ -82,7 +82,7 @@ visNetworkVisualisationSettings <- function(lnet, netinfo, doimages, dolinks, do
     E(vnet)$label = ""
   }
   E(vnet)$hidden = !dolinks
-  E(vnet)$width = 2
+#  E(vnet)$width = 2
   
   vnet
 }
