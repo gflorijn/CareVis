@@ -47,6 +47,8 @@ tagList(
                             tags$hr(),
                             actionButton("restart", "Restart"),
                             tags$hr(),
+                            actionButton("showdemos", "Examples"),
+                            tags$hr(),
                             downloadButton("export", "Export"),
                             tags$hr(),
                             actionButton(inputId="quit", "Quit")
@@ -218,6 +220,47 @@ server <- function(input, output, session) {
     })
 
 
+
+# Demo files --------------------------------------------------------------
+
+        
+    observeEvent(input$showdemos, {
+      showModal(modalDialog(
+        title = "Some Demos",
+        tags$p("Tutorial - simple illustration of different kinds of nodes"),
+        downloadLink("demotutorialjson", "Download json file"),
+        tags$br(),
+        actionLink("demotutorialload", "Add to network"),
+        tags$p(),
+        tags$p("PGO - Illustration of components involved in a PGO (already loaded)"),
+        downloadLink("demoPGOjson", "Download json file"),
+        tags$br(),
+      ))
+    })
+    
+    output$demotutorialjson <- downloadHandler(
+        filename <- function() {
+          "demo-tutorial-v1.json"
+        },
+        content <- function(file) {
+          file.copy("Demos/tutorial-v1.json", file)
+        }
+      )
+    
+    observeEvent("demotutorialload", {
+      thedata = fromJSON("Demos/tutorial-v1.json")
+      restartAll(thedata)
+    })
+
+    output$demoPGOjson <- downloadHandler(
+      filename <- function() {
+        "demo-PGO.json"
+      },
+      content <- function(file) {
+        file.copy("Data/PGO.json", file)
+      }
+    )
+    
 
 # Node selection and menu handling ----------------------------------------
 
@@ -596,8 +639,8 @@ server <- function(input, output, session) {
       }
       
       # Allow interaction - note: nodes can be in multiple groups
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE
-                       , selectedBy=list(variable = "groupnames", multiple = TRUE))
+      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, # manipulation = TRUE,
+                       selectedBy=list(variable = "groupnames", multiple = TRUE))
 
       if (input$navigation)
         vnt = visInteraction(vnt, navigationButtons = TRUE)
