@@ -1,4 +1,4 @@
-﻿id;domein;nodetype;icon;url
+﻿id;domain;nodetype;icon;url
 _Standaarden;Standaarden;category;;
 FHIR;Standaarden;standard;;
 HL7;Standaarden;standard;;

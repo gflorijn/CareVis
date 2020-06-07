@@ -13,8 +13,7 @@ uploadDataUI <- function(id, label="Upload Data") {
       ),
       tags$hr(),
       fluidRow(
-        column(6, fileInput(ns("uploadnodesfile"), "Load Nodes", multiple=FALSE)),
-        column(6, fileInput(ns("uploadlinksfile"), "Load Links", multiple=FALSE))
+        column(6, fileInput(ns("uploadjsonfile"), "Load JSON file", multiple=FALSE)),
       ),
       tags$hr(),
       fluidRow(
@@ -26,41 +25,36 @@ uploadDataUI <- function(id, label="Upload Data") {
 }
 
 uploadData <- function(input, output, session, viewid, netinfo) {
-  nodesFile <- reactive({
-    # If no file is selected, don't do anything
-    validate(need(input$uploadnodesfile, message = FALSE))
-    input$uploadnodesfile
-  })
   
-  linksFile <- reactive({
-    # If no file is selected, don't do anything
-    validate(need(input$uploadlinksfile, message = FALSE))
-    input$uploadlinksfile
-  })
-  
-  nodesData <- reactive({
-    read.csv2(nodesFile()$datapath, header=T, colClasses="character", sep=";")
+  jsonContents <- reactive({
+    jfile = input$uploadjsonfile
+    if (is.null(jfile)) 
+      return(NULL)
+    
+    fromJSON(jfile$datapath)
   })
 
-  linksData <- reactive({
-    read.csv2(linksFile()$datapath, header=T, colClasses="character", sep=";")
-  })  
-  
+      
   output$nodecontents <- renderTable({
-    nodesData()
+    if (!is.null(jsonContents()))
+      flattenedDataFrameForTable(jsonContents()$nodes)
+    else
+      return(NULL)
   })
   
   output$linkcontents <- renderTable({
-    linksData()
+    if (!is.null(jsonContents()))
+      flattenedDataFrameForTable(jsonContents()$links)
+    else
+      return(NULL)
   })
   
 
   checkdata <- reactive({
-    newnds = nodesData()$id
+    newnds = jsonContents()$nodes$id
     existnds = netinfo$rawnodes$id
     allnodes = c(newnds, existnds)
-    newlks = linksData()
-#    browser()
+    newlks = jsonContents()$links
     
     haveerrors = FALSE
     msg = ""
@@ -90,7 +84,7 @@ uploadData <- function(input, output, session, viewid, netinfo) {
   })
   
   loadedData <- reactive({
-    list(nodes=nodesData(), links=linksData(), errors=checkdata()$haveerrors)
+    list(nodes=jsonContents()$nodes, links=jsonContents()$links, errors=checkdata()$haveerrors)
   })
   
   return(loadedData)

@@ -1,0 +1,173 @@
+{
+  "nodes": [
+    {
+      "id": "_Gegevens",
+      "domain": "Gegevens",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Medicatieoverzicht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Recept",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Verstrekkingsbericht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Waarneembericht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Waarneming",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Professionele samenvatting",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Verwijzing",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Opname-Ontslagmelding",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Voortgangsmelding",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Afspraken",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "eConsult",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Metingen",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Orders",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Uitslagen",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Overdrachtdossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Beelden",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Dossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsdossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Monitoring",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Autorisaties",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": []
+}

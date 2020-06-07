@@ -1,0 +1,78 @@
+{
+  "nodes": [
+    {
+      "id": "_Leveranciers",
+      "domain": "Leveranciers",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Hinq",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPIC",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Chipsoft",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Enovation",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ivido",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "http://www.ivido.nl",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "EPIC",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPIC",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "refer"
+    }
+  ]
+}

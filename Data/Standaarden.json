@@ -1,0 +1,194 @@
+{
+  "nodes": [
+    {
+      "id": "_Standaarden",
+      "domain": "Standaarden",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "FHIR",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "HL7",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "MedMij",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "https://www.medmij.nl",
+      "groups": []
+    },
+    {
+      "id": "XDS",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZIBS",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "eOverdracht",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "BgZ",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "MedicatieOverdracht",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labuitwisseling",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartswaarneming",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Edifact",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Richtlijn HASP",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Edifact",
+      "to": "Verstrekkingsbericht",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Recept",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Waarneming",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Huisartswaarneming",
+      "to": "Waarneembericht",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Huisartswaarneming",
+      "to": "Professionele samenvatting",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Labuitwisseling",
+      "to": "Uitslagen",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Richtlijn HASP",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "BgZ",
+      "to": "ZIBS",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPD-z",
+      "to": "BgZ",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPD-z2",
+      "to": "BgZ",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Labuitwisseling",
+      "to": "HL7",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "i-Waarnemen",
+      "to": "Huisartswaarneming",
+      "label": "",
+      "linktype": "refer"
+    }
+  ]
+}

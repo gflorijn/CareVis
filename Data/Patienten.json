@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {
+      "id": "_Patienten",
+      "domain": "Patienten",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patient",
+      "domain": "Patienten",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Mantelzorger",
+      "domain": "Patienten",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": []
+}

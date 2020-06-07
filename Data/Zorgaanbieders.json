@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "_Zorgaanbieders",
+      "domain": "Zorgaanbieders",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisarts",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ziekenhuis",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Apotheek",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Paramedici",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "VVT",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ziekenhuis2",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Laboratorium",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "GGZ",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsenpost",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": []
+}

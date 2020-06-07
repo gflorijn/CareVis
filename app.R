@@ -4,9 +4,9 @@ library(shinythemes)
 library(shinyjs)
 library(shinyWidgets)
 
-source("ZorgnetData.R")
-source("ZorgnetOps.R")
-source("ZorgnetVisualisatie.R")
+source("netData.R")
+source("netOps.R")
+source("netVisuals.R")
 source("frozenview.R")
 source("uploaddata.R")
 source("helppage.R")
@@ -56,8 +56,8 @@ tagList(
              ),
              mainPanel(width = 11,
                 fluidRow(
-                 column(2, checkboxInput("navigatie", "Navigation", TRUE)),
-                 column(2, checkboxInput("ongericht", "Undirected", value=TRUE)),
+                 column(2, checkboxInput("navigation", "Navigation", TRUE)),
+                 column(2, checkboxInput("undirected", "Undirected", value=TRUE)),
                  column(2, checkboxInput("images", "Icons", TRUE)),
                  column(2, checkboxInput("showlinks", "Links", TRUE)),
                  column(2, checkboxInput("linklabels", "Link names", FALSE)),
@@ -73,7 +73,7 @@ tagList(
                  # column(1, uiOutput("viewselectmenu"))
                ),
                tags$hr(),
-               visNetworkOutput("graph_panel", height="600px", width="100%")
+               visNetworkOutput("graph_panel", height="700px", width="100%")
              )
            )
   ),
@@ -122,20 +122,14 @@ server <- function(input, output, session) {
       thenetworkinfo = NULL,
       theigraph=NULL, 
       thevisgraph = NULL, 
-      # thevispositions = NULL,
       # thegraphproxy = NULL,
       thenodeselected = NULL, 
       theurl = "",
       themessage = NULL,
       theviewcounter = 0,
-      # focusshowsall = FALSE, # True als de huidige weergave de hele database is.
       forcerepaint = FALSE,
       thecurrentview = NULL,
-      # haveuploadpane = FALSE,
-      # thenodesread = NULL,
-      # thelinksread = NULL,
       thedatauploader = NULL
-      # theuploadeddata = NULL
     )
 
 
@@ -145,11 +139,10 @@ server <- function(input, output, session) {
     layerstoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
                      "Leveranciers", "PGO")
-                    
     
     loadNetworkInfo <- function(netinfo, additionaldata) {
       if (is.null(additionaldata)) {
-        n =  readNetworkData(layerstoload)
+        n = readNetworkData(layerstoload)
       }
       else { # in case of extending with uploaded data
         n = addAdditionalData(netinfo, additionaldata)
@@ -162,23 +155,25 @@ server <- function(input, output, session) {
     
     restartAll <- function(additionaldata) {
       ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
+
       rv$thevisgraph = NULL
 #      rv$thevispositions = NULL
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
       rv$themessage = ""
       rv$thecurrentview = "Main"
-      rv$theigraph = ni$network
-      rv$theigraph = znops.startViewOpGraaf(rv$theigraph, rv$thecurrentview)
 #      browser()
 
-      
       # the is the reactive variable from the module that will produce the data to load
       # a list of nodes and links
       rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
 
       nodes = c("Patient")
+      rv$theigraph = ni$network
+      rv$theigraph = initializeViewOnGraph(rv$theigraph, rv$thecurrentview)
       rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
+      rv$theigraph = setupVisualDefinitionsForGraph(rv$theigraph, rv$thenetworkinfo)
+      
       updateTabsetPanel(session, "theAppPage", selected = "Main")
     }
     
@@ -262,22 +257,17 @@ server <- function(input, output, session) {
     # observeEvent(input$oncontext, {
     # }) 
     
-    # Double click ==> focus op de betreffende node
+    # Double click ==> focus on the node selected. Usage set in event-setting 
     observeEvent(input$doubleClick, {
       #browser()
       rv$thenodeselected = input$doubleClick$nodes[[1]]
       rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
     
-    # ===
-    #
     
     # == UI for node selectie afhandeling
     observeEvent(rv$thenodeselected, {
-      #cat("Selected ", rv$thenodeselected, "\n")
       rv$themessage = " "
-      # toggleState("hidefromview", rv$thenodeselected != "")
-      # toggleState("switchfocus", rv$thenodeselected != "")
       rv$theurl = ""
       haveurl = rv$thenodeselected != "" && V(rv$theigraph)[rv$thenodeselected]$url != ""
       
@@ -288,7 +278,7 @@ server <- function(input, output, session) {
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
     
-    #click on linkmenu for selected node
+    #react to click on linkmenu for selected node - the event has the link type to follow
     observeEvent(input$nodemenuclick, {
       if (rv$thenodeselected != "")
         growViewByLinks(c(rv$thenodeselected), input$nodemenuclick)
@@ -296,47 +286,42 @@ server <- function(input, output, session) {
     
     #click on linkmenu for all nodes in view
     observeEvent(input$viewmenuclick, {
+        # browser()
         growViewByLinks(znops.nodesInView(rv$theigraph, rv$thecurrentview), input$viewmenuclick)
     } )
     
-    
+    #add nodes by following links of type from nodes
     growViewByLinks <- function(nodes, l) {
-#browser()
       linktypes = c(l)
       if (l == "all")
         linktypes = rv$thenetworkinfo$linktypes
       for (n in nodes) {
-        rv$theigraph = addFriendsToView(rv$theigraph, rv$thecurrentview, n, 
-                                                    linktypes)
+        rv$theigraph = addFriendsToView(rv$theigraph, rv$thecurrentview, n, linktypes)
       }
-      rv$forcerepaint = TRUE
     }
    
-    # Creeer en teken de graaf opnieuw
+    # Force redraw of the graph
     #
     observeEvent(input$showgraph, {
       rv$forcerepaint = TRUE
     })
     
-    
- 
-
-    # Verstop node
+    # hide event
     observeEvent(input$hidefromview, {
       rv$theigraph = znops.verwijderNodesUitView(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     })
   
-    # Focus de view op een node
+    # Focus view on a node
     observeEvent(input$switchfocus, {
       rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
     }) 
     
- 
-     # Show the whole underlying network
+     # View the whole underlying network
     observeEvent(input$showall, {
       rv$theigraph = znops.toonAllesInView(rv$theigraph, rv$thecurrentview)
     }) 
     
+    # Should launch a browser for nodes with an URL.
     observeEvent(input$launchbrowser, {
       rv$themessage("not available yet")
       #browseURL(rv$theurl)
@@ -347,17 +332,17 @@ server <- function(input, output, session) {
 # Data view output --------------------------------------------------------
 
     output$dataviewnodes <- renderTable({
-      rv$thenetworkinfo$rawnodes
+      flattenedDataFrameForTable(rv$thenetworkinfo$rawnodes)
     })    
     
     output$dataviewlinks <- renderTable({
 #      browser()
-      rv$thenetworkinfo$rawlinks
+      flattenedDataFrameForTable(rv$thenetworkinfo$rawlinks)
     })    
     
     
     
-# Handle uploaded data ----------------------------------------------------
+# Handle uploading data ----------------------------------------------------
 
     # Try to add the loaded nodes and links to the network and restart all
     #
@@ -389,7 +374,7 @@ server <- function(input, output, session) {
                       )}
       )
       
-      rv$theigraph = znops.startViewOpGraaf(rv$theigraph, viewid)
+      rv$theigraph = initializeViewOnGraph(rv$theigraph, viewid)
       rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
       
       gr <- callModule(frozenView, viewid, viewid, rv$thevisgraph)
@@ -418,11 +403,19 @@ server <- function(input, output, session) {
     }
   )
   
-  
+
+
+# Output rendering and reaction -------------------------------------------
+
+     
   output$generalmessage <- renderText({
     rv$themessage
   })
 
+
+# Starting points selector + handling -------------------------------------
+
+    
   #Starting point menu for showing nodes from different domains.
   output$startpointsmenu <- renderUI({
     domains= rv$thenetworkinfo$domains
@@ -432,21 +425,23 @@ server <- function(input, output, session) {
     )
   })
 
-  # Focus de graaf op een set van nodes uit een domein
+  # Focus de graaf op een set van nodes uit een domain
   observeEvent(input$startingpoint, {
     #    browser()
     nd = input$startingpoint
     if (!is.null(nd) & nd!= "") {
-      nodes = V(rv$theigraph)[V(rv$theigraph)$domein == input$startingpoint]$name
+      nodes = V(rv$theigraph)[V(rv$theigraph)$domain == input$startingpoint]$name
       rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
     }
   })
   
 
+# Search node box + action handling ---------------------------------------
+
   #Starting point menu for showing nodes from different domains.
   output$searchnodemenu <- renderUI({
     #    browser()
-    names= V(rv$thenetworkinfo$network)$naam
+    names= V(rv$thenetworkinfo$network)$name
     fixedRow(
         column(9, selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)),
         column(3, tagList(
@@ -559,73 +554,70 @@ server <- function(input, output, session) {
   # 
   # observeEvent(input$afterdrawing, {
   # })
+
+# Output rendering for the graph panel ------------------------------------
+
   
    
   output$graph_panel <- renderVisNetwork({
      
-      visual3 = rv$theigraph
-      
-      if (rv$forcerepaint)
+      if (rv$forcerepaint) { #called when the redraw action has been activated
         rv$forcerepaint = FALSE
+      } 
       
 
-      #Focus op de elementen in de view
+      #Reduce the graph to the elements in the current view
+    
+      visual3 = rv$theigraph
+    
       visual3 = visual3 - V(visual3)[!vertex_attr(visual3, rv$thecurrentview, V(visual3))]
       visual3 = visual3 - E(visual3)[!edge_attr(visual3, rv$thecurrentview, E(visual3))]
       
  
-      if (input$ongericht) 
+      if (input$undirected) 
         visual3 = as.undirected(visual3, mode="each")
 
-      visual3 = znvis.visNetworkVisualisatieSettings(visual3, rv$thenetworkinfo, input$images, 
+      # Prepare the graph for visualisation
+      #
+      visual3 = visNetworkVisualisationSettings(visual3, rv$thenetworkinfo, input$images, 
                                                      input$showlinks, input$linklabels)
       
+      # #activate this to show the node-action menu when hovering over the node
       # V(visual3)$title = HTML( 
       #   singleNodeSelectMenu()
       # )
       
       if (input$igraphlayout) {
-        # Gebruik van Igraph voor layout, 
-        vnt = visIgraph(visual3) # layout=input$layout, smooth=input$smooth) 
+        # Use Igraph for  layout, 
+        vnt = visIgraph(visual3)    # layout=input$layout, smooth=input$smooth) 
       } else {
         data3 <- toVisNetworkData(visual3)
-        # browser()
         vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
       }
       
+      # Allow interaction - note: nodes can be in multiple groups
       vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE
-                       , selectedBy="group")
+                       , selectedBy=list(variable = "groupnames", multiple = TRUE))
 
-      # vnt = visPhysics(vnt, stabilization = FALSE)        
-
-      if (input$navigatie)
+      if (input$navigation)
         vnt = visInteraction(vnt, navigationButtons = TRUE)
-
-      if (!input$ongericht)
+      
+      if (!input$undirected)
         vnt = visEdges(vnt, arrows="to")
 
-      vnt = visEvents(vnt, 
+ #      vnt = visEvents(vnt, 
  #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
  #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
-          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
-      )
+ #          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
+ #      )
       
-#      groups = unique(V(visual3)$group)
-#      vnt = visClusteringByGroup(vnt, groups)
-      
-      
+      #Older experiments
+      # groups = unique(V(visual3)$group)
+      #      vnt = visClusteringByGroup(vnt, groups)
       #visPhysics(vnt, stabilization = FALSE)
+ 
       rv$thevisgraph = vnt
 
-      #
-      # Gebruik van Igraph voor layout, 
-      # vnt = visIgraph(visual3, layout=input$layout, smooth=input$smooth) 
-      # 
-      # vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE)
-      # if (input$navigatie)
-      #   vnt = visInteraction(vnt, navigationButtons = TRUE)
-      # rv$thevisgraph = vnt
-      
       vnt
       })
 }

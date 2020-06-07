@@ -1,0 +1,478 @@
+{
+  "nodes": [
+    {
+      "id": "_Systemen",
+      "domain": "Systemen",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "HIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "AIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "FIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD-z2",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD-v",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD-g",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Uitslagenportaal",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labsysteem",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-g",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-v",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgverlenersportaal-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgverlenersportaal-z2",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsenportaal",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ozis",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "E-zorg",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgmail",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "LSP",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Papier-Fax",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labonline",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "https://www.topicus-diagnostiek.nl",
+      "groups": []
+    },
+    {
+      "id": "Zorgdomein",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Point",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "XDS-platform",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Vecozo",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Huisarts",
+      "to": "HIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "VVT",
+      "to": "ECD-v",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "GGZ",
+      "to": "ECD-g",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Laboratorium",
+      "to": "Labsysteem",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Laboratorium",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Patientportaal-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "GGZ",
+      "to": "Patientportaal-g",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "VVT",
+      "to": "Patientportaal-v",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Zorgverlenersportaal-z2",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Apotheek",
+      "to": "AIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Paramedici",
+      "to": "FIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Huisartsenportaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Patient",
+      "to": "Huisartsenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-g",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-v",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "LSP",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "E-zorg",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Huisartsenportaal",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Papier-Fax",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "LSP",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Labonline",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Uitslagenportaal",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgverlenersportaal-z",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Papier-Fax",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Patientportaal-z",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "XDS-platform",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "XDS-platform",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Point",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "system"
+    }
+  ]
+}

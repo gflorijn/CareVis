@@ -1,4 +1,4 @@
-﻿id;domein;nodetype;icon;url
+﻿id;domain;nodetype;icon;url
 _Zorgaanbieders;Zorgaanbieders;category;;
 Huisarts;Zorgaanbieders;actor;;
 Ziekenhuis;Zorgaanbieders;actor;;

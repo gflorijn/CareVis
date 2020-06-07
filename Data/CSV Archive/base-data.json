@@ -1,0 +1,1822 @@
+{
+  "nodes": [
+    {
+      "id": "_Patienten",
+      "domain": "Patienten",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patient",
+      "domain": "Patienten",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Mantelzorger",
+      "domain": "Patienten",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Zorgaanbieders",
+      "domain": "Zorgaanbieders",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisarts",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ziekenhuis",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Apotheek",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Paramedici",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "VVT",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ziekenhuis2",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Laboratorium",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "GGZ",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsenpost",
+      "domain": "Zorgaanbieders",
+      "nodetype": "actor",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Administratie",
+      "domain": "Administratie",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "CIZ",
+      "domain": "Administratie",
+      "nodetype": "party",
+      "icon": "",
+      "url": "http://www.ciz.nl",
+      "groups": []
+    },
+    {
+      "id": "Gemeente",
+      "domain": "Administratie",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgverzekeraar",
+      "domain": "Administratie",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgkantoor",
+      "domain": "Administratie",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Gegevens",
+      "domain": "Gegevens",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Medicatieoverzicht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Recept",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Verstrekkingsbericht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Waarneembericht",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Waarneming",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Professionele samenvatting",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Verwijzing",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Opname-Ontslagmelding",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Voortgangsmelding",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Afspraken",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "eConsult",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Metingen",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Orders",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Uitslagen",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Overdrachtdossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Beelden",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Dossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsdossier",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Monitoring",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Autorisaties",
+      "domain": "Gegevens",
+      "nodetype": "object",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Interactie",
+      "domain": "Interactie",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Verwijzen",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Medicatie",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Onderzoek",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Order",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Uitslagen",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Ziekenhuiszorg",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Overdracht",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Waarnemen",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-eHealth",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Administratie",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Aanvraagzorg",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-COV",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "i-Declareren",
+      "domain": "Interactie",
+      "nodetype": "interaction",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Systemen",
+      "domain": "Systemen",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "HIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "AIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "FIS",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD-z2",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD-v",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD-g",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Uitslagenportaal",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labsysteem",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-g",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Patientportaal-v",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgverlenersportaal-z",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgverlenersportaal-z2",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartsenportaal",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ozis",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "E-zorg",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgmail",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "LSP",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Papier-Fax",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labonline",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "https://www.topicus-diagnostiek.nl",
+      "groups": []
+    },
+    {
+      "id": "Zorgdomein",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Point",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "XDS-platform",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Vecozo",
+      "domain": "Systemen",
+      "nodetype": "system",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Platformen",
+      "domain": "Platformen",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Sananet",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Luscii",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "KIS",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "https://www.ketenzorgfriesland.nl/portal-kz-zorgverlener-pagina/kis",
+      "groups": []
+    },
+    {
+      "id": "Zorgplatform",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Covid-19 Portaal",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Minddistrict",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Standaarden",
+      "domain": "Standaarden",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "FHIR",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "HL7",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "MedMij",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "https://www.medmij.nl",
+      "groups": []
+    },
+    {
+      "id": "XDS",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZIBS",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "eOverdracht",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "BgZ",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "MedicatieOverdracht",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Labuitwisseling",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Huisartswaarneming",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Edifact",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Richtlijn HASP",
+      "domain": "Standaarden",
+      "nodetype": "standard",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "_Leveranciers",
+      "domain": "Leveranciers",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Hinq",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPIC",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Chipsoft",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Enovation",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ivido",
+      "domain": "Leveranciers",
+      "nodetype": "party",
+      "icon": "",
+      "url": "http://www.ivido.nl",
+      "groups": []
+    },
+    {
+      "id": "_PGO",
+      "domain": "PGO",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "icon": "Platform",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO UI",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "Systeem",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO Server",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "DVZA",
+      "domain": "PGO",
+      "nodetype": "interaction",
+      "icon": "Koppelvlak",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Zorgaanbieder",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Ziekenhuis",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Resources",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Systeem",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "Systeem",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Data",
+      "domain": "PGO",
+      "nodetype": "object",
+      "icon": "Databases",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Interface",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "icon": "Platform",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Patient",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Huisarts",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Huisarts",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Apotheek",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Patient",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Medicatie",
+      "to": "Recept",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Medicatie",
+      "to": "Medicatieoverzicht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Medicatie",
+      "to": "Verstrekkingsbericht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Huisartsenpost",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Waarnemen",
+      "to": "Professionele samenvatting",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Waarnemen",
+      "to": "Waarneming",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Waarnemen",
+      "to": "Waarneembericht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-Onderzoek",
+      "label": "1",
+      "linktype": "actor"
+    },
+    {
+      "from": "Laboratorium",
+      "to": "i-Onderzoek",
+      "label": "2",
+      "linktype": "actor"
+    },
+    {
+      "from": "Patient",
+      "to": "i-Onderzoek",
+      "label": "3",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Onderzoek",
+      "to": "i-Order",
+      "label": "1",
+      "linktype": "part"
+    },
+    {
+      "from": "i-Onderzoek",
+      "to": "i-Uitslagen",
+      "label": "2",
+      "linktype": "part"
+    },
+    {
+      "from": "i-Uitslagen",
+      "to": "Uitslagen",
+      "label": "2",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Order",
+      "to": "Orders",
+      "label": "1",
+      "linktype": "object"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Paramedici",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Verwijzen",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Verwijzen",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Verwijzen",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Paramedici",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "VVT",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Patient",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Afspraken",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "eConsult",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Dossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Ziekenhuiszorg",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "VVT",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Overdracht",
+      "to": "Overdrachtdossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Patient",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Huisarts",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "GGZ",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-eHealth",
+      "to": "eConsult",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-eHealth",
+      "to": "Metingen",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-eHealth",
+      "to": "Monitoring",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "i-Administratie",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "i-Administratie",
+      "to": "i-COV",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "i-Administratie",
+      "to": "i-Declareren",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "Patient",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Mantelzorger",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Aanvraagzorg",
+      "to": "CIZ",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Aanvraagzorg",
+      "to": "Gemeente",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "_Zorgaanbieders",
+      "to": "i-COV",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-COV",
+      "to": "Zorgverzekeraar",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "_Zorgaanbieders",
+      "to": "i-Declareren",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Declareren",
+      "to": "Zorgverzekeraar",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "i-Declareren",
+      "to": "Zorgkantoor",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Huisarts",
+      "to": "HIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "VVT",
+      "to": "ECD-v",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "GGZ",
+      "to": "ECD-g",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Laboratorium",
+      "to": "Labsysteem",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Laboratorium",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Patientportaal-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "GGZ",
+      "to": "Patientportaal-g",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "VVT",
+      "to": "Patientportaal-v",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Zorgverlenersportaal-z2",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Apotheek",
+      "to": "AIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Paramedici",
+      "to": "FIS",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Huisartsenportaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Patient",
+      "to": "Huisartsenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-g",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Patientportaal-v",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Patient",
+      "to": "Uitslagenportaal",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Huisarts",
+      "to": "Zorgverlenersportaal-z",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "LSP",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "E-zorg",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Huisartsenportaal",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Papier-Fax",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "LSP",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Labonline",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Uitslagenportaal",
+      "to": "i-Onderzoek",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgverlenersportaal-z",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Papier-Fax",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgdomein",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgmail",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Patientportaal-z",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "XDS-platform",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "XDS-platform",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Point",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Sananet",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgplatform",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Luscii",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Minddistrict",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Covid-19 Portaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Covid-19 Portaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Covid-19 Portaal",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Covid-19 Portaal",
+      "to": "Dossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Edifact",
+      "to": "Verstrekkingsbericht",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Recept",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Waarneming",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Huisartswaarneming",
+      "to": "Waarneembericht",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Huisartswaarneming",
+      "to": "Professionele samenvatting",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Labuitwisseling",
+      "to": "Uitslagen",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Richtlijn HASP",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Edifact",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "BgZ",
+      "to": "ZIBS",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPD-z",
+      "to": "BgZ",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPD-z2",
+      "to": "BgZ",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Labuitwisseling",
+      "to": "HL7",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "i-Waarnemen",
+      "to": "Huisartswaarneming",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPIC",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft",
+      "to": "EPD-z",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPIC",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft",
+      "to": "EPD-z2",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "PGO Gebruiker",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO Server",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO Autorisaties",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "DVZA",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "DVZA",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "ZA Interface",
+      "to": "ZA Resources",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "ZA Interface",
+      "to": "ZA Autorisaties",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "ZA Systeem",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "ZA Systeem",
+      "to": "ZA Data",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "ZA Gebruiker",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "PGO",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "DVZA",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "ZA Zorgaanbieder",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "system"
+    }
+  ]
+}

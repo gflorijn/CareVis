@@ -1,0 +1,202 @@
+{
+  "nodes": [
+    {
+      "id": "_PGO",
+      "domain": "PGO",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "PGO",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "icon": "Platform",
+      "url": "",
+      "groups": ["PGO systeem"]
+    },
+    {
+      "id": "PGO UI",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "Systeem",
+      "url": "",
+      "groups": ["PGO systeem"]
+    },
+    {
+      "id": "PGO Server",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": ["PGO systeem"]
+    },
+    {
+      "id": "PGO Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["PGO systeem"]
+    },
+    {
+      "id": "DVZA",
+      "domain": "PGO",
+      "nodetype": "interaction",
+      "icon": "Koppelvlak",
+      "url": "",
+      "groups": ["PGO systeem", "PGO ZA"]
+    },
+    {
+      "id": "ZA Zorgaanbieder",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Ziekenhuis",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "ZA Resources",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "ZA Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "ZA Systeem",
+      "domain": "PGO",
+      "nodetype": "system",
+      "icon": "Systeem",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "ZA Data",
+      "domain": "PGO",
+      "nodetype": "object",
+      "icon": "Databases",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "ZA Interface",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "icon": "Platform",
+      "url": "",
+      "groups": ["PGO ZA"]
+    },
+    {
+      "id": "PGO Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Patient",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ZA Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "icon": "Huisarts",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "PGO Gebruiker",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO Server",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "PGO Autorisaties",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "PGO",
+      "to": "DVZA",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "DVZA",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "ZA Interface",
+      "to": "ZA Resources",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "ZA Interface",
+      "to": "ZA Autorisaties",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "ZA Systeem",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "ZA Systeem",
+      "to": "ZA Data",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "ZA Gebruiker",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "from": "PGO",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "DVZA",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "ZA Zorgaanbieder",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "system"
+    }
+  ]
+}

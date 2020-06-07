@@ -1,0 +1,588 @@
+{
+  "nodes": [
+   {
+      "id": "VZVZ",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "DomeinLeveranciers",
+      "url": "",
+      "groups": ["VZVZ", "LSP"]
+    },
+    {
+      "id": "VZVZ Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": ["VZVZ"]
+    },
+    {
+      "id": "VZVZ Autorisaties",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["VZVZ"]
+    },
+    {
+      "id": "VZVZ DVZA",
+      "domain": "PGO-Demo",
+      "nodetype": "interaction",
+      "icon": "Koppelvlak",
+      "url": "",
+      "groups": ["VZVZ"]
+    },
+    {
+      "id": "Ivido PGO",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "Systeem",
+      "url": "",
+      "groups": ["Ivido"]
+    },
+    {
+      "id": "Ivido PGO Server",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "DomeinPlatformen",
+      "url": "",
+      "groups": ["Ivido"]
+    },
+    {
+      "id": "Ivido Autorisaties",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["Ivido"]
+    },
+    {
+      "id": "IRMA",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "Systeem",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Client",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Patient",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgprofessional",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Huisarts",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "HINQ ZNO",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "Systeem",
+      "url": "",
+      "groups": ["HINQ"]
+    },
+    {
+      "id": "Enovation DVZA",
+      "domain": "PGO-Demo",
+      "nodetype": "interaction",
+      "icon": "Koppelvlak",
+      "url": "",
+      "groups": ["Enovation"]
+    },
+    {
+      "id": "Enovation Autorisaties",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["Enovation"]
+    },
+    {
+      "id": "Enovation Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": ["Enovation"]
+    },
+    {
+      "id": "HINQ XDS",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "Beelden",
+      "url": "",
+      "groups": ["HINQ"]
+    },
+    {
+      "id": "Enovation Translation Server",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "_network_node",
+      "url": "",
+      "groups": ["Enovation"]
+    },
+    {
+      "id": "Regio Enovation XDS",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "Beelden",
+      "url": "",
+      "groups": ["Enovation"]
+    },
+    {
+      "id": "Pharmapartners Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Nedap Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Gerimedica Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Pink Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Chipsoft Resources",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "ResourceServer",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Pharmapartners Medicom",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Systeem",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Fundis",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Kantoor",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorginstelling1",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "_building",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorginstelling2",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "_building",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD Nedap",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "EPD-z",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD Ysis - Gerimedica",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "EPD-z",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Parnassia GGZ Rivierduinen",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "GGZ",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "ECD - Pink",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "EPD-z",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Langeland Reinier Haga",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Ziekenhuis",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "EPD HIX Chipsoft",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "EPD-z",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Chipsoft Zorgplatform",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "DomeinPlatformen",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Zorgprofessional Huisarts",
+      "domain": "PGO-Demo",
+      "nodetype": "party",
+      "icon": "Huisarts",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Ivido Autorisaties dup",
+      "domain": "PGO-Demo",
+      "nodetype": "system",
+      "icon": "AutorisatieServer",
+      "url": "",
+      "groups": ["Ivido"]
+    },
+    {
+      "id": "Enovation Hub",
+      "domain": "PGO-Demo",
+      "nodetype": "platform",
+      "icon": "DomeinPlatformen",
+      "url": "",
+      "groups": ["Enovation"]
+    }
+  ],
+  "links": [
+    {
+      "from": "VZVZ",
+      "to": "LSP",
+      "label": "Serves",
+      "linktype": "system"
+    },
+    {
+      "from": "LSP",
+      "to": "VZVZ Resources",
+      "label": "Resources",
+      "linktype": "part"
+    },
+    {
+      "from": "LSP",
+      "to": "VZVZ Autorisaties",
+      "label": "Autorisatie",
+      "linktype": "part"
+    },
+    {
+      "from": "LSP",
+      "to": "VZVZ DVZA",
+      "label": "Data + Autorisaties",
+      "linktype": "actor"
+    },
+    {
+      "from": "VZVZ DVZA",
+      "to": "Ivido PGO Server",
+      "label": "Medicatie",
+      "linktype": "actor"
+    },
+    {
+      "from": "Ivido PGO",
+      "to": "Ivido Autorisaties",
+      "label": "Autorisatie",
+      "linktype": "part"
+    },
+    {
+      "from": "Ivido PGO",
+      "to": "Ivido PGO Server",
+      "label": "Resources",
+      "linktype": "part"
+    },
+    {
+      "from": "IRMA",
+      "to": "Ivido PGO",
+      "label": "Authenticatie",
+      "linktype": "use"
+    },
+    {
+      "from": "Ivido PGO Server",
+      "to": "Ivido Autorisaties",
+      "label": "?",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido PGO Server",
+      "to": "HINQ ZNO",
+      "label": "?",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido Autorisaties",
+      "to": "HINQ ZNO",
+      "label": "?",
+      "linktype": "refer"
+    },
+    {
+      "from": "Client",
+      "to": "Ivido PGO",
+      "label": "Gebruik",
+      "linktype": "use"
+    },
+    {
+      "from": "Client",
+      "to": "IRMA",
+      "label": "Inloggen",
+      "linktype": "use"
+    },
+    {
+      "from": "Zorgprofessional",
+      "to": "HINQ ZNO",
+      "label": "Gebruik",
+      "linktype": "use"
+    },
+    {
+      "from": "Ivido PGO Server",
+      "to": "Enovation DVZA",
+      "label": "?",
+      "linktype": "actor"
+    },
+    {
+      "from": "Enovation Hub",
+      "to": "Enovation DVZA",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "from": "Enovation Hub",
+      "to": "Enovation Autorisaties",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "Enovation Hub",
+      "to": "Enovation Resources",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "Enovation Hub",
+      "to": "Enovation Translation Server",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "Enovation Translation Server",
+      "to": "Enovation Resources",
+      "label": "FHIR",
+      "linktype": "refer"
+    },
+    {
+      "from": "Enovation Hub",
+      "to": "HINQ XDS",
+      "label": "PDFA-Beelden",
+      "linktype": "refer"
+    },
+    {
+      "from": "Regio Enovation XDS",
+      "to": "HINQ XDS",
+      "label": "?",
+      "linktype": "refer"
+    },
+    {
+      "from": "Pharmapartners Resources",
+      "to": "Enovation Translation Server",
+      "label": "Huisarts",
+      "linktype": "refer"
+    },
+    {
+      "from": "Gerimedica Resources",
+      "to": "Enovation Translation Server",
+      "label": "Langdurige zorg",
+      "linktype": "refer"
+    },
+    {
+      "from": "Nedap Resources",
+      "to": "Enovation Translation Server",
+      "label": "Langdurige zorg",
+      "linktype": "refer"
+    },
+    {
+      "from": "Pink Resources",
+      "to": "Enovation Translation Server",
+      "label": "GGZ",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft Resources",
+      "to": "Enovation Translation Server",
+      "label": "Zorg",
+      "linktype": "refer"
+    },
+    {
+      "from": "Pharmapartners Medicom",
+      "to": "Pharmapartners Resources",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Fundis",
+      "to": "EPD Ysis - Gerimedica",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Fundis",
+      "to": "ECD Nedap",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorginstelling2",
+      "to": "EPD Ysis - Gerimedica",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "Zorginstelling1",
+      "to": "ECD Nedap",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "ECD Nedap",
+      "to": "Nedap Resources",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "EPD Ysis - Gerimedica",
+      "to": "Gerimedica Resources",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Parnassia GGZ Rivierduinen",
+      "to": "ECD - Pink",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "ECD - Pink",
+      "to": "Pink Resources",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Langeland Reinier Haga",
+      "to": "EPD HIX Chipsoft",
+      "label": "",
+      "linktype": "part"
+    },
+    {
+      "from": "EPD HIX Chipsoft",
+      "to": "Chipsoft Resources",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Chipsoft Zorgplatform",
+      "to": "EPD HIX Chipsoft",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Zorgprofessional Huisarts",
+      "to": "Pharmapartners Medicom",
+      "label": "HIS",
+      "linktype": "use"
+    },
+    {
+      "from": "Chipsoft Zorgplatform",
+      "to": "Regio Enovation XDS",
+      "label": "PDFA-Beelden",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido Autorisaties dup",
+      "to": "Pharmapartners Medicom",
+      "label": "SSO",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido Autorisaties dup",
+      "to": "Fundis",
+      "label": "SSO",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido Autorisaties dup",
+      "to": "Parnassia GGZ Rivierduinen",
+      "label": "SSO",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido Autorisaties dup",
+      "to": "Chipsoft Zorgplatform",
+      "label": "SSO",
+      "linktype": "refer"
+    },
+    {
+      "from": "Enovation DVZA",
+      "to": "DVZA",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "VZVZ DVZA",
+      "to": "DVZA",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "from": "Ivido PGO",
+      "to": "PGO",
+      "label": "",
+      "linktype": "refer"
+    }
+  ],
+  "groups": [
+    {
+      "name": "VZVZ",
+      "nodes": ["PGO", "Ivido"]
+    }
+  ]
+}

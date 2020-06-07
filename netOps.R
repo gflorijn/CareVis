@@ -17,7 +17,7 @@ znops.focusLinks <- function(g, nodes, linktypes) {
 }
 
 # Voeg een view toe aan de graaf. includeall geeft aan of alle nodes/links erbij horen
-znops.startViewOpGraaf <- function(graaf, viewnaam) {
+initializeViewOnGraph <- function(graaf, viewnaam) {
   # bewaar de aangemaakte views 
   x = graph_attr(graaf, "hasviews")
   if (is.null(x))
@@ -95,7 +95,7 @@ znops.verwijderLinksUitView <- function(graaf, view, edges) {
 
 znops.nodesInView <- function(graaf, view) {
   g = graaf
-  V(g)$naam[vertex_attr(g, view, V(g))]
+  V(g)$name[vertex_attr(g, view, V(g))]
 }
 
 znops.linksInView <- function(graaf, view) {

@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "id": "_Platformen",
+      "domain": "Platformen",
+      "nodetype": "category",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Sananet",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Luscii",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "KIS",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "https://www.ketenzorgfriesland.nl/portal-kz-zorgverlener-pagina/kis",
+      "groups": []
+    },
+    {
+      "id": "Zorgplatform",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Covid-19 Portaal",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    },
+    {
+      "id": "Minddistrict",
+      "domain": "Platformen",
+      "nodetype": "platform",
+      "icon": "",
+      "url": "",
+      "groups": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Sananet",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Zorgplatform",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Luscii",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Minddistrict",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis",
+      "to": "Covid-19 Portaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Ziekenhuis2",
+      "to": "Covid-19 Portaal",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "from": "Covid-19 Portaal",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "from": "Covid-19 Portaal",
+      "to": "Dossier",
+      "label": "",
+      "linktype": "object"
+    }
+  ]
+}
