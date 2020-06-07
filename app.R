@@ -213,6 +213,7 @@ server <- function(input, output, session) {
  
     observeEvent(input$showabout, {
       showModal(modalDialog(
+        easyClose = TRUE,
         title = "About NetVis",
         tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
         tags$p("Gert Florijn, 2020")
@@ -226,6 +227,7 @@ server <- function(input, output, session) {
         
     observeEvent(input$showdemos, {
       showModal(modalDialog(
+        easyClose = TRUE,
         title = "Some Demos",
         tags$p("Tutorial - simple illustration of different kinds of nodes"),
         downloadLink("demotutorialjson", "Download json file"),
