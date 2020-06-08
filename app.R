@@ -53,8 +53,8 @@ tagList(
                             tags$hr(),
                             downloadButton("downloadviewasjson", "JSON"),
                             tags$hr(),
-                            actionButton(inputId="interrupt", "Interrupt"),
-                            tags$hr(),
+                            # actionButton(inputId="interrupt", "Interrupt"),
+                            # tags$hr(),
                             actionButton(inputId="quit", "Quit")
                             # tags$hr(),
                             # actionButton(inputId="interrupt", "Interrupt"),
