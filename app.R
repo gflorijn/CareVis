@@ -53,6 +53,8 @@ tagList(
                             tags$hr(),
                             downloadButton("downloadviewasjson", "JSON"),
                             tags$hr(),
+                            actionButton(inputId="interrupt", "Interrupt"),
+                            tags$hr(),
                             actionButton(inputId="quit", "Quit")
                             # tags$hr(),
                             # actionButton(inputId="interrupt", "Interrupt"),
@@ -199,9 +201,9 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- # observeEvent(input$interrupt, {
- #    browser()
- #     })
+ observeEvent(input$interrupt, {
+    browser()
+     })
     
     # handle tabpanel selection event
     #

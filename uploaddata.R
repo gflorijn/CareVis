@@ -59,13 +59,13 @@ uploadData <- function(input, output, session, viewid, netinfo) {
     haveerrors = FALSE
     msg = ""
     
-    dupn = existnds[existnds %in% newnds]
-    if (length(dupn) > 0) {
-      msg1 = paste0("Duplicate nodes: ")
-      msg2 = unique(dupn)
-      msg = c(msg1, msg2, ". ")
-      haveerrors = TRUE
-    }
+    # dupn = existnds[existnds %in% newnds]
+    # if (length(dupn) > 0) {
+    #   msg1 = paste0("Duplicate nodes: ")
+    #   msg2 = unique(dupn)
+    #   msg = c(msg1, msg2, ". ")
+    #   haveerrors = TRUE
+    # }
     mis = checkNodesInLinks(allnodes, newlks)
     if (length(mis) > 0) {
       msg1 = c(msg, " Missing node definitions for ")

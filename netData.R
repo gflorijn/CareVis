@@ -15,6 +15,7 @@ loadNetworkLayer <- function(nodeslinks=NULL, naam) {
   nls = fromJSON(paste0("Data/", naam, ".json"))
   lnodes=nls$nodes
   llinks=nls$links
+  
 
   # lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
   # llinks <- read.csv2(paste0("Data/", naam, "-Links.csv"), header=T, colClasses="character", sep=";")
@@ -29,8 +30,8 @@ loadNetworkLayer <- function(nodeslinks=NULL, naam) {
   dupn = oln$id[oln$id %in% lnodes$id]
   err = FALSE
   if (length(dupn) > 0) {
-    simpleMessage(cat("Layer ", naam, ":  duplicate node in nodes file: ", unique(dupn), ". Layer skipped.\n"))
-    err = TRUE
+    simpleMessage(cat("Warning - Layer ", naam, ":  duplicate node in nodes file: ", unique(dupn), ".\n"))
+    err = FALSE
   }
   n = checkNodesInLinks(nodenames, llinks)
   if (length(n) > 0) {
@@ -92,6 +93,7 @@ readNetworkData <-  function(layers) {
   links = nls$links
   links$van = links$from
   links$naar = links$to
+  
   network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
   list(rawnodes = rawnodes, rawlinks = rawlinks, nodes=nodes, links=links, network=network, layers=layers)
 }
@@ -126,9 +128,13 @@ addAdditionalData <- function(netinfo, additionaldata) {
   addrawnodes = additionaldata$nodes
   addrawlinks = additionaldata$links
   
-  #allow new colums through the use of bind_rows
-  netinfo$rawnodes = dplyr::bind_rows(netinfo$rawnodes, addrawnodes)
+  #allow new colums through the use of bind_rows. New node defs override existing
+  netinfo$rawnodes = netinfo$rawnodes[!(netinfo$rawnodes$id %in% addrawnodes$id),]
+  netinfo$rawnodes= dplyr::bind_rows(netinfo$rawnodes, addrawnodes)
   netinfo$rawlinks = dplyr::bind_rows(netinfo$rawlinks, addrawlinks)
+  #Note: rawlinks may contain duplicate edges
+  #So: remove them. Unclear which is removed (should be the older)
+  netinfo$rawlinks = unique(netinfo$rawlinks)
   
   addnodes = additionaldata$nodes
   addlinks = additionaldata$links
@@ -136,9 +142,10 @@ addAdditionalData <- function(netinfo, additionaldata) {
   addnodes$name = addnodes$id
   addlinks$van = addlinks$from
   addlinks$naar = addlinks$to
-#  browser()
-  netinfo$nodes = dplyr::bind_rows(netinfo$nodes, addnodes)
+  netinfo$nodes = dplyr::bind_rows(netinfo$nodes[!(netinfo$nodes$name %in% addnodes$name),], addnodes)
   netinfo$links = dplyr::bind_rows(netinfo$links, addlinks)
+  netinfo$links = unique(netinfo$links)
+  
   netinfo$network = graph_from_data_frame(d=netinfo$links, vertices=netinfo$nodes, directed=T)
   netinfo
 }

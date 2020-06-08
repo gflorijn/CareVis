@@ -31,21 +31,6 @@ initializeViewOnGraph <- function(graaf, viewnaam) {
 }
 
 
-# Geef de namen van nodes die gelinkt zijn (volgens een relatie in linktypes) aan elementen uit nodes en geef ook de links
-znops.friendNodes <-  function(g, nodes, linktypes, blacklist) {
-  res = c()
-  for (node in nodes) {
-    es = incident(g, node)
-    els = es[es$linktype %in% linktypes]
-    ns = c(els$from, els$to)
-    res = append(res, ns)
-  }
-  res = unique(res)
-  res = res[!(res %in% nodes)]
-  res = res[!(res %in% blacklist)]
-  res
-}
-
 # Focus de view op de aangegeven nodes
 restartViewOnNodes <- function(g, view, nodes) {
   edge_attr(g, view, E(g)) <- FALSE
@@ -58,7 +43,6 @@ restartViewOnNodes <- function(g, view, nodes) {
 addFriendsToView <- function(graaf, view, node, linktypes) {
   #browser()
   #cat("voeg vrienden ", node, " toe aan ", view, '\n')
-  
   es = incident(graaf, node)
   els = es[es$linktype %in% linktypes]
   ns = unique(c(els$van, els$naar))
