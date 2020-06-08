@@ -102,10 +102,15 @@ znops.copyViewInfo <- function(graaf, fromview, toview) {
   g
 }
 
-getNodesAndLinksForView  <- function(graph, view) {
+getGraphForView <- function(graph, view) {
   subg = graph
   subg = subg - V(subg)[!vertex_attr(subg, view, V(subg))]
   subg = subg - E(subg)[!edge_attr(subg, view, E(subg))]
+  return(subg)
+}
+
+getNodesAndLinksForView  <- function(graph, view) {
+  subg = getGraphForView(graph, view)
   nodes = as_data_frame(subg, what="vertices")
   links = as_data_frame(subg, what="edges")
   return(list(nodes=nodes, links=links))

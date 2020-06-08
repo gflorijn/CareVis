@@ -201,10 +201,10 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- observeEvent(input$interrupt, {
-    browser()
-     })
-    
+ # observeEvent(input$interrupt, {
+ #    browser()
+ #     })
+ #    
     # handle tabpanel selection event
     #
     observeEvent(input$theAppPage, {
@@ -437,14 +437,33 @@ server <- function(input, output, session) {
 
 # Export the graph --------------------------------------------------------
 
+    removeInternalColums <- function(nodeslinks) {
+      nd = nodeslinks$nodes
+      nl = nodeslinks$links
+
+      nd$groupnames = NULL
+      nd$brokenImage = NULL
+      nd$image = NULL
+      nd$Main = NULL
+      colnames(nd)[colnames(nd) == "name"] <- "id"
+      nl$Main = NULL
+      nl$van = NULL
+      nl$naar = NULL
+      return(list(nodes=nd, links=nl))
+    }
     
   output$downloadviewasjson = downloadHandler(
       filename <- function() {
         "currentview.json"
       },
       content <- function(file) {
-        writeLines(toJSON(getNodesAndLinksForView(rv$theigraph, rv$thecurrentview), pretty=T), file)
+       d = getNodesAndLinksForView(rv$theigraph, rv$thecurrentview)
+        r = removeInternalColums(d)
+        writeLines(
+          toJSON(
+           r , pretty=T, rownames = FALSE), file)
       }
+      
     )
     
   #
@@ -679,5 +698,6 @@ server <- function(input, output, session) {
       vnt
       })
 }
+
 
 shinyApp(ui = ui, server = server)

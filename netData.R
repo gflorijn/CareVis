@@ -3,6 +3,8 @@
 
 require("igraph", quietly=T)
 require("jsonlite", quietly=T)
+require("r2d3", quietly=T)
+require("d3r", quietly=T)
 
 # laad de data  een bepaald perspectief. Elk perspectief omvat nodes.
 #de functie levert een list op van twee dataframes - de nodes en de links.

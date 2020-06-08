@@ -193,6 +193,12 @@
       "linktype": "refer"
     },
     {
+      "from": "ZA Interface",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
       "from": "ZA Zorgaanbieder",
       "to": "ZA Systeem",
       "label": "",
