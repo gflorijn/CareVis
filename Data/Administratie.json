@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "CIZ",
@@ -14,7 +14,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "http://www.ciz.nl",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Gemeente",
@@ -22,7 +22,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgverzekeraar",
@@ -30,7 +30,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgkantoor",
@@ -38,8 +38,8 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": []
+  "edges": []
 }

@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Huisarts",
@@ -14,7 +14,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Ziekenhuis",
@@ -22,7 +22,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Apotheek",
@@ -30,7 +30,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Paramedici",
@@ -38,7 +38,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "VVT",
@@ -46,7 +46,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Ziekenhuis2",
@@ -54,7 +54,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Laboratorium",
@@ -62,7 +62,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "GGZ",
@@ -70,7 +70,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Huisartsenpost",
@@ -78,8 +78,8 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": []
+  "edges": []
 }

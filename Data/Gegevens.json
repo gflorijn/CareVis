@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Medicatieoverzicht",
@@ -14,7 +14,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Recept",
@@ -22,7 +22,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Verstrekkingsbericht",
@@ -30,7 +30,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Waarneembericht",
@@ -38,7 +38,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Waarneming",
@@ -46,7 +46,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Professionele samenvatting",
@@ -54,7 +54,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Verwijzing",
@@ -62,7 +62,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Opname-Ontslagmelding",
@@ -70,7 +70,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Voortgangsmelding",
@@ -78,7 +78,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Afspraken",
@@ -86,7 +86,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "eConsult",
@@ -94,7 +94,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Metingen",
@@ -102,7 +102,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Orders",
@@ -110,7 +110,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Uitslagen",
@@ -118,7 +118,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Overdrachtdossier",
@@ -126,7 +126,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Beelden",
@@ -134,7 +134,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Dossier",
@@ -142,7 +142,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Huisartsdossier",
@@ -150,7 +150,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Monitoring",
@@ -158,7 +158,7 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Autorisaties",
@@ -166,8 +166,8 @@
       "nodetype": "object",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": []
+  "edges": []
 }

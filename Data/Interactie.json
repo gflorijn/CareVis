@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Verwijzen",
@@ -14,7 +14,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Medicatie",
@@ -22,7 +22,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Onderzoek",
@@ -30,7 +30,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Order",
@@ -38,7 +38,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Uitslagen",
@@ -46,7 +46,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Ziekenhuiszorg",
@@ -54,7 +54,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Overdracht",
@@ -62,7 +62,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Waarnemen",
@@ -70,7 +70,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-eHealth",
@@ -78,7 +78,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Administratie",
@@ -86,7 +86,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Aanvraagzorg",
@@ -94,7 +94,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-COV",
@@ -102,7 +102,7 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "i-Declareren",
@@ -110,10 +110,10 @@
       "nodetype": "interaction",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "Huisarts",
       "to": "i-Medicatie",

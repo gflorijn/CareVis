@@ -17,73 +17,61 @@ extendNetworkInfoForVisualisation <-  function(nstruct) {
   # See display.brewer.all() for examples
   #
   dcolors = brewer.pal(length(ns$domains),"Set3")
-  dshapes = rep("dot", length(ns$domains))
   ltcolors = brewer.pal(length(ns$linktypes), "Accent")
   ltcolors[4] = ltcolors[8]
   #ip <- "http://localhost:8001/www/"
   ip <- ""
   
   ns[["domaincolors"]] = dcolors
-  ns[["domainshapes"]] = dshapes
   ns[["linktypecolors"]] = ltcolors
   ns[["imagepath"]] = ip
   
   ns
 }
 
+# define basic properties for visualisation of network
 #
-#Zet basis settings voor visualisatie van graaf, gegeven settubgs
-setupVisualDefinitionsForGraph <- function(lnet, netinfo) {
-  #cat('Defaultvisualisatiesettings voor graaf\n')
-  llnet = lnet
-  ns = netinfo
-  V(llnet)$color = mapvalues(V(llnet)$domain, from=ns$domains, to=ns$domaincolors, warn_missing = FALSE)
-  V(llnet)$shape = mapvalues(V(llnet)$domain, from=ns$domains, to=ns$domainshapes, warn_missing = FALSE)
-  E(llnet)$color = mapvalues(E(llnet)$linktype, from=ns$linktypes, to=ns$linktypecolors, warn_missing = FALSE)
+setupVisualDefinitionsForNetwork <- function(net) {
+  
+  nd = net$nodes
+  ne = net$edges
+  
+  nd$color = mapvalues(nd$domain, from=net$domains, to=net$domaincolors, warn_missing = TRUE)
+  ne$color = mapvalues(ne$linktype, from=net$linktypes, to=net$linktypecolors, warn_missing = TRUE)
+  
+  nd$image = str_c(net$imagepath, "Images/", if_else( (nd$icon!=""), nd$icon, nd$name), ".png")
+  nd$brokenImage = str_c(net$imagepath, "Images/NotFound", ".png")
 
-  # Default attempt for imagefile is the node name.
-  # Can be overriden by the icon attribute
-  V(llnet)$image = paste0(ns$imagepath, "Images/", V(llnet)$name, ".png")
-  iconnodes = V(llnet)[V(llnet)$icon != ""]
-  for (i in iconnodes) {
-    V(llnet)[i]$image = paste0(ns$imagepath, "Images/", V(llnet)[i]$icon, ".png")
-  }
-  V(llnet)$brokenImage = paste0(ns$imagepath, "Images/NotFound", ".png")
-
-  #  browser()
-  #string representation for groups used in networdk browser widget
-  for (n in V(llnet)[[]]) {
-    V(llnet)[[n]]$groupnames = toString(V(llnet)[[n]]$groups)
-  }
-  llnet 
+  # nd$groupnames = vapply(nd$groups, toString, character(1L))
+  net$nodes = nd
+  net$edges = ne
+  return(net)
 }
+  
 
 
+addVisualSettingsForView <- function(view, doimages, dolinklabels) {
+    # cat('Add visuals\n')
+    
+    if (doimages) {
+      view$nodes$shape = "image"
+    }
+    else {
+      view$nodes$shape = "dot"
+    }
 
-#Set the properties for visualisation
-visNetworkVisualisationSettings <- function(lnet, netinfo, doimages, dolinks, dolinklabels) {
-  
-  vnet = lnet
+    #Set node label to name if no label is provided - TODO!
+    
+    view$nodes$label = view$nodes$name
 
-  # see the visnetwork documentation for meaning. Size is node size, value a scale factor
-  #  V(vnet)$size = 25
-  #  V(vnet)$value = 20
-  
-  if (doimages) {
-    V(vnet)$shape = "image" 
-  }
-  
-  # Hide category nodes
-  V(vnet)[V(vnet)$nodetype=="category"]$hidden=TRUE
-  
-  V(vnet)$widthConstraint = TRUE  #Applies to long labels inside shapes - not useful for images
- 
-  if (!dolinklabels) {
-    E(vnet)$label = ""
-  }
-  E(vnet)$hidden = !dolinks
-#  E(vnet)$width = 2
-  
-  vnet
+    # Hide category nodes
+    view$nodes = subset(view$nodes, view$nodes$nodetype != "category")
+
+    #view$nodes$widthConstraint = TRUE  #Applies to long labels inside shapes - not useful for images
+
+    if (!dolinklabels) { # hiermee verdwijnen de labels, 
+      view$edges$label = ""
+    }
+
+    return(view)
 }
-
