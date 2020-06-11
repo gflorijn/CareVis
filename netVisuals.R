@@ -69,7 +69,7 @@ addVisualSettingsForView <- function(view, doimages, dolinklabels) {
 
     #view$nodes$widthConstraint = TRUE  #Applies to long labels inside shapes - not useful for images
 
-    if (!dolinklabels) { # hiermee verdwijnen de labels, 
+    if (!dolinklabels) { # hiermee verdwijnen de labels, TODO
       view$edges$label = ""
     }
 

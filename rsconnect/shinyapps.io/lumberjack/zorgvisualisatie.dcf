@@ -5,8 +5,9 @@ account: lumberjack
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2349985
-bundleId: 3185121
+bundleId: 3244087
 url: https://lumberjack.shinyapps.io/zorgvisualisatie/
-when: 1590350817.30075
+when: 1591644957.5869
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: README|TODO|Demos/.DS_Store

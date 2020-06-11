@@ -38,79 +38,90 @@ tagList(
   ),
 
   tabPanel("Main",
-           sidebarLayout(
-             sidebarPanel(width=1,
-                          fluidRow(
-                            actionButton("showabout", "About"),
-                            tags$hr(),
-                            actionButton("showgraph", "Redraw"),
-                            tags$hr(),
-                            actionButton("restart", "Restart"),
-                            tags$hr(),
-                            actionButton("showdemos", "Examples"),
-                            tags$hr(),
-                            downloadButton("export", "Export"),
-                            tags$hr(),
-                            downloadButton("downloadviewasjson", "JSON"),
-                            tags$hr(),
-                             actionButton(inputId="interrupt", "Interrupt"),
-                             tags$hr(),
-                            actionButton(inputId="quit", "Quit")
-                          )
-             ),
-             mainPanel(width = 11,
-                fluidRow(
-                 column(2, checkboxInput("navigation", "Navigation", TRUE)),
-                 column(2, checkboxInput("undirected", "Undirected", value=TRUE)),
-                 column(2, checkboxInput("images", "Icons", TRUE)),
-                 column(2, checkboxInput("linklabels", "Link names", TRUE)),
-                 column(2, checkboxInput("igraphlayout", "iGraph layout"))
-                # column(2, checkboxInput("smooth", "Smooth"))
+           div(
+             class = "outer",
+             tags$head(includeCSS("styles.css")),
+             
+             sidebarLayout(
+               sidebarPanel(
+                 width = 1,
+                 fluidRow(
+                   actionButton("showabout", "About"),
+                   tags$hr(),
+                   actionButton("showgraph", "Redraw"),
+                   tags$hr(),
+                   actionButton("restart", "Restart"),
+                   tags$hr(),
+                   actionButton("showdemos", "Examples"),
+                   tags$hr(),
+                   downloadButton("export", "Export"),
+                   tags$hr(),
+                   downloadButton("downloadviewasjson", "JSON"),
+                   tags$hr(),
+                   actionButton(inputId = "interrupt", "Interrupt"),
+                   tags$hr(),
+                   actionButton(inputId = "quit", "Quit")
+                 )
                ),
-               fluidRow(
-                 column(2, uiOutput("startpointsmenu")),
-                 column(3, uiOutput("searchnodemenu")),
-                 column(2, textInput("nodefield", label=NULL)),
-                 column(2, uiOutput("singlenodeselectmenu")),
-                 column(3, uiOutput("viewnodeselectmenu")),
-                 # column(1, uiOutput("viewselectmenu"))
-               ),
-               tags$hr(),
-               visNetworkOutput("graph_panel", height="700px", width="100%")
+               mainPanel(
+                 width = 11,
+                 fluidRow(
+                   column(2, checkboxInput("navigation", "Navigation", TRUE)),
+                   column(2, checkboxInput("undirected", "Undirected", value =
+                                             TRUE)),
+                   column(2, checkboxInput("images", "Icons", TRUE)),
+                   column(2, checkboxInput("linklabels", "Link names", TRUE)),
+                   column(2, checkboxInput("manipulationmode", "Edit mode", FALSE)),
+                   column(2, checkboxInput("igraphlayout", "iGraph layout"))
+                   # column(2, checkboxInput("smooth", "Smooth"))
+                 ),
+                 fluidRow(
+                   column(2, uiOutput("startpointsmenu")),
+                   column(3, uiOutput("searchnodemenu")),
+                   column(2, textInput("nodefield", label = NULL)),
+                   column(2, uiOutput("singlenodeselectmenu")),
+                   column(3, uiOutput("viewnodeselectmenu")),
+                   # column(1, uiOutput("viewselectmenu"))
+                 ),
+                 tags$hr(),
+                 visNetworkOutput("graph_panel", height = "700px", width =
+                                    "100%"),
+                 absolutePanel(
+                   id = "editcontrols",
+                   class = "panel panel-default",
+                   top = 200,
+                   left = 320,
+                   width = 250,
+                   fixed = TRUE,
+                   draggable = TRUE,
+                   height = "auto", 
+                   uiOutput("editmodemenu")
+                 )
+               )
              )
-           )
-  ),
+           )), 
   tabPanel("Upload",
            sidebarLayout(
              sidebarPanel(width = 2,
                           tagList(
                             actionButton("adduploadeddata", "Add data to network")
-                          )
-             ),
-             mainPanel(width=10,
-               uploadDataUI("upload"),
-             )
-           )
-  ),
-  tabPanel("Data view - Nodes", 
-           tagList(
-              tags$h2("Nodes"),
-              tags$br(),
-              tableOutput("dataviewnodes")
+                          )),
+             mainPanel(width = 10,
+                       uploadDataUI("upload"),)
            )),
+  tabPanel("Data view - Nodes",
+           tagList(tags$h2("Nodes"),
+                   tags$br(),
+                   tableOutput("dataviewnodes"))),
   
-  tabPanel("Data view - Edges", 
-           tagList(
-             tags$h2("Edges"),
-             tags$br(),
-             tableOutput("dataviewedges")
-           )),
+  tabPanel("Data view - Edges",
+           tagList(tags$h2("Edges"),
+                   tags$br(),
+                   tableOutput("dataviewedges"))),
   
   tabPanel("Help",
-           tagList(
-             helpPageText()
-           ))
- 
+           tagList(helpPageText()))
+  
 )
 )
 
@@ -585,6 +596,7 @@ server <- function(input, output, session) {
     getMenuEntryScriptForColor(linkname, actionlabel, color, "viewmenuclick")
   }
   
+  
   singleNodeSelectMenu <- function() {
     res =  c(
              getNodeMenuEntryScriptFor("actor", "a"), 
@@ -595,7 +607,8 @@ server <- function(input, output, session) {
              getNodeMenuEntryScriptFor("refer", "r"),
              getMenuEntryScriptForColor("all", "*", "black", "nodemenuclick"),
              getMenuEntryScriptForColor("all", "H", "grey", "hidefromview"),
-             getMenuEntryScriptForColor("all", "F", "grey", "switchfocus")
+             getMenuEntryScriptForColor("all", "F", "grey", "switchfocus"),
+             getMenuEntryScriptForColor("all", "C", "grey", "editclonenode")
     )
   }
   
@@ -625,6 +638,12 @@ server <- function(input, output, session) {
       )
   }
   
+  editModeMenu  <- function() {
+    res = c(
+      getMenuEntryScriptForColor("all", "Save changes", "grey", "editmodesavechanges"),
+      getMenuEntryScriptForColor("all", "Cancel edit", "grey", "editmodecancel")
+    )
+  }
   
   output$singlenodeselectmenu <- renderUI({
     tagList(
@@ -646,7 +665,15 @@ server <- function(input, output, session) {
     )
   })
 
-
+  output$editmodemenu <- renderUI({
+    tagList(
+      HTML("&nbsp;&nbsp; Edit mode &nbsp;"),
+      HTML(
+        editModeMenu()
+      )
+    )
+  })
+  
 # Event Experiments -------------------------------------------------------
 
 
@@ -657,61 +684,119 @@ server <- function(input, output, session) {
   # })
   
 
+# Edit Mode actions -------------------------------------------------------
+
+  observeEvent(input$editclonenode, {
+    if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
+      return()
+    rv$activeview = addCloneOfNodeToView(rv$activeview, rv$thenodeselected)
+  })
+  
+  observeEvent(input$editmodesavechanges, {
+    saveEditModeChangelog()
+    flushEditModeChangelog()
+  })
+  
+  observeEvent(input$editmodecancel, {
+    flushEditModeChangelog()
+    rv$forcerepaint = TRUE
+  })
+
+  
+
 # Output rendering for the graph panel ------------------------------------
-  
-  # Splits de output naar 2 niveaus
-  # 1) afhankelijkheid van igraph
-  # 2) afhankelijkheid van de nodes en edge set die het Visnetwork gebruikt
-  # Zie https://stackoverflow.com/questions/54846529/how-to-extract-and-save-visnetwork-manipulation-changes-in-shiny
-  
 
   
-  # Dit is observer die kijkt naar de igraph en veranderingen vertaalt in scherm updates
-  #
-  observeEvent( {
-          rv$activeview
-          rv$forcerepaint},  {
 
-    if (rv$forcerepaint) { #called when the redraw action has been activated
-      cat('Force repaint\n')
-      rv$forcerepaint = FALSE
+  addCloneOfNodeToView <- function (view, name) {
+    #browser()
+    if (is.null(name) | name == "") {
+      return(view)
     }
-#browser()
-    # Prepare the graph for visualisation
-    #
-    rv$activeview= addVisualSettingsForView(rv$activeview, input$images, input$linklabels)
-
-    # #activate this to show the node-action menu when hovering over the node
-    # V(viewg)$title = HTML(
-    #   singleNodeSelectMenu()
-    # )
-
-      # Save the graph for future use
-      # rv$theviewigraph = viewg  #n this is different from the visgraph. Decide what to use in spawning views.
-
-
-      # allows users to give a specific name to a node. Moet weg - geen igraph meer
-
-      graph_panel_data$nodes = rv$activeview$nodes
-      graph_panel_data$edges = rv$activeview$edges
-   })
+    n = getNodeByName(view, name)
+    newnode = createCloneOfNode(n, str_c(n$name, "_c"))
+    newedge = tibble(from=newnode$id, to=name,  label="", linktype="clone", eid=getEidForEdge(newnode$id,name,"") )
+    
+    net = view$net
+    net = addNodesToNetwork(net, newnode)
+    net = addEdgesToNetwork(net, newedge)
+    net = updateDerivedNetworkInfo(net) # add presentation stuff
+    view$net = net
+    rv$thenetwerkinfo = net  # Should not be here
+    view = addNodesToViewByName(view, newnode$id)
+    view = addEdgesToViewByEid(view, newedge$eid)
+    return(view)
+  }
   
-  #todo
-  #- save changes in a list and carry them through after a save button on a special menu
-  #- add a clone node function based on add new Nodes
-  
-  
+  #produce a clone of node , with name id
+  createCloneOfNode <- function(node, nid) {
+    newnode = node
+    newnode$id = nid
+    newnode$name = nid
+    return(newnode)
+  }
   
   #Make a new node give the id
   createNewNodeForIdWithDefaults <- function(nid) {
     return(tibble(id=nid, name=nid, icon="", url="", groups="", domain="UI", nodetype="undefined"))
   }
  
+  # create a new edge and handle id translation
   createNewEdgeWithDefaults <- function(from,to) {
-    return(tibble(from=from, to=to,  label="", linktype="refer", eid=getEidForEdge(from,to,"") ))
+    fname = if (existsNodeInView(rv$activeview, from)) from else subset(editmodelog$idmap, id==from)$label
+    tname = if (existsNodeInView(rv$activeview, to)) to else subset(editmodelog$idmap, id==to)$label
+    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
   }
 
-  # If the user edits the graph, this shows up in
+  #Capture the changes during an edit session
+  #
+  editmodelog <- reactiveValues(
+      nodes = tibble(),
+      edges = tibble(),
+      idmap = tibble() # map visNetwork ids to our ids
+  )
+  
+  flushEditModeChangelog <- function() {
+    editmodelog$nodes = tibble()
+    editmodelog$edges = tibble()
+    editmodelog$idmap = tibble()
+  }
+ 
+  # mapping from visnetwork id to our label id.
+  editModeLogIdMap <- function(id, label) { 
+    editmodelog$idmap = bind_rows(editmodelog$idmap, tibble(id = id, label = label))
+  }
+    
+  editModeLogAddNodes <- function(nodes) {
+    onodes = editmodelog$nodes
+    onodes = bind_rows(onodes, nodes)
+    editmodelog$nodes = onodes
+  }
+  
+  editModeLogAddEdges <- function(edges) {
+    #browser()
+    oedges = editmodelog$edges
+    oedges = bind_rows(oedges, edges)
+    editmodelog$edges = oedges
+  }
+  
+  saveEditModeChangelog <- function() {
+#    browser()
+    net = rv$activeview$net
+    net = addNodesToNetwork(net, editmodelog$nodes)
+    net = addEdgesToNetwork(net, editmodelog$edges)
+    net = updateDerivedNetworkInfo(net)
+    rv$activeview$net = net
+    rv$thenetworkinfo = net
+    
+    view = rv$activeview
+    
+    view = addNodesToViewByName(view, editmodelog$nodes$id)
+    view = addEdgesToViewByEid(view, editmodelog$edges$eid)
+    rv$activeview = view
+  }
+  
+   # If the user edits the graph, this shows up in
   # `input$[name_of_the_graph_output]_graphChange`.  This is a list whose
   # members depend on whether the user added a node or an edge.  The "cmd"
   # element tells us what the user did.
@@ -724,18 +809,47 @@ server <- function(input, output, session) {
         nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
         nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
         newnode = createNewNodeForIdWithDefaults(nlabel)
-        rv$activeview = addNewNodesToNetworkAndView(rv$activeview, newnode)
-        rv$activeview$net = updateDerivedNetworkInfo(rv$activeview$net)
-        rv$thenetworkinfo = rv$activeview$net
+        editModeLogIdMap(nid, nlabel)
+        editModeLogAddNodes(newnode)
       }
-      else if (cmd == "addEdge") {
+      else if (cmd == "addEdge") { 
+        
+        
         nfrom = input$graph_panel_graphChange$from
         nto = input$graph_panel_graphChange$to
         newedge = createNewEdgeWithDefaults(nfrom, nto)
-        rv$activeview = addNewEdgesToNetworkAndView(rv$activeview, newedge)
-        rv$activeview$net = updateDerivedNetworkInfo(rv$activeview$net)
-        rv$thenetworkinfo = rv$activeview$net
+        editModeLogAddEdges(newedge)
       }
+    })
+
+
+# Rendering the view -----------------------------------------------------
+
+  
+  # The observer watching the current view
+  observeEvent( {
+    rv$activeview
+    rv$forcerepaint},  {
+      
+      if (rv$forcerepaint) { #called when the redraw action has been activated
+        #cat('Force repaint\n')
+        rv$forcerepaint = FALSE
+      }
+      
+      flushEditModeChangelog()
+      
+      #browser()
+      # Prepare the graph for visualisation
+      #
+      rv$activeview= addVisualSettingsForView(rv$activeview, input$images, input$linklabels)
+      
+      # #activate this to show the node-action menu when hovering over the node
+      # V(viewg)$title = HTML(
+      #   singleNodeSelectMenu()
+      # )
+      
+      graph_panel_data$nodes = rv$activeview$nodes
+      graph_panel_data$edges = rv$activeview$edges
     })
   
   
@@ -747,7 +861,7 @@ server <- function(input, output, session) {
   
       # Allow interaction - note: nodes can be in multiple groups
       # Allow maniuplation - should be switch?
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, manipulation = TRUE,
+      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, manipulation = input$manipulationmode,
                        selectedBy=list(variable = "groups", multiple = TRUE))
   
       if (input$igraphlayout) {

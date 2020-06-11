@@ -52,10 +52,9 @@ addNodesToViewByName <-  function(view, nodeids) {
 }
 
 addEdgesToViewByEid <-  function(view, eids) {
-  #browser()
   basenet = view$net
   newedges = subset(basenet$edges, basenet$edges$eid %in% eids)
-  nondups = subset(view$edges, !(view$edges$eids %in% eids))
+  nondups = subset(view$edges, !(view$edges$eid %in% eids))
   view$edges = bind_rows(nondups, newedges)
   return(view)
 }
@@ -101,28 +100,13 @@ removeEdgesFromViewById <-  function(view, eids) {
 }
 
 
-# add a new node  to the network and the view
-#
-addNewNodesToNetworkAndView <- function(view, node) {
-  net = view$net
-  net = addNodesToNetwork(net, node)
-  view$net = net
-  view = addNodesToViewByName(view, node$id)
-  return(view)
+getNodeByName <-  function(view, n) {
+  nd = subset(view$nodes, name == n)
+  return(nd)
 }
 
-# add a new node  to the network and the view
-#
-addNewEdgesToNetworkAndView <- function(view, edge) {
-  net = view$net
-  net = addEdgesToNetwork(net, edge)
-  view$net = net
-  view = addEdgesToViewByEid(view, edge$eid)
-  return(view)
-}
-
-getNodeByName <-  function(view, name) {
-  return(subset(view$nodes, view$nodes$name == name))
+existsNodeInView <- function(view, n) {
+  return(nrow(subset(view$nodes, name==n)) > 0)
 }
 
 getNodeNamesInView <- function(view) {
