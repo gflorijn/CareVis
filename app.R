@@ -53,11 +53,9 @@ tagList(
                             tags$hr(),
                             downloadButton("downloadviewasjson", "JSON"),
                             tags$hr(),
-                            # actionButton(inputId="interrupt", "Interrupt"),
-                            # tags$hr(),
+                             actionButton(inputId="interrupt", "Interrupt"),
+                             tags$hr(),
                             actionButton(inputId="quit", "Quit")
-                            # tags$hr(),
-                            # actionButton(inputId="interrupt", "Interrupt"),
                           )
              ),
              mainPanel(width = 11,
@@ -65,8 +63,7 @@ tagList(
                  column(2, checkboxInput("navigation", "Navigation", TRUE)),
                  column(2, checkboxInput("undirected", "Undirected", value=TRUE)),
                  column(2, checkboxInput("images", "Icons", TRUE)),
-                 column(2, checkboxInput("showlinks", "Links", TRUE)),
-                 column(2, checkboxInput("linklabels", "Link names", FALSE)),
+                 column(2, checkboxInput("linklabels", "Link names", TRUE)),
                  column(2, checkboxInput("igraphlayout", "iGraph layout"))
                 # column(2, checkboxInput("smooth", "Smooth"))
                ),
@@ -90,7 +87,7 @@ tagList(
                             actionButton("adduploadeddata", "Add data to network")
                           )
              ),
-             mainPanel(
+             mainPanel(width=10,
                uploadDataUI("upload"),
              )
            )
@@ -102,11 +99,11 @@ tagList(
               tableOutput("dataviewnodes")
            )),
   
-  tabPanel("Data view - Links", 
+  tabPanel("Data view - Edges", 
            tagList(
-             tags$h2("Links"),
+             tags$h2("Edges"),
              tags$br(),
-             tableOutput("dataviewlinks")
+             tableOutput("dataviewedges")
            )),
   
   tabPanel("Help",
@@ -134,8 +131,11 @@ server <- function(input, output, session) {
       themessage = NULL,
       theviewcounter = 0,
       forcerepaint = FALSE,
-      thecurrentview = NULL,
-      thedatauploader = NULL
+      thecurrentviewname = NULL,
+      thedatauploader = NULL,
+      
+      activeview = NULL
+      
     )
 
 
@@ -151,15 +151,38 @@ server <- function(input, output, session) {
         n = readNetworkData(layerstoload)
       }
       else { # in case of extending with uploaded data
-        n = addAdditionalData(netinfo, additionaldata)
+        n = combineNetworks(netinfo, additionaldata)
       }
-      n = addDerivedNetworkData(n)
-      n = extendNetworkInfoForVisualisation(n)
+      n = updateDerivedNetworkInfo(n)
+      
 #      browser()
-      n
+      return(n)
     }
     
+    # Add stuff like domain lists and colors
+    updateDerivedNetworkInfo <- function(net) {
+      n = addDerivedNetworkData(net)
+      n = extendNetworkInfoForVisualisation(n)
+      n = setupVisualDefinitionsForNetwork(n)
+      return(n)
+    } 
+    
+    # 
+    # `graph_panel_data` is a list of two data frames: one of nodes, one of edges.
+    # Deze moeten we initialiseren bij het restart verhaal.
+    graph_panel_data = reactiveValues(
+      nodes = NULL,
+      edges = NULL
+    )
+    # we initialiseren ze van daaruit met  lege dataframe:
+    setGraphPanelData <- function(nds, eds) {
+      graph_panel_data$nodes = nds
+      graph_panel_data$edges = eds
+    }
+    
+    
     restartAll <- function(additionaldata) {
+      #browser()
       ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
 
       rv$thevisgraph = NULL
@@ -167,18 +190,19 @@ server <- function(input, output, session) {
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
       rv$themessage = ""
-      rv$thecurrentview = "Main"
+      rv$thecurrentviewname = "Main"
 #      browser()
-
+        
       # the is the reactive variable from the module that will produce the data to load
       # a list of nodes and links
       rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
 
       nodes = c("Patient")
-      rv$theigraph = ni$network
-      rv$theigraph = initializeViewOnGraph(rv$theigraph, rv$thecurrentview)
-      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
-      rv$theigraph = setupVisualDefinitionsForGraph(rv$theigraph, rv$thenetworkinfo)
+        
+      rv$activeview = newViewOnNetwork(ni, "Main")    
+      rv$activeview = addNodesToViewByName(rv$activeview, nodes)
+
+      setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Main")
     }
@@ -201,14 +225,14 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- # observeEvent(input$interrupt, {
- #    browser()
- #     })
- #    
+ observeEvent(input$interrupt, {
+    browser()
+     })
+
     # handle tabpanel selection event
     #
     observeEvent(input$theAppPage, {
- #     rv$thecurrentview = input$theAppPage
+ #     rv$thecurrentviewname = input$theAppPage
     })
 
 
@@ -310,7 +334,7 @@ server <- function(input, output, session) {
     observeEvent(input$doubleClick, {
       #browser()
       rv$thenodeselected = input$doubleClick$nodes[[1]]
-      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
+      rv$activeview = restartViewOnNodeNames(rv$activeview, rv$thenodeselected)
     }) 
     
     
@@ -318,10 +342,10 @@ server <- function(input, output, session) {
     observeEvent(rv$thenodeselected, {
       rv$themessage = " "
       rv$theurl = ""
-      haveurl = rv$thenodeselected != "" && V(rv$theigraph)[rv$thenodeselected]$url != ""
+      haveurl = rv$thenodeselected != "" && getNodeByName(rv$activeview, rv$thenodeselected)$url != ""
       
       if (haveurl) {
-        rv$theurl = V(rv$theigraph)[rv$thenodeselected]$url
+        rv$theurl = getNodeByName(rv$activeview, rv$thenodeselected)$url
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
       }
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
@@ -336,17 +360,18 @@ server <- function(input, output, session) {
     #click on linkmenu for all nodes in view
     observeEvent(input$viewmenuclick, {
         # browser()
-        growViewByLinks(znops.nodesInView(rv$theigraph, rv$thecurrentview), input$viewmenuclick)
+        growViewByLinks(getNodeNamesInView(rv$activeview), input$viewmenuclick)
     } )
     
     #add nodes by following links of type from nodes
-    growViewByLinks <- function(nodes, l) {
-      linktypes = c(l)
-      if (l == "all")
+    growViewByLinks <- function(nodenames, lt) {
+      linktypes = c(lt)
+      if (lt == "all")
         linktypes = rv$thenetworkinfo$linktypes
-      for (n in nodes) {
-        rv$theigraph = addFriendsToView(rv$theigraph, rv$thecurrentview, n, linktypes)
+      for (n in nodenames) {
+        rv$activeview = addFriendsOfNodeToView(rv$activeview, n, linktypes)
       }
+      #rv$forcerepaint = TRUE
     }
    
     # Force redraw of the graph
@@ -357,17 +382,17 @@ server <- function(input, output, session) {
     
     # hide event
     observeEvent(input$hidefromview, {
-      rv$theigraph = znops.verwijderNodesUitView(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
+      rv$activeview = removeNodesFromViewByName(rv$activeview, c(rv$thenodeselected))
     })
   
     # Focus view on a node
     observeEvent(input$switchfocus, {
-      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, rv$thenodeselected)
+      rv$activeview = restartViewOnNodeNames(rv$activeview, c(rv$thenodeselected))
     }) 
     
      # View the whole underlying network
     observeEvent(input$showall, {
-      rv$theigraph = znops.toonAllesInView(rv$theigraph, rv$thecurrentview)
+      rv$activeview = switchViewToNetwork(rv$activeview)
     }) 
     
     # Should launch a browser for nodes with an URL.
@@ -381,12 +406,14 @@ server <- function(input, output, session) {
 # Data view output --------------------------------------------------------
 
     output$dataviewnodes <- renderTable({
-      flattenedDataFrameForTable(rv$thenetworkinfo$rawnodes)
+      rv$activeview$net$nodes
+      #flattenedDataFrameForTable(rv$activeview$nodes$name)
     })    
     
-    output$dataviewlinks <- renderTable({
+    output$dataviewedges <- renderTable({
 #      browser()
-      flattenedDataFrameForTable(rv$thenetworkinfo$rawlinks)
+      rv$activeview$net$edges
+      #flattenedDataFrameForTable(rv$activeview$edges$eid)
     })    
     
     
@@ -423,10 +450,10 @@ server <- function(input, output, session) {
                       )}
       )
       
-      rv$theigraph = initializeViewOnGraph(rv$theigraph, viewid)
-      rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentview, viewid)
+ #     rv$theigraph = initializeViewOnGraph(rv$theigraph, viewid)
+ #     rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentviewname, viewid)
       
-      gr <- callModule(frozenView, viewid, viewid, rv$thevisgraph)
+      gr <- callModule(frozenView, viewid, viewid, rv$activeview)
 
       # Voeg de tab toeg
       appendTab("theAppPage", tabp, select=TRUE)  
@@ -437,18 +464,13 @@ server <- function(input, output, session) {
 
 # Export the graph --------------------------------------------------------
 
+    #Todo: Remove this
     removeInternalColums <- function(nodeslinks) {
       nd = nodeslinks$nodes
-      nl = nodeslinks$links
+      nl = nodeslinks$edges
 
-      nd$groupnames = NULL
       nd$brokenImage = NULL
       nd$image = NULL
-      nd$Main = NULL
-      colnames(nd)[colnames(nd) == "name"] <- "id"
-      nl$Main = NULL
-      nl$van = NULL
-      nl$naar = NULL
       return(list(nodes=nd, links=nl))
     }
     
@@ -457,8 +479,7 @@ server <- function(input, output, session) {
         "currentview.json"
       },
       content <- function(file) {
-       d = getNodesAndLinksForView(rv$theigraph, rv$thecurrentview)
-        r = removeInternalColums(d)
+         d = rv$activeview()
         writeLines(
           toJSON(
            r , pretty=T, rownames = FALSE), file)
@@ -507,8 +528,7 @@ server <- function(input, output, session) {
     #    browser()
     nd = input$startingpoint
     if (!is.null(nd) & nd!= "") {
-      nodes = V(rv$theigraph)[V(rv$theigraph)$domain == input$startingpoint]$name
-      rv$theigraph = restartViewOnNodes(rv$theigraph, rv$thecurrentview, nodes)
+      rv$activeview = restartViewOnNodesFromDomain(rv$activeview, nd) 
     }
   })
   
@@ -518,7 +538,7 @@ server <- function(input, output, session) {
   #Starting point menu for showing nodes from different domains.
   output$searchnodemenu <- renderUI({
     #    browser()
-    names= V(rv$thenetworkinfo$network)$name
+    names= rv$activeview$net$nodes$name
     fixedRow(
         column(9, selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)),
         column(3, tagList(
@@ -536,8 +556,8 @@ server <- function(input, output, session) {
   observeEvent(input$addnodefromsearch, {
     nodes = input$addsearchnodes
     if (!is.null(nodes) & length(nodes) > 0) {
-      rv$theigraph = addNodesToView(rv$theigraph, rv$thecurrentview, nodes)
-#      rv$forcerepaint = TRUE 
+      rv$activeview = addNodesToViewByName(rv$activeview, nodes)
+        #      rv$forcerepaint = TRUE 
     }
   }) 
 
@@ -566,7 +586,8 @@ server <- function(input, output, session) {
   }
   
   singleNodeSelectMenu <- function() {
-    res =  c(getNodeMenuEntryScriptFor("actor", "a"), 
+    res =  c(
+             getNodeMenuEntryScriptFor("actor", "a"), 
              getNodeMenuEntryScriptFor("system", "s"),
              getNodeMenuEntryScriptFor("use", "u"), 
              getNodeMenuEntryScriptFor("object", "o"),
@@ -624,79 +645,134 @@ server <- function(input, output, session) {
       tags$small("Nodes in view")
     )
   })
-  
+
+
+# Event Experiments -------------------------------------------------------
+
 
   # observeEvent(input$beforedrawing, {
   # })
   # 
   # observeEvent(input$afterdrawing, {
   # })
+  
 
 # Output rendering for the graph panel ------------------------------------
+  
+  # Splits de output naar 2 niveaus
+  # 1) afhankelijkheid van igraph
+  # 2) afhankelijkheid van de nodes en edge set die het Visnetwork gebruikt
+  # Zie https://stackoverflow.com/questions/54846529/how-to-extract-and-save-visnetwork-manipulation-changes-in-shiny
+  
 
   
-   
-  output$graph_panel <- renderVisNetwork({
-     
-      if (rv$forcerepaint) { #called when the redraw action has been activated
-        rv$forcerepaint = FALSE
-      } 
-      
+  # Dit is observer die kijkt naar de igraph en veranderingen vertaalt in scherm updates
+  #
+  observeEvent( {
+          rv$activeview
+          rv$forcerepaint},  {
 
-      #Reduce the graph to the elements in the current view
-    
-      visual3 = rv$theigraph
-    
-      visual3 = visual3 - V(visual3)[!vertex_attr(visual3, rv$thecurrentview, V(visual3))]
-      visual3 = visual3 - E(visual3)[!edge_attr(visual3, rv$thecurrentview, E(visual3))]
-      
+    if (rv$forcerepaint) { #called when the redraw action has been activated
+      cat('Force repaint\n')
+      rv$forcerepaint = FALSE
+    }
+#browser()
+    # Prepare the graph for visualisation
+    #
+    rv$activeview= addVisualSettingsForView(rv$activeview, input$images, input$linklabels)
+
+    # #activate this to show the node-action menu when hovering over the node
+    # V(viewg)$title = HTML(
+    #   singleNodeSelectMenu()
+    # )
+
+      # Save the graph for future use
+      # rv$theviewigraph = viewg  #n this is different from the visgraph. Decide what to use in spawning views.
+
+
+      # allows users to give a specific name to a node. Moet weg - geen igraph meer
+
+      graph_panel_data$nodes = rv$activeview$nodes
+      graph_panel_data$edges = rv$activeview$edges
+   })
+  
+  #todo
+  #- save changes in a list and carry them through after a save button on a special menu
+  #- add a clone node function based on add new Nodes
+  
+  
+  
+  #Make a new node give the id
+  createNewNodeForIdWithDefaults <- function(nid) {
+    return(tibble(id=nid, name=nid, icon="", url="", groups="", domain="UI", nodetype="undefined"))
+  }
  
-      if (input$undirected) 
-        visual3 = as.undirected(visual3, mode="each")
+  createNewEdgeWithDefaults <- function(from,to) {
+    return(tibble(from=from, to=to,  label="", linktype="refer", eid=getEidForEdge(from,to,"") ))
+  }
 
-      # Prepare the graph for visualisation
-      #
-      visual3 = visNetworkVisualisationSettings(visual3, rv$thenetworkinfo, input$images, 
-                                                     input$showlinks, input$linklabels)
-      
-      # #activate this to show the node-action menu when hovering over the node
-      # V(visual3)$title = HTML( 
-      #   singleNodeSelectMenu()
-      # )
-      
-      if (input$igraphlayout) {
-        # Use Igraph for  layout, 
-        vnt = visIgraph(visual3)    # layout=input$layout, smooth=input$smooth) 
-      } else {
-        data3 <- toVisNetworkData(visual3)
-        vnt = visNetwork(nodes=data3$nodes, edges=data3$edges)
+  # If the user edits the graph, this shows up in
+  # `input$[name_of_the_graph_output]_graphChange`.  This is a list whose
+  # members depend on whether the user added a node or an edge.  The "cmd"
+  # element tells us what the user did.
+  observeEvent(
+    input$graph_panel_graphChange,
+    {
+      cmd = input$graph_panel_graphChange$cmd
+      #cat("cmd = ", cmd, "\n")
+      if (cmd == "addNode") {
+        nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
+        nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
+        newnode = createNewNodeForIdWithDefaults(nlabel)
+        rv$activeview = addNewNodesToNetworkAndView(rv$activeview, newnode)
+        rv$activeview$net = updateDerivedNetworkInfo(rv$activeview$net)
+        rv$thenetworkinfo = rv$activeview$net
       }
-      
-      # Allow interaction - note: nodes can be in multiple groups
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, # manipulation = TRUE,
-                       selectedBy=list(variable = "groupnames", multiple = TRUE))
+      else if (cmd == "addEdge") {
+        nfrom = input$graph_panel_graphChange$from
+        nto = input$graph_panel_graphChange$to
+        newedge = createNewEdgeWithDefaults(nfrom, nto)
+        rv$activeview = addNewEdgesToNetworkAndView(rv$activeview, newedge)
+        rv$activeview$net = updateDerivedNetworkInfo(rv$activeview$net)
+        rv$thenetworkinfo = rv$activeview$net
+      }
+    })
+  
+  
+ 
+  # Render the graph.
+  output$graph_panel <- renderVisNetwork({
 
+      vnt = visNetwork(nodes=graph_panel_data$nodes, edges=graph_panel_data$edges)
+  
+      # Allow interaction - note: nodes can be in multiple groups
+      # Allow maniuplation - should be switch?
+      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, manipulation = TRUE,
+                       selectedBy=list(variable = "groups", multiple = TRUE))
+  
+      if (input$igraphlayout) {
+        vnt = visIgraphLayout(vnt, type="full")
+      }
       if (input$navigation)
         vnt = visInteraction(vnt, navigationButtons = TRUE)
-      
+  
       if (!input$undirected)
         vnt = visEdges(vnt, arrows="to")
-
- #      vnt = visEvents(vnt, 
- #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
- #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
- #          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
- #      )
-      
+  
+      #      vnt = visEvents(vnt,
+      #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
+      #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
+      #          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
+      #      )
+  
       #Older experiments
       # groups = unique(V(visual3)$group)
       #      vnt = visClusteringByGroup(vnt, groups)
       #visPhysics(vnt, stabilization = FALSE)
- 
+  
       rv$thevisgraph = vnt
-
       vnt
-      })
+  })
 }
 
 

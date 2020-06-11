@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Patient",
@@ -14,7 +14,7 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Mantelzorger",
@@ -22,8 +22,8 @@
       "nodetype": "actor",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": []
+  "edges": []
 }

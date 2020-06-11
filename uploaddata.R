@@ -17,45 +17,47 @@ uploadDataUI <- function(id, label="Upload Data") {
       ),
       tags$hr(),
       fluidRow(
-        column(6, tableOutput(ns("nodecontents"))),
-        column(6, tableOutput(ns("linkcontents")))
+        column(6, div(tableOutput(ns("nodecontents")), style="font-size:80%")),
+        column(6, div(tableOutput(ns("edgecontents")), style="font-size:80%"))
       ),
     ) 
   }
 }
-
 uploadData <- function(input, output, session, viewid, netinfo) {
   
   jsonContents <- reactive({
     jfile = input$uploadjsonfile
     if (is.null(jfile)) 
       return(NULL)
-    
-    fromJSON(jfile$datapath)
+ #   browser()
+    newnet = readNetworkDataFromJSON(jfile$datapath)
+    return(newnet)
   })
 
       
   output$nodecontents <- renderTable({
     if (!is.null(jsonContents()))
-      flattenedDataFrameForTable(jsonContents()$nodes)
+      jsonContents()$nodes
+      #flattenedDataFrameForTable(jsonContents()$nodes)
     else
       return(NULL)
   })
   
-  output$linkcontents <- renderTable({
+  output$edgecontents <- renderTable({
     if (!is.null(jsonContents()))
-      flattenedDataFrameForTable(jsonContents()$links)
+      jsonContents()$edges
+      #flattenedDataFrameForTable(jsonContents()$edges)
     else
       return(NULL)
   })
   
 
   checkdata <- reactive({
-    newnds = jsonContents()$nodes$id
-    existnds = netinfo$rawnodes$id
-    allnodes = c(newnds, existnds)
-    newlks = jsonContents()$links
-    
+    newnds = jsonContents()$nodes
+    existnds = netinfo$nodes
+    allnodes = c(newnds$name, existnds$name)
+    newlks = jsonContents()$edges
+#browser()    
     haveerrors = FALSE
     msg = ""
     
@@ -84,7 +86,7 @@ uploadData <- function(input, output, session, viewid, netinfo) {
   })
   
   loadedData <- reactive({
-    list(nodes=jsonContents()$nodes, links=jsonContents()$links, errors=checkdata()$haveerrors)
+    list(nodes=jsonContents()$nodes, edges=jsonContents()$edges, errors=checkdata()$haveerrors)
   })
   
   return(loadedData)

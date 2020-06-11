@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "FHIR",
@@ -14,7 +14,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "HL7",
@@ -22,7 +22,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "MedMij",
@@ -30,7 +30,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "https://www.medmij.nl",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "XDS",
@@ -38,7 +38,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ZIBS",
@@ -46,7 +46,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "eOverdracht",
@@ -54,7 +54,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "BgZ",
@@ -62,7 +62,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "MedicatieOverdracht",
@@ -70,7 +70,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Labuitwisseling",
@@ -78,7 +78,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Huisartswaarneming",
@@ -86,7 +86,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Edifact",
@@ -94,7 +94,7 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Richtlijn HASP",
@@ -102,10 +102,10 @@
       "nodetype": "standard",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "Edifact",
       "to": "Verstrekkingsbericht",

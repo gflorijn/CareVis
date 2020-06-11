@@ -5,190 +5,150 @@ require("igraph", quietly=T)
 require("jsonlite", quietly=T)
 require("r2d3", quietly=T)
 require("d3r", quietly=T)
+require("tidyverse", quietly=T)
 
 # laad de data  een bepaald perspectief. Elk perspectief omvat nodes.
 #de functie levert een list op van twee dataframes - de nodes en de links.
 #als het argument nodeslinks niet null is worden de ingelezen nodes en links toegevoegd 
 #aan de meegegeven argumenten zodat er uiteindelijk 1 graaf ontstaat
 #
-loadNetworkLayer <- function(nodeslinks=NULL, naam) {
-  cat('load layer: ', naam, "\n")
+loadNetworkLayer <- function(nodesedges=NULL, name) {
+  cat('load layer: ', name, "\n")
   
-  nls = fromJSON(paste0("Data/", naam, ".json"))
+  nls = fromJSON(paste0("Data/", name, ".json"))
   lnodes=nls$nodes
-  llinks=nls$links
+  ledges=nls$edges 
   
-
   # lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
-  # llinks <- read.csv2(paste0("Data/", naam, "-Links.csv"), header=T, colClasses="character", sep=";")
- 
+  # ledges <- read.csv2(paste0("Data/", naam, "-edges.csv"), header=T, colClasses="character", sep=";")
+  
   oln = c()
   nodenames = lnodes$id
-  if (!is.null(nodeslinks)) {
-    oln = nodeslinks$nodes 
+  if (!is.null(nodesedges)) {
+    oln = nodesedges$nodes 
     nodenames = c(nodenames, oln$id)
   }
- # browser()
-  dupn = oln$id[oln$id %in% lnodes$id]
+#  browser()
   err = FALSE
-  if (length(dupn) > 0) {
-    simpleMessage(cat("Warning - Layer ", naam, ":  duplicate node in nodes file: ", unique(dupn), ".\n"))
-    err = FALSE
-  }
-  n = checkNodesInLinks(nodenames, llinks)
+  n = checkNodesInedges(nodenames, ledges)
   if (length(n) > 0) {
-    simpleMessage(cat("Layer ", naam, ":  unknown nodes in links file: ", unique(n), ". Layer skipped.\n"))
+    simpleMessage(cat("Layer ", naam, ":  unknown nodes in edges file: ", unique(n), ". Layer skipped.\n"))
     err = TRUE
   }
   if (err) {
-    return(nodeslinks)
+    return(nodesedges)
   }
   
-  if (is.null(nodeslinks)) {
-    return(list(nodes=lnodes, links=llinks))
+  if (is.null(nodesedges)) {
+    return(list(nodes=lnodes, edges=ledges))
   }
   else {
-    olinks = nodeslinks$links 
-    onodes = nodeslinks$nodes 
+    oedges = nodesedges$edges 
+    onodes = nodesedges$nodes 
     rnodes = dplyr::bind_rows(onodes, lnodes)
-    rlinks = dplyr::bind_rows(olinks, llinks)
-    return( list(nodes=rnodes, links=rlinks) )
+    redges = dplyr::bind_rows(oedges, ledges)
+    return( list(nodes=rnodes, edges=redges) )
   }
 }
 
-#check of links verwijzen naar bekende nodes
+#check of edges verwijzen naar bekende nodes
 #todo: accepteer onbekende nodes, maak er forward references van.
-# of doe de checklinks pas aan het eind.
+# of doe de checkedges pas aan het eind.
 #
-checkNodesInLinks <- function(nodenames, links) {
-  nofrom = !(links$from %in% nodenames)
-  noto = !(links$to %in% nodenames)
-  c(links$from[nofrom], links$to[noto])
+checkNodesInedges <- function(nodenames, edges) {
+  nofrom = !(edges$from %in% nodenames)
+  noto = !(edges$to %in% nodenames)
+  c(edges$from[nofrom], edges$to[noto])
 }
 
-# Lees alle aangegeven perspectieven. Produceer een lijst bestaande uit nodes en links voor de graaf.
-readLayers <- function(namen) {
+# Read all layers
+readLayers <- function(names) {
   #cat("n = ", namen)
   lnl = NULL
-  for (i in namen) {
-    lnl = loadNetworkLayer(lnl, naam=i)
+  for (i in names) {
+    lnl = loadNetworkLayer(lnl, i)
   }
   lnl
 }
 
 
 # Read the network data and collect all info in a list. -------------------
-# The list has three entries:
-# $nodes - the vertices
-# $links - the edges
-# $network - the igraph
-# $layers - the layers loaded
+# The list has a few elements: 
+# $nodes - the nodes
+# $edges - the edges
+
 readNetworkData <-  function(layers) {
   nls = readLayers(layers)
+  return(prepareNetworkDataForBrowsing(nls))
+}
+
+#augment network data with attributes for browsing
+prepareNetworkDataForBrowsing <- function(nls) {
   #browser()
-  rawnodes = nls$nodes
-  rawlinks = nls$links
   # add some columns for graph handling
   nodes = nls$nodes
   nodes$name = nodes$id
   
-  links = nls$links
-  links$van = links$from
-  links$naar = links$to
+  edges = nls$edges
+  edges$eid = getEidForEdge(edges$from,edges$to, edges$label)
   
-  network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
-  list(rawnodes = rawnodes, rawlinks = rawlinks, nodes=nodes, links=links, network=network, layers=layers)
+  return(list(nodes=nodes, edges=edges))
 }
 
-
+# produce an eid based edge characteristics
+getEidForEdge <- function(from, to, label) {
+  return(str_c(from,label,to, sep="-"))
+}
 
 # Read the network data from a single json file and collect all info in a list. -------------------
 # The list has three entries:
 # $nodes - the vertices
-# $links - the edges
+# $edges - the edges
 # $network - the igraph
 # $layers - the layers loaded
 readNetworkDataFromJSON <-  function(jsonfile) {
   nls = fromJSON(jsonfile)
-  #browser()
-  rawnodes = nls$nodes
-  rawlinks = nls$links
-  # add some columns for graph handling
-  nodes = nls$nodes
-  nodes$name = nodes$id
-  
-  links = nls$links
-  links$van = links$from
-  links$naar = links$to
-  network = graph_from_data_frame(d=links, vertices=nodes, directed=T)
-  list(rawnodes = rawnodes, rawlinks = rawlinks, nodes=nodes, links=links, network=network)
+  return(prepareNetworkDataForBrowsing(nls))
 }
 
 #add additional data to an existing network structure. Should be in "raw" format, should also be checked. 
 #Avoids rereading all data
-addAdditionalData <- function(netinfo, additionaldata) {
-  addrawnodes = additionaldata$nodes
-  addrawlinks = additionaldata$links
-  
-  #allow new colums through the use of bind_rows. New node defs override existing
-  netinfo$rawnodes = netinfo$rawnodes[!(netinfo$rawnodes$id %in% addrawnodes$id),]
-  netinfo$rawnodes= dplyr::bind_rows(netinfo$rawnodes, addrawnodes)
-  netinfo$rawlinks = dplyr::bind_rows(netinfo$rawlinks, addrawlinks)
-  #Note: rawlinks may contain duplicate edges
-  #So: remove them. Unclear which is removed (should be the older)
-  netinfo$rawlinks = unique(netinfo$rawlinks)
-  
-  addnodes = additionaldata$nodes
-  addlinks = additionaldata$links
-
-  addnodes$name = addnodes$id
-  addlinks$van = addlinks$from
-  addlinks$naar = addlinks$to
-  netinfo$nodes = dplyr::bind_rows(netinfo$nodes[!(netinfo$nodes$name %in% addnodes$name),], addnodes)
-  netinfo$links = dplyr::bind_rows(netinfo$links, addlinks)
-  netinfo$links = unique(netinfo$links)
-  
-  netinfo$network = graph_from_data_frame(d=netinfo$links, vertices=netinfo$nodes, directed=T)
-  netinfo
+combineNetworks <- function(net1, net2) {
+  net2names = net2$nodes$name
+  net2eids = net2$edges$eid
+  nda = subset(net1$nodes, !(net1$nodes$name %in% net2names))
+  eda = subset(net1$edges, !(net1$edges$eid %in% net2eids ))
+  net1$nodes = dplyr::bind_rows(nda, net2$nodes)
+  net1$edges = dplyr::bind_rows(eda, net2$edges)
+  return(net1)
 }
 
 # Add derived information to the basic network data
 #
-addDerivedNetworkData <-  function(nstruct) {
-  ns = nstruct
-  ds = unique(V(ns$network)$domain)
+addDerivedNetworkData <-  function(net) {
+  ds = unique(net$nodes$domain)
   ds = ds[ds != ""]
-  lt = unique(E(ns$network)$linktype)
+  lt = unique(net$edges$linktype)
   lt = lt[lt != ""]
-  nt = unique(V(ns$network)$nodetype)
+  nt = unique(net$nodes$nodetype)
   nt = nt[nt != ""]
   
-  ns[["domains"]] = ds
-  ns[["linktypes"]] = lt
-  ns[["nodetypes"]] = nt
-  ns
+  net$domains = ds
+  net$linktypes = lt
+  net$nodetypes = nt
+  return(net)
 }
 
 # make a data frame suitable for presenting in a tableoutput
 flattenedDataFrameForTable <- function(df) {
   r = flatten(df)
-  for (c in 1:length(df)) {
-    if (is.list(r[[c]])) {
-      r[[c]] = vapply(r[[c]], toString, character(1L))
-    }
-  }
-  r
+  # for (c in 1:length(df)) {
+  #   if (is.list(r[[c]])) {
+  #     r[[c]] = vapply(r[[c]], toString, character(1L))
+  #   }
+  # }
+  return(r)
 }
 
-# Used for conversion from CSV to Json format. Once only
-convertCSVtoJSON   <- function(layers) {
-  for (l in layers) {
-    lnodes <- read.csv2(paste0("Data/", l, "-Nodes.csv"), header=T, colClasses="character", sep=";")
-    llinks <- read.csv2(paste0("Data/", l, "-Links.csv"), header=T, colClasses="character", sep=";")
-    lnodes$groups=list(rep(vector(), length(lnodes)))
-    res = list(nodes=lnodes, links=llinks)
-    writeLines(toJSON(res, pretty=T), paste0("Data/", l,".json"))
-  }
-}
 
 

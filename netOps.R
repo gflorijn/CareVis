@@ -1,118 +1,142 @@
-# 
-
-
-# verwijder onverbonden nodes 
-# TODO: verwijder ook nodes met alleen een self-link (simplify crasht daarop)
-znops.zonderOnverbondenNodes <- function(g) {
-  y = g - V(g)[degree(g, V(g)) == 0]
-  y
-}
-
-# lever de links op vanuit nodes met type in linktypes
-znops.focusLinks <- function(g, nodes, linktypes) {
-  els = incident_edges(g, nodes)
-  res = el
-  z = E(z)[E(z)$linktype %in% linktypes]
-  z
-}
-
-# Voeg een view toe aan de graaf. includeall geeft aan of alle nodes/links erbij horen
-initializeViewOnGraph <- function(graaf, viewnaam) {
-  # bewaar de aangemaakte views 
-  x = graph_attr(graaf, "hasviews")
-  if (is.null(x))
-    x = c()
-  x = c(viewnaam, x)
-  graph_attr(graaf, "hasviews") <- x
-  graph_attr(graaf, viewnaam) <- FALSE
-  edge_attr(graaf, viewnaam, E(graaf)) <- FALSE
-  vertex_attr(graaf, viewnaam, V(graaf)) <- FALSE
-  graaf
-}
-
-
-# Focus de view op de aangegeven nodes
-restartViewOnNodes <- function(g, view, nodes) {
-  edge_attr(g, view, E(g)) <- FALSE
-  vertex_attr(g, view, V(g)) <- FALSE
-  g2 = addNodesToView(g, view, nodes)
-  g2
-}
+require("tidyverse", quietly = TRUE)
 
 #
-addFriendsToView <- function(graaf, view, node, linktypes) {
+# These operations work on views on a network
+# The view is a list consisting of:
+#   name, net (the base network), nodes, edges
+# The network  has the full list of nodes and edges, the view a selection.
+#
+
+# create a view on a network
+newViewOnNetwork <- function(net, name) {
+  return(
+    list(name = name, net = net, nodes = tibble(), edges = tibble())
+  )
+}
+restartViewOnNodesFromDomain <- function(view, d) {
+#  browser()
+  domnds = as_tibble(view$net$nodes)
+  domnds = subset(domnds, domnds$domain == d)
+  return(restartViewOnNodeNames(view, domnds$name))
+}
+
+# Restart the view
+restartViewOnNodeNames <- function(view, nodeids) {
+  view$nodes = tibble()
+  view$edges = tibble()
+  view = addNodesToViewByName(view, nodeids)
+  return(view)
+}
+
+# Add nodes that are related to node via linktypes to the view
+addFriendsOfNodeToView <- function(view, nodename, linktypes) {
   #browser()
-  #cat("voeg vrienden ", node, " toe aan ", view, '\n')
-  es = incident(graaf, node)
-  els = es[es$linktype %in% linktypes]
-  ns = unique(c(els$van, els$naar))
-  
+  basenet=view$net
+  newedges = subset(basenet$edges, (basenet$edges$from == nodename | basenet$edges$to == nodename))
+  newedges = subset(newedges, newedges$linktype %in% linktypes)
   # cat ('ns = ', ns, '\n')
-  g = addNodesToView(graaf, view, ns)
-  g = znops.voegLinksToeAanView(g, view, els)
-  g
+  nodeids = unique(c(newedges$from, newedges$to))
+  view = addNodesToViewByName(view, nodeids)
+  view = addEdgesToView(view, newedges)
+  return(view)
 }
 
 #
-addNodesToView <-  function(graaf, view, nodes) {
-  # cat("voeg toe ", nodes, " aan ", view, '\n')
-  vertex_attr(graaf, view, V(graaf)[nodes]) <- TRUE
-  # print(V(graaf)[[]])
-  graaf
+addNodesToViewByName <-  function(view, nodeids) {
+  #browser()
+  basenet = view$net
+  newnodes = subset(basenet$nodes, basenet$nodes$name %in% nodeids)
+  nondups = subset(view$nodes, !(view$nodes$name %in% nodeids))
+  view$nodes = bind_rows(nondups, newnodes)
+  return(view)
 }
 
-znops.verwijderNodesUitView <-  function(graaf, view, nodes) {
-  vertex_attr(graaf, view, V(graaf)[nodes]) <- FALSE
-  graaf
+addEdgesToViewByEid <-  function(view, eids) {
+  #browser()
+  basenet = view$net
+  newedges = subset(basenet$edges, basenet$edges$eid %in% eids)
+  nondups = subset(view$edges, !(view$edges$eids %in% eids))
+  view$edges = bind_rows(nondups, newedges)
+  return(view)
 }
 
-znops.voegLinksToeAanView <- function(graaf, view, edges) {
-  edge_attr(graaf, view, E(graaf)[edges]) <- TRUE
-  graaf
+# add a new node to the underlying network - similar to view
+addNodesToNetwork <- function(net, nodes) {
+  nda = subset(net$nodes, !(net$nodes$name %in% nodes$name))
+  net$nodes = bind_rows(nda, nodes)
+  return(net)
 }
 
-znops.verwijderLinksUitView <- function(graaf, view, edges) {
-  edge_attr(graaf, view, E(graaf)[edges]) <- FALSE
-  graaf
-  
+# add new edge(s) to the underlying network - similar to view
+addEdgesToNetwork <- function(net, edges) {
+  eda = subset(net$edges, !(net$edges$eid %in% edges$eid))
+  net$edges = bind_rows(eda, edges)
+  return(net)
 }
 
-znops.nodesInView <- function(graaf, view) {
-  g = graaf
-  V(g)$name[vertex_attr(g, view, V(g))]
+addNodesToView <- function(view, nodes) {
+#  browser()
+  nda = subset(view$nodes, !(view$nodes$name %in% nodes$name))
+  view$nodes = bind_rows(nda, nodes)
+  return(view)
 }
 
-znops.linksInView <- function(graaf, view) {
-  E(graaf)[edge_attr(graaf, view, E(graaf))]
+removeNodesFromViewByName <-  function(view, nodeids) {
+  newnodes = subset(view$nodes, !(view$nodes$name %in% nodeids))
+  view$nodes = newnodes
+  return(view)
 }
 
-znops.toonAllesInView <- function(graaf, view) {
-  vertex_attr(graaf, view, V(graaf)) <- TRUE
-  edge_attr(graaf, view, E(graaf)) <- TRUE
-  graaf
+addEdgesToView <- function( view, newedges) {
+#  browser()
+  eda = subset(view$edges, !(view$edges$eid %in% newedges$eid ))
+  view$edges = bind_rows(eda, newedges)
+  return(view)
 }
 
-znops.copyViewInfo <- function(graaf, fromview, toview) {
-  g = graaf
-  # cat('copy view from ', fromview, ' to ', toview, '\n')
-  ns = znops.nodesInView(g, fromview)
-  es = znops.linksInView(g, fromview)
-  g = addNodesToView(g, toview, ns)
-  g = znops.voegLinksToeAanView(g, toview, es)
-  g
+removeEdgesFromViewById <-  function(view, eids) {
+  newedges = subset(view$edges, !(view$edges$eid %in% eids))
+  view$edges = newnedges
+  return(view)
 }
 
-getGraphForView <- function(graph, view) {
-  subg = graph
-  subg = subg - V(subg)[!vertex_attr(subg, view, V(subg))]
-  subg = subg - E(subg)[!edge_attr(subg, view, E(subg))]
-  return(subg)
+
+# add a new node  to the network and the view
+#
+addNewNodesToNetworkAndView <- function(view, node) {
+  net = view$net
+  net = addNodesToNetwork(net, node)
+  view$net = net
+  view = addNodesToViewByName(view, node$id)
+  return(view)
 }
 
-getNodesAndLinksForView  <- function(graph, view) {
-  subg = getGraphForView(graph, view)
-  nodes = as_data_frame(subg, what="vertices")
-  links = as_data_frame(subg, what="edges")
-  return(list(nodes=nodes, links=links))
+# add a new node  to the network and the view
+#
+addNewEdgesToNetworkAndView <- function(view, edge) {
+  net = view$net
+  net = addEdgesToNetwork(net, edge)
+  view$net = net
+  view = addEdgesToViewByEid(view, edge$eid)
+  return(view)
 }
+
+getNodeByName <-  function(view, name) {
+  return(subset(view$nodes, view$nodes$name == name))
+}
+
+getNodeNamesInView <- function(view) {
+  return(view$nodes$name)
+}
+
+getLinksIdsInView <- function(view) {
+  return(view$edges$eid)
+}
+
+switchViewToNetwork <- function(view) {
+  view$nodes = view$net$nodes
+  view$edges = view$net$edges
+  return(view)
+}
+
 

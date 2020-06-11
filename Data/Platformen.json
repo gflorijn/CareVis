@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Sananet",
@@ -14,7 +14,7 @@
       "nodetype": "platform",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Luscii",
@@ -22,7 +22,7 @@
       "nodetype": "platform",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "KIS",
@@ -30,7 +30,7 @@
       "nodetype": "platform",
       "icon": "",
       "url": "https://www.ketenzorgfriesland.nl/portal-kz-zorgverlener-pagina/kis",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgplatform",
@@ -38,7 +38,7 @@
       "nodetype": "platform",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Covid-19 Portaal",
@@ -46,7 +46,7 @@
       "nodetype": "platform",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Minddistrict",
@@ -54,10 +54,10 @@
       "nodetype": "platform",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "Sananet",
       "to": "i-eHealth",

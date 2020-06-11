@@ -6,7 +6,7 @@
       "nodetype": "platform",
       "icon": "DomeinLeveranciers",
       "url": "",
-      "groups": ["VZVZ", "LSP"]
+      "groups": "VZVZ, LSP"
     },
     {
       "id": "VZVZ Resources",
@@ -14,7 +14,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": ["VZVZ"]
+      "groups": "VZVZ"
     },
     {
       "id": "VZVZ Autorisaties",
@@ -22,7 +22,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["VZVZ"]
+      "groups": "VZVZ"
     },
     {
       "id": "VZVZ DVZA",
@@ -30,7 +30,7 @@
       "nodetype": "interaction",
       "icon": "Koppelvlak",
       "url": "",
-      "groups": ["VZVZ"]
+      "groups": "VZVZ"
     },
     {
       "id": "Ivido PGO",
@@ -38,7 +38,7 @@
       "nodetype": "platform",
       "icon": "Systeem",
       "url": "",
-      "groups": ["Ivido"]
+      "groups": "Ivido"
     },
     {
       "id": "Ivido PGO Server",
@@ -46,7 +46,7 @@
       "nodetype": "system",
       "icon": "DomeinPlatformen",
       "url": "",
-      "groups": ["Ivido"]
+      "groups": "Ivido"
     },
     {
       "id": "Ivido Autorisaties",
@@ -54,7 +54,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["Ivido"]
+      "groups": "Ivido"
     },
     {
       "id": "IRMA",
@@ -62,7 +62,7 @@
       "nodetype": "platform",
       "icon": "Systeem",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Client",
@@ -70,7 +70,7 @@
       "nodetype": "party",
       "icon": "Patient",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgprofessional",
@@ -78,7 +78,7 @@
       "nodetype": "party",
       "icon": "Huisarts",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "HINQ ZNO",
@@ -86,7 +86,7 @@
       "nodetype": "platform",
       "icon": "Systeem",
       "url": "",
-      "groups": ["HINQ"]
+      "groups": "HINQ"
     },
     {
       "id": "Enovation DVZA",
@@ -94,7 +94,7 @@
       "nodetype": "interaction",
       "icon": "Koppelvlak",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     },
     {
       "id": "Enovation Autorisaties",
@@ -102,7 +102,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     },
     {
       "id": "Enovation Resources",
@@ -110,7 +110,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     },
     {
       "id": "HINQ XDS",
@@ -118,7 +118,7 @@
       "nodetype": "system",
       "icon": "Beelden",
       "url": "",
-      "groups": ["HINQ"]
+      "groups": "HINQ"
     },
     {
       "id": "Enovation Translation Server",
@@ -126,7 +126,7 @@
       "nodetype": "system",
       "icon": "_network_node",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     },
     {
       "id": "Regio Enovation XDS",
@@ -134,7 +134,7 @@
       "nodetype": "system",
       "icon": "Beelden",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     },
     {
       "id": "Pharmapartners Resources",
@@ -142,7 +142,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Nedap Resources",
@@ -150,7 +150,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Gerimedica Resources",
@@ -158,7 +158,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Pink Resources",
@@ -166,7 +166,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Chipsoft Resources",
@@ -174,7 +174,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Pharmapartners Medicom",
@@ -182,7 +182,7 @@
       "nodetype": "party",
       "icon": "Systeem",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Fundis",
@@ -190,7 +190,7 @@
       "nodetype": "party",
       "icon": "Kantoor",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorginstelling1",
@@ -198,7 +198,7 @@
       "nodetype": "party",
       "icon": "_building",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorginstelling2",
@@ -206,7 +206,7 @@
       "nodetype": "party",
       "icon": "_building",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ECD Nedap",
@@ -214,7 +214,7 @@
       "nodetype": "system",
       "icon": "SysteemDatabases",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "EPD Ysis - Gerimedica",
@@ -222,7 +222,7 @@
       "nodetype": "system",
       "icon": "SysteemDatabases",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Parnassia GGZ Rivierduinen",
@@ -230,7 +230,7 @@
       "nodetype": "party",
       "icon": "GGZ",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ECD - Pink",
@@ -238,7 +238,7 @@
       "nodetype": "system",
       "icon": "SysteemDatabases",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Langeland Reinier Haga",
@@ -246,7 +246,7 @@
       "nodetype": "party",
       "icon": "Ziekenhuis",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "EPD HIX Chipsoft",
@@ -254,7 +254,7 @@
       "nodetype": "system",
       "icon": "SysteemDatabases",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Chipsoft Zorgplatform",
@@ -262,7 +262,7 @@
       "nodetype": "platform",
       "icon": "DomeinPlatformen",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgprofessional Huisarts",
@@ -270,7 +270,7 @@
       "nodetype": "party",
       "icon": "Huisarts",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Ivido Autorisaties dup",
@@ -278,7 +278,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["Ivido"]
+      "groups": "Ivido"
     },
     {
       "id": "Enovation Hub",
@@ -286,10 +286,10 @@
       "nodetype": "platform",
       "icon": "DomeinPlatformen",
       "url": "",
-      "groups": ["Enovation"]
+      "groups": "Enovation"
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "VZVZ",
       "to": "LSP",
@@ -577,12 +577,6 @@
       "to": "PGO",
       "label": "",
       "linktype": "refer"
-    }
-  ],
-  "groups": [
-    {
-      "name": "VZVZ",
-      "nodes": ["PGO", "Ivido"]
     }
   ]
 }

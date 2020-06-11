@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Hinq",
@@ -14,7 +14,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "EPIC",
@@ -22,7 +22,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Chipsoft",
@@ -30,7 +30,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Enovation",
@@ -38,7 +38,7 @@
       "nodetype": "party",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Ivido",
@@ -46,10 +46,10 @@
       "nodetype": "party",
       "icon": "",
       "url": "http://www.ivido.nl",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "EPIC",
       "to": "EPD-z",

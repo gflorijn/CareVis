@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "PGO",
@@ -14,7 +14,7 @@
       "nodetype": "platform",
       "icon": "Platform",
       "url": "",
-      "groups": ["PGO systeem"]
+      "groups": "PGO systeem"
     },
     {
       "id": "PGO UI",
@@ -22,7 +22,7 @@
       "nodetype": "system",
       "icon": "Systeem",
       "url": "",
-      "groups": ["PGO systeem"]
+      "groups": "PGO systeem"
     },
     {
       "id": "PGO Server",
@@ -30,7 +30,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": ["PGO systeem"]
+      "groups": "PGO systeem"
     },
     {
       "id": "PGO Autorisaties",
@@ -38,7 +38,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["PGO systeem"]
+      "groups": "PGO systeem"
     },
     {
       "id": "DVZA",
@@ -46,7 +46,7 @@
       "nodetype": "interaction",
       "icon": "Koppelvlak",
       "url": "",
-      "groups": ["PGO systeem", "PGO ZA"]
+      "groups": "PGO systeem, PGO ZA"
     },
     {
       "id": "ZA Zorgaanbieder",
@@ -54,7 +54,7 @@
       "nodetype": "party",
       "icon": "Ziekenhuis",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "ZA Resources",
@@ -62,7 +62,7 @@
       "nodetype": "system",
       "icon": "ResourceServer",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "ZA Autorisaties",
@@ -70,7 +70,7 @@
       "nodetype": "system",
       "icon": "AutorisatieServer",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "ZA Systeem",
@@ -78,7 +78,7 @@
       "nodetype": "system",
       "icon": "Systeem",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "ZA Data",
@@ -86,7 +86,7 @@
       "nodetype": "object",
       "icon": "Databases",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "ZA Interface",
@@ -94,7 +94,7 @@
       "nodetype": "platform",
       "icon": "Platform",
       "url": "",
-      "groups": ["PGO ZA"]
+      "groups": "PGO ZA"
     },
     {
       "id": "PGO Gebruiker",
@@ -102,7 +102,7 @@
       "nodetype": "party",
       "icon": "Patient",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ZA Gebruiker",
@@ -110,10 +110,10 @@
       "nodetype": "party",
       "icon": "Huisarts",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "PGO Gebruiker",
       "to": "PGO UI",

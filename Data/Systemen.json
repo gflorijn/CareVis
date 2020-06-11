@@ -6,7 +6,7 @@
       "nodetype": "category",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "HIS",
@@ -14,7 +14,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "AIS",
@@ -22,7 +22,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "FIS",
@@ -30,7 +30,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "EPD-z",
@@ -38,7 +38,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "EPD-z2",
@@ -46,7 +46,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ECD-v",
@@ -54,7 +54,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "ECD-g",
@@ -62,7 +62,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Uitslagenportaal",
@@ -70,7 +70,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Labsysteem",
@@ -78,7 +78,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Patientportaal-z",
@@ -86,7 +86,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Patientportaal-g",
@@ -94,7 +94,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Patientportaal-v",
@@ -102,7 +102,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgverlenersportaal-z",
@@ -110,7 +110,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgverlenersportaal-z2",
@@ -118,7 +118,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Huisartsenportaal",
@@ -126,7 +126,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Ozis",
@@ -134,7 +134,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "E-zorg",
@@ -142,7 +142,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgmail",
@@ -150,7 +150,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "LSP",
@@ -158,7 +158,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Papier-Fax",
@@ -166,7 +166,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Labonline",
@@ -174,7 +174,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "https://www.topicus-diagnostiek.nl",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Zorgdomein",
@@ -182,7 +182,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Point",
@@ -190,7 +190,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "XDS-platform",
@@ -198,7 +198,7 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     },
     {
       "id": "Vecozo",
@@ -206,10 +206,10 @@
       "nodetype": "system",
       "icon": "",
       "url": "",
-      "groups": []
+      "groups": ""
     }
   ],
-  "links": [
+  "edges": [
     {
       "from": "Huisarts",
       "to": "HIS",
