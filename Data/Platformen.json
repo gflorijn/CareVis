@@ -1,60 +1,67 @@
 {
   "nodes": [
     {
-      "id": "_Platformen",
+      "nid": "_Platformen",
       "domain": "Platformen",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Platformen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Platformen"
     },
     {
-      "id": "Sananet",
+      "nid": "Sananet",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "Sananet",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Sananet"
     },
     {
-      "id": "Luscii",
+      "nid": "Luscii",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "Luscii",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Luscii"
     },
     {
-      "id": "KIS",
+      "nid": "KIS",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "KIS",
       "url": "https://www.ketenzorgfriesland.nl/portal-kz-zorgverlener-pagina/kis",
-      "groups": ""
+      "groups": "",
+      "label": "KIS"
     },
     {
-      "id": "Zorgplatform",
+      "nid": "Zorgplatform",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "Zorgplatform",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgplatform"
     },
     {
-      "id": "Covid-19 Portaal",
+      "nid": "Covid-19 Portaal",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "Covid-19 Portaal",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Covid-19 Portaal"
     },
     {
-      "id": "Minddistrict",
+      "nid": "Minddistrict",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "",
+      "icon": "Minddistrict",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Minddistrict"
     }
   ],
   "edges": [

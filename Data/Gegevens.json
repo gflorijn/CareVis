@@ -1,172 +1,193 @@
 {
   "nodes": [
     {
-      "id": "_Gegevens",
+      "nid": "_Gegevens",
       "domain": "Gegevens",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Gegevens",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Gegevens"
     },
     {
-      "id": "Medicatieoverzicht",
+      "nid": "Medicatieoverzicht",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Medicatieoverzicht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Medicatieoverzicht"
     },
     {
-      "id": "Recept",
+      "nid": "Recept",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Recept",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Recept"
     },
     {
-      "id": "Verstrekkingsbericht",
+      "nid": "Verstrekkingsbericht",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Verstrekkingsbericht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Verstrekkingsbericht"
     },
     {
-      "id": "Waarneembericht",
+      "nid": "Waarneembericht",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Waarneembericht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Waarneembericht"
     },
     {
-      "id": "Waarneming",
+      "nid": "Waarneming",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Waarneming",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Waarneming"
     },
     {
-      "id": "Professionele samenvatting",
+      "nid": "Professionele samenvatting",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Professionele samenvatting",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Professionele samenvatting"
     },
     {
-      "id": "Verwijzing",
+      "nid": "Verwijzing",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Verwijzing",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Verwijzing"
     },
     {
-      "id": "Opname-Ontslagmelding",
+      "nid": "Opname-Ontslagmelding",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Opname-Ontslagmelding",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Opname-Ontslagmelding"
     },
     {
-      "id": "Voortgangsmelding",
+      "nid": "Voortgangsmelding",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Voortgangsmelding",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Voortgangsmelding"
     },
     {
-      "id": "Afspraken",
+      "nid": "Afspraken",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Afspraken",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Afspraken"
     },
     {
-      "id": "eConsult",
+      "nid": "eConsult",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "eConsult",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "eConsult"
     },
     {
-      "id": "Metingen",
+      "nid": "Metingen",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Metingen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Metingen"
     },
     {
-      "id": "Orders",
+      "nid": "Orders",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Orders",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Orders"
     },
     {
-      "id": "Uitslagen",
+      "nid": "Uitslagen",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Uitslagen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Uitslagen"
     },
     {
-      "id": "Overdrachtdossier",
+      "nid": "Overdrachtdossier",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Overdrachtdossier",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Overdrachtdossier"
     },
     {
-      "id": "Beelden",
+      "nid": "Beelden",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Beelden",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Beelden"
     },
     {
-      "id": "Dossier",
+      "nid": "Dossier",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Dossier",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Dossier"
     },
     {
-      "id": "Huisartsdossier",
+      "nid": "Huisartsdossier",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Huisartsdossier",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Huisartsdossier"
     },
     {
-      "id": "Monitoring",
+      "nid": "Monitoring",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Monitoring",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Monitoring"
     },
     {
-      "id": "Autorisaties",
+      "nid": "Autorisaties",
       "domain": "Gegevens",
       "nodetype": "object",
-      "icon": "",
+      "icon": "Autorisaties",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Autorisaties"
     }
   ],
   "edges": []

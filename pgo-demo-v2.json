@@ -1,7 +1,8 @@
 {
   "nodes": [
    {
-      "id": "VZVZ",
+      "nid": "VZVZ",
+      "label": "VZVZ",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "DomeinLeveranciers",
@@ -9,7 +10,8 @@
       "groups": "VZVZ, LSP"
     },
     {
-      "id": "VZVZ Resources",
+      "nid": "VZVZ Resources",
+      "label": "VZVZ Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -17,7 +19,8 @@
       "groups": "VZVZ"
     },
     {
-      "id": "VZVZ Autorisaties",
+      "nid": "VZVZ Autorisaties",
+      "label": "VZVZ Autorisaties",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -25,7 +28,8 @@
       "groups": "VZVZ"
     },
     {
-      "id": "VZVZ DVZA",
+      "nid": "VZVZ DVZA",
+      "label": "VZVZ DVZA",
       "domain": "PGO-Demo",
       "nodetype": "interaction",
       "icon": "Koppelvlak",
@@ -33,7 +37,8 @@
       "groups": "VZVZ"
     },
     {
-      "id": "Ivido PGO",
+      "nid": "Ivido PGO",
+      "label": "Ivido PGO",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "Systeem",
@@ -41,7 +46,8 @@
       "groups": "Ivido"
     },
     {
-      "id": "Ivido PGO Server",
+      "nid": "Ivido PGO Server",
+      "label": "Ivido PGO Server",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "DomeinPlatformen",
@@ -49,7 +55,8 @@
       "groups": "Ivido"
     },
     {
-      "id": "Ivido Autorisaties",
+      "nid": "Ivido Autorisaties",
+      "label": "Ivido Autorisaties",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -57,7 +64,8 @@
       "groups": "Ivido"
     },
     {
-      "id": "IRMA",
+      "nid": "IRMA",
+      "label": "IRMA",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "Systeem",
@@ -65,7 +73,8 @@
       "groups": ""
     },
     {
-      "id": "Client",
+      "nid": "Client",
+      "label": "Client",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Patient",
@@ -73,7 +82,8 @@
       "groups": ""
     },
     {
-      "id": "Zorgprofessional",
+      "nid": "Zorgprofessional",
+      "label": "Zorgprofessional",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Huisarts",
@@ -81,7 +91,8 @@
       "groups": ""
     },
     {
-      "id": "HINQ ZNO",
+      "nid": "HINQ ZNO",
+      "label": "HINQ ZNO",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "Systeem",
@@ -89,7 +100,8 @@
       "groups": "HINQ"
     },
     {
-      "id": "Enovation DVZA",
+      "nid": "Enovation DVZA",
+      "label": "Enovation DVZA",
       "domain": "PGO-Demo",
       "nodetype": "interaction",
       "icon": "Koppelvlak",
@@ -97,7 +109,8 @@
       "groups": "Enovation"
     },
     {
-      "id": "Enovation Autorisaties",
+      "nid": "Enovation Autorisaties",
+      "label": "Enovation Autorisaties",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -105,7 +118,8 @@
       "groups": "Enovation"
     },
     {
-      "id": "Enovation Resources",
+      "nid": "Enovation Resources",
+      "label": "Enovation Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -113,7 +127,8 @@
       "groups": "Enovation"
     },
     {
-      "id": "HINQ XDS",
+      "nid": "HINQ XDS",
+      "label": "HINQ XDS",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "Beelden",
@@ -121,7 +136,8 @@
       "groups": "HINQ"
     },
     {
-      "id": "Enovation Translation Server",
+      "nid": "Enovation Translation Server",
+      "label": "Enovation Translation Server",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "_network_node",
@@ -129,7 +145,8 @@
       "groups": "Enovation"
     },
     {
-      "id": "Regio Enovation XDS",
+      "nid": "Regio Enovation XDS",
+      "label": "Regio Enovation XDS",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "Beelden",
@@ -137,7 +154,8 @@
       "groups": "Enovation"
     },
     {
-      "id": "Pharmapartners Resources",
+      "nid": "Pharmapartners Resources",
+      "label": "Pharmapartners Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -145,7 +163,8 @@
       "groups": ""
     },
     {
-      "id": "Nedap Resources",
+      "nid": "Nedap Resources",
+      "label": "Nedap Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -153,7 +172,8 @@
       "groups": ""
     },
     {
-      "id": "Gerimedica Resources",
+      "nid": "Gerimedica Resources",
+      "label": "Gerimedica Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -161,7 +181,8 @@
       "groups": ""
     },
     {
-      "id": "Pink Resources",
+      "nid": "Pink Resources",
+      "label": "Pink Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -169,7 +190,8 @@
       "groups": ""
     },
     {
-      "id": "Chipsoft Resources",
+      "nid": "Chipsoft Resources",
+      "label": "Chipsoft Resources",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -177,7 +199,8 @@
       "groups": ""
     },
     {
-      "id": "Pharmapartners Medicom",
+      "nid": "Pharmapartners Medicom",
+      "label": "Pharmapartners Medicom",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Systeem",
@@ -185,7 +208,8 @@
       "groups": ""
     },
     {
-      "id": "Fundis",
+      "nid": "Fundis",
+      "label": "Fundis",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Kantoor",
@@ -193,7 +217,8 @@
       "groups": ""
     },
     {
-      "id": "Zorginstelling1",
+      "nid": "Zorginstelling1",
+      "label": "Zorginstelling1",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "_building",
@@ -201,7 +226,8 @@
       "groups": ""
     },
     {
-      "id": "Zorginstelling2",
+      "nid": "Zorginstelling2",
+      "label": "Zorginstelling2",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "_building",
@@ -209,7 +235,8 @@
       "groups": ""
     },
     {
-      "id": "ECD Nedap",
+      "nid": "ECD Nedap",
+      "label": "ECD Nedap",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "SysteemDatabases",
@@ -217,7 +244,8 @@
       "groups": ""
     },
     {
-      "id": "EPD Ysis - Gerimedica",
+      "nid": "EPD Ysis - Gerimedica",
+      "label": "EPD Ysis - Gerimedica",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "SysteemDatabases",
@@ -225,7 +253,8 @@
       "groups": ""
     },
     {
-      "id": "Parnassia GGZ Rivierduinen",
+      "nid": "Parnassia GGZ Rivierduinen",
+      "label": "Parnassia GGZ Rivierduinen",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "GGZ",
@@ -233,7 +262,8 @@
       "groups": ""
     },
     {
-      "id": "ECD - Pink",
+      "nid": "ECD - Pink",
+      "label": "ECD - Pink",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "SysteemDatabases",
@@ -241,7 +271,8 @@
       "groups": ""
     },
     {
-      "id": "Langeland Reinier Haga",
+      "nid": "Langeland Reinier Haga",
+      "label": "Langeland Reinier Haga",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Ziekenhuis",
@@ -249,7 +280,8 @@
       "groups": ""
     },
     {
-      "id": "EPD HIX Chipsoft",
+      "nid": "EPD HIX Chipsoft",
+      "label": "EPD HIX Chipsoft",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "SysteemDatabases",
@@ -257,7 +289,8 @@
       "groups": ""
     },
     {
-      "id": "Chipsoft Zorgplatform",
+      "nid": "Chipsoft Zorgplatform",
+      "label": "Chipsoft Zorgplatform",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "DomeinPlatformen",
@@ -265,7 +298,8 @@
       "groups": ""
     },
     {
-      "id": "Zorgprofessional Huisarts",
+      "nid": "Zorgprofessional Huisarts",
+      "label": "Zorgprofessional Huisarts",
       "domain": "PGO-Demo",
       "nodetype": "party",
       "icon": "Huisarts",
@@ -273,7 +307,8 @@
       "groups": ""
     },
     {
-      "id": "Ivido Autorisaties dup",
+      "nid": "Ivido Autorisaties dup",
+      "label": "Ivido Autorisaties dup",
       "domain": "PGO-Demo",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -281,7 +316,8 @@
       "groups": "Ivido"
     },
     {
-      "id": "Enovation Hub",
+      "nid": "Enovation Hub",
+      "label": "Enovation Hub",
       "domain": "PGO-Demo",
       "nodetype": "platform",
       "icon": "DomeinPlatformen",

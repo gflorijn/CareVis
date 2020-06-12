@@ -1,212 +1,238 @@
 {
   "nodes": [
     {
-      "id": "_Systemen",
+      "nid": "_Systemen",
       "domain": "Systemen",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Systemen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Systemen"
     },
     {
-      "id": "HIS",
+      "nid": "HIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "HIS",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "HIS"
     },
     {
-      "id": "AIS",
+      "nid": "AIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "AIS",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "AIS"
     },
     {
-      "id": "FIS",
+      "nid": "FIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "FIS",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "FIS"
     },
     {
-      "id": "EPD-z",
+      "nid": "EPD-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "EPD-z",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "EPD-z"
     },
     {
-      "id": "EPD-z2",
+      "nid": "EPD-z2",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "EPD-z2",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "EPD-z2"
     },
     {
-      "id": "ECD-v",
+      "nid": "ECD-v",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "ECD-v",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "ECD-v"
     },
     {
-      "id": "ECD-g",
+      "nid": "ECD-g",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "ECD-g",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "ECD-g"
     },
     {
-      "id": "Uitslagenportaal",
+      "nid": "Uitslagenportaal",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Uitslagenportaal",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Uitslagenportaal"
     },
     {
-      "id": "Labsysteem",
+      "nid": "Labsysteem",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Labsysteem",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Labsysteem"
     },
     {
-      "id": "Patientportaal-z",
+      "nid": "Patientportaal-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Patientportaal-z",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Patientportaal-z"
     },
     {
-      "id": "Patientportaal-g",
+      "nid": "Patientportaal-g",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Patientportaal-g",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Patientportaal-g"
     },
     {
-      "id": "Patientportaal-v",
+      "nid": "Patientportaal-v",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Patientportaal-v",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Patientportaal-v"
     },
     {
-      "id": "Zorgverlenersportaal-z",
+      "nid": "Zorgverlenersportaal-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Zorgverlenersportaal-z",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgverlenersportaal-z"
     },
     {
-      "id": "Zorgverlenersportaal-z2",
+      "nid": "Zorgverlenersportaal-z2",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Zorgverlenersportaal-z2",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgverlenersportaal-z2"
     },
     {
-      "id": "Huisartsenportaal",
+      "nid": "Huisartsenportaal",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Huisartsenportaal",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Huisartsenportaal"
     },
     {
-      "id": "Ozis",
+      "nid": "Ozis",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Ozis",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Ozis"
     },
     {
-      "id": "E-zorg",
+      "nid": "E-zorg",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "E-zorg",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "E-zorg"
     },
     {
-      "id": "Zorgmail",
+      "nid": "Zorgmail",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Zorgmail",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgmail"
     },
     {
-      "id": "LSP",
+      "nid": "LSP",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "LSP",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "LSP"
     },
     {
-      "id": "Papier-Fax",
+      "nid": "Papier-Fax",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Papier-Fax",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Papier-Fax"
     },
     {
-      "id": "Labonline",
+      "nid": "Labonline",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Labonline",
       "url": "https://www.topicus-diagnostiek.nl",
-      "groups": ""
+      "groups": "",
+      "label": "Labonline"
     },
     {
-      "id": "Zorgdomein",
+      "nid": "Zorgdomein",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Zorgdomein",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgdomein"
     },
     {
-      "id": "Point",
+      "nid": "Point",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Point",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Point"
     },
     {
-      "id": "XDS-platform",
+      "nid": "XDS-platform",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "XDS-platform",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "XDS-platform"
     },
     {
-      "id": "Vecozo",
+      "nid": "Vecozo",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "",
+      "icon": "Vecozo",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Vecozo"
     }
   ],
   "edges": [

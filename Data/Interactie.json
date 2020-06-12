@@ -1,116 +1,130 @@
 {
   "nodes": [
     {
-      "id": "_Interactie",
+      "nid": "_Interactie",
       "domain": "Interactie",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Interactie",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Interactie"
     },
     {
-      "id": "i-Verwijzen",
+      "nid": "i-Verwijzen",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Verwijzen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Verwijzen"
     },
     {
-      "id": "i-Medicatie",
+      "nid": "i-Medicatie",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Medicatie",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Medicatie"
     },
     {
-      "id": "i-Onderzoek",
+      "nid": "i-Onderzoek",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Onderzoek",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Onderzoek"
     },
     {
-      "id": "i-Order",
+      "nid": "i-Order",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Order",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Order"
     },
     {
-      "id": "i-Uitslagen",
+      "nid": "i-Uitslagen",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Uitslagen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Uitslagen"
     },
     {
-      "id": "i-Ziekenhuiszorg",
+      "nid": "i-Ziekenhuiszorg",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Ziekenhuiszorg",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Ziekenhuiszorg"
     },
     {
-      "id": "i-Overdracht",
+      "nid": "i-Overdracht",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Overdracht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Overdracht"
     },
     {
-      "id": "i-Waarnemen",
+      "nid": "i-Waarnemen",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Waarnemen",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Waarnemen"
     },
     {
-      "id": "i-eHealth",
+      "nid": "i-eHealth",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-eHealth",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-eHealth"
     },
     {
-      "id": "i-Administratie",
+      "nid": "i-Administratie",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Administratie",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Administratie"
     },
     {
-      "id": "i-Aanvraagzorg",
+      "nid": "i-Aanvraagzorg",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Aanvraagzorg",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Aanvraagzorg"
     },
     {
-      "id": "i-COV",
+      "nid": "i-COV",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-COV",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-COV"
     },
     {
-      "id": "i-Declareren",
+      "nid": "i-Declareren",
       "domain": "Interactie",
       "nodetype": "interaction",
-      "icon": "",
+      "icon": "i-Declareren",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "i-Declareren"
     }
   ],
   "edges": [

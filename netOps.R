@@ -42,7 +42,7 @@ addFriendsOfNodeToView <- function(view, nodename, linktypes) {
 }
 
 addFriendsAndEdgesOfNodesInView <- function(view, linktypes) {
-  nodenames = view$nodes$id
+  nodenames = view$nodes$nid
   for (n in nodenames) {
     view = addFriendsOfNodeToView(view, n, linktypes)
   }
@@ -60,7 +60,7 @@ addNodesToViewByName <-  function(view, nodeids) {
 }
 
 addEdgesBetweenNodesInView <- function(view) {
-  viewnodes = view$nodes$id
+  viewnodes = view$nodes$nid
   viewedges = subset(view$net$edges, (from %in% viewnodes)|(to %in% viewnodes))
   view$edges = viewedges
   return(view)

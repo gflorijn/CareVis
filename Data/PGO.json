@@ -1,7 +1,8 @@
 {
   "nodes": [
     {
-      "id": "_PGO",
+      "nid": "_PGO",
+      "label": "_PGO",
       "domain": "PGO",
       "nodetype": "category",
       "icon": "",
@@ -9,7 +10,8 @@
       "groups": ""
     },
     {
-      "id": "PGO",
+      "nid": "PGO",
+      "label": "PGO",
       "domain": "PGO",
       "nodetype": "platform",
       "icon": "Platform",
@@ -17,7 +19,8 @@
       "groups": "PGO systeem"
     },
     {
-      "id": "PGO UI",
+      "nid": "PGO UI",
+      "label": "PGO UI",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "Systeem",
@@ -25,7 +28,8 @@
       "groups": "PGO systeem"
     },
     {
-      "id": "PGO Server",
+      "nid": "PGO Server",
+      "nid": "PGO Server",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -33,7 +37,8 @@
       "groups": "PGO systeem"
     },
     {
-      "id": "PGO Autorisaties",
+      "nid": "PGO Autorisaties",
+      "label": "PGO Autorisaties",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -41,7 +46,8 @@
       "groups": "PGO systeem"
     },
     {
-      "id": "DVZA",
+      "nid": "DVZA",
+      "label": "DVZA",
       "domain": "PGO",
       "nodetype": "interaction",
       "icon": "Koppelvlak",
@@ -49,7 +55,8 @@
       "groups": "PGO systeem, PGO ZA"
     },
     {
-      "id": "ZA Zorgaanbieder",
+      "nid": "ZA Zorgaanbieder",
+      "label": "ZA Zorgaanbieder",
       "domain": "PGO",
       "nodetype": "party",
       "icon": "Ziekenhuis",
@@ -57,7 +64,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "ZA Resources",
+      "nid": "ZA Resources",
+      "label": "ZA Resources",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -65,7 +73,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "ZA Autorisaties",
+      "nid": "ZA Autorisaties",
+      "label": "ZA Autorisaties",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "AutorisatieServer",
@@ -73,7 +82,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "ZA Systeem",
+      "nid": "ZA Systeem",
+      "label": "ZA Systeem",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "Systeem",
@@ -81,7 +91,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "ZA Data",
+      "nid": "ZA Data",
+      "label": "ZA Data",
       "domain": "PGO",
       "nodetype": "object",
       "icon": "Databases",
@@ -89,7 +100,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "ZA Interface",
+      "nid": "ZA Interface",
+      "label": "ZA Interface",
       "domain": "PGO",
       "nodetype": "platform",
       "icon": "Platform",
@@ -97,7 +109,8 @@
       "groups": "PGO ZA"
     },
     {
-      "id": "PGO Gebruiker",
+      "nid": "PGO Gebruiker",
+      "label": "PGO Gebruiker",
       "domain": "PGO",
       "nodetype": "party",
       "icon": "Patient",
@@ -105,7 +118,8 @@
       "groups": ""
     },
     {
-      "id": "ZA Gebruiker",
+      "nid": "ZA Gebruiker",
+      "label": "ZA Gebruiker",
       "domain": "PGO",
       "nodetype": "party",
       "icon": "Huisarts",

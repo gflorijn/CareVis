@@ -1,28 +1,31 @@
 {
   "nodes": [
     {
-      "id": "_Patienten",
+      "nid": "_Patienten",
       "domain": "Patienten",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Patienten",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Patienten"
     },
     {
-      "id": "Patient",
+      "nid": "Patient",
       "domain": "Patienten",
       "nodetype": "actor",
-      "icon": "",
+      "icon": "Patient",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Patient"
     },
     {
-      "id": "Mantelzorger",
+      "nid": "Mantelzorger",
       "domain": "Patienten",
       "nodetype": "actor",
-      "icon": "",
+      "icon": "Mantelzorger",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Mantelzorger"
     }
   ],
   "edges": []

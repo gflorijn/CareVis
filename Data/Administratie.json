@@ -1,44 +1,49 @@
 {
   "nodes": [
     {
-      "id": "_Administratie",
+      "nid": "_Administratie",
       "domain": "Administratie",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Administratie",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Administratie"
     },
     {
-      "id": "CIZ",
+      "nid": "CIZ",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "",
+      "icon": "CIZ",
       "url": "http://www.ciz.nl",
-      "groups": ""
+      "groups": "",
+      "label": "CIZ"
     },
     {
-      "id": "Gemeente",
+      "nid": "Gemeente",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Gemeente",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Gemeente"
     },
     {
-      "id": "Zorgverzekeraar",
+      "nid": "Zorgverzekeraar",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Zorgverzekeraar",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgverzekeraar"
     },
     {
-      "id": "Zorgkantoor",
+      "nid": "Zorgkantoor",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Zorgkantoor",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Zorgkantoor"
     }
   ],
   "edges": []

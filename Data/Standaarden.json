@@ -1,108 +1,121 @@
 {
   "nodes": [
     {
-      "id": "_Standaarden",
+      "nid": "_Standaarden",
       "domain": "Standaarden",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Standaarden",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Standaarden"
     },
     {
-      "id": "FHIR",
+      "nid": "FHIR",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "FHIR",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "FHIR"
     },
     {
-      "id": "HL7",
+      "nid": "HL7",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "HL7",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "HL7"
     },
     {
-      "id": "MedMij",
+      "nid": "MedMij",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "MedMij",
       "url": "https://www.medmij.nl",
-      "groups": ""
+      "groups": "",
+      "label": "MedMij"
     },
     {
-      "id": "XDS",
+      "nid": "XDS",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "XDS",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "XDS"
     },
     {
-      "id": "ZIBS",
+      "nid": "ZIBS",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "ZIBS",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "ZIBS"
     },
     {
-      "id": "eOverdracht",
+      "nid": "eOverdracht",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "eOverdracht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "eOverdracht"
     },
     {
-      "id": "BgZ",
+      "nid": "BgZ",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "BgZ",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "BgZ"
     },
     {
-      "id": "MedicatieOverdracht",
+      "nid": "MedicatieOverdracht",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "MedicatieOverdracht",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "MedicatieOverdracht"
     },
     {
-      "id": "Labuitwisseling",
+      "nid": "Labuitwisseling",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "Labuitwisseling",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Labuitwisseling"
     },
     {
-      "id": "Huisartswaarneming",
+      "nid": "Huisartswaarneming",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "Huisartswaarneming",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Huisartswaarneming"
     },
     {
-      "id": "Edifact",
+      "nid": "Edifact",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "Edifact",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Edifact"
     },
     {
-      "id": "Richtlijn HASP",
+      "nid": "Richtlijn HASP",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "",
+      "icon": "Richtlijn HASP",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Richtlijn HASP"
     }
   ],
   "edges": [

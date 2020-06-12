@@ -723,8 +723,8 @@ server <- function(input, output, session) {
       return(view)
     }
     n = getNodeByName(view, name)
-    newnode = createCloneOfNode(n, str_c(n$name, "_c"))
-    newedge = tibble(from=newnode$id, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$id,name,"") )
+    newnode = createCloneOfNode(view, n)
+    newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
     
     net = view$net
     net = addNodesToNetwork(net, newnode)
@@ -732,31 +732,11 @@ server <- function(input, output, session) {
     net = updateDerivedNetworkInfo(net) # add presentation stuff
     view$net = net
     rv$thenetwerkinfo = net  # Should not be here
-    view = addNodesToViewByName(view, newnode$id)
+    view = addNodesToViewByName(view, newnode$nid)
     view = addEdgesToViewByEid(view, newedge$eid)
     return(view)
   }
   
-  #produce a clone of node , with name id
-  createCloneOfNode <- function(node, nid) {
-    newnode = node
-    newnode$id = nid
-    newnode$name = nid
-    return(newnode)
-  }
-  
-  #Make a new node give the id
-  createNewNodeForIdWithDefaults <- function(nid) {
-    return(tibble(id=nid, name=nid, icon="", url="", groups="", domain="UI", nodetype="undefined"))
-  }
- 
-  # create a new edge and handle id translation
-  createNewEdgeWithDefaults <- function(from,to) {
-    fname = if (existsNodeInView(rv$activeview, from)) from else subset(editmodelog$idmap, id==from)$label
-    tname = if (existsNodeInView(rv$activeview, to)) to else subset(editmodelog$idmap, id==to)$label
-    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
-  }
-
   #Capture the changes during an edit session
   #
   editmodelog <- reactiveValues(
@@ -800,7 +780,7 @@ server <- function(input, output, session) {
     
     view = rv$activeview
     
-    view = addNodesToViewByName(view, editmodelog$nodes$id)
+    view = addNodesToViewByName(view, editmodelog$nodes$nid)
     view = addEdgesToViewByEid(view, editmodelog$edges$eid)
     rv$activeview = view
   }
@@ -866,8 +846,9 @@ server <- function(input, output, session) {
   # Render the graph.
   output$graph_panel <- renderVisNetwork({
 
-      # set "id" to edge id
+      # set "id" to node id/edge id
       nds = graph_panel_data$nodes
+      nds$id = nds$nid
       eds = graph_panel_data$edges
       eds$id = eds$eid
       vnt = visNetwork(nodes=nds, edges=eds)

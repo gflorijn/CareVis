@@ -1,52 +1,58 @@
 {
   "nodes": [
     {
-      "id": "_Leveranciers",
+      "nid": "_Leveranciers",
       "domain": "Leveranciers",
       "nodetype": "category",
-      "icon": "",
+      "icon": "_Leveranciers",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "_Leveranciers"
     },
     {
-      "id": "Hinq",
+      "nid": "Hinq",
       "domain": "Leveranciers",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Hinq",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Hinq"
     },
     {
-      "id": "EPIC",
+      "nid": "EPIC",
       "domain": "Leveranciers",
       "nodetype": "party",
-      "icon": "",
+      "icon": "EPIC",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "EPIC"
     },
     {
-      "id": "Chipsoft",
+      "nid": "Chipsoft",
       "domain": "Leveranciers",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Chipsoft",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Chipsoft"
     },
     {
-      "id": "Enovation",
+      "nid": "Enovation",
       "domain": "Leveranciers",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Enovation",
       "url": "",
-      "groups": ""
+      "groups": "",
+      "label": "Enovation"
     },
     {
-      "id": "Ivido",
+      "nid": "Ivido",
       "domain": "Leveranciers",
       "nodetype": "party",
-      "icon": "",
+      "icon": "Ivido",
       "url": "http://www.ivido.nl",
-      "groups": ""
+      "groups": "",
+      "label": "Ivido"
     }
   ],
   "edges": [

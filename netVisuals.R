@@ -60,9 +60,6 @@ addVisualSettingsForView <- function(view, doimages, dolinklabels) {
       view$nodes$shape = "dot"
     }
 
-    #Set node label to name if no label is provided - TODO!
-    
-    view$nodes$label = view$nodes$name
 
     # Hide category nodes
     view$nodes = subset(view$nodes, view$nodes$nodetype != "category")

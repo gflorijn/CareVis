@@ -19,20 +19,17 @@ loadNetworkLayer <- function(nodesedges=NULL, name) {
   lnodes=nls$nodes
   ledges=nls$edges 
   
-  # lnodes <- read.csv2(paste0("Data/", naam, "-Nodes.csv"), header=T, colClasses="character", sep=";")
-  # ledges <- read.csv2(paste0("Data/", naam, "-edges.csv"), header=T, colClasses="character", sep=";")
-  
   oln = c()
-  nodenames = lnodes$id
+  nodenames = lnodes$nid
   if (!is.null(nodesedges)) {
     oln = nodesedges$nodes 
-    nodenames = c(nodenames, oln$id)
+    nodenames = c(nodenames, oln$nid)
   }
 #  browser()
   err = FALSE
   n = checkNodesInedges(nodenames, ledges)
   if (length(n) > 0) {
-    simpleMessage(cat("Layer ", naam, ":  unknown nodes in edges file: ", unique(n), ". Layer skipped.\n"))
+    simpleMessage(cat("Layer ", name, ":  unknown nodes in edges file: ", unique(n), ". Layer skipped.\n"))
     err = TRUE
   }
   if (err) {
@@ -87,7 +84,7 @@ prepareNetworkDataForBrowsing <- function(nls) {
   #browser()
   # add some columns for graph handling
   nodes = nls$nodes
-  nodes$name = nodes$id
+  nodes$name = nodes$nid
   
   edges = nls$edges
   edges$eid = getEidForEdge(edges$from,edges$to, edges$label)
@@ -139,16 +136,48 @@ addDerivedNetworkData <-  function(net) {
   return(net)
 }
 
-# make a data frame suitable for presenting in a tableoutput
-flattenedDataFrameForTable <- function(df) {
-  r = flatten(df)
-  # for (c in 1:length(df)) {
-  #   if (is.list(r[[c]])) {
-  #     r[[c]] = vapply(r[[c]], toString, character(1L))
-  #   }
-  # }
-  return(r)
+
+# Node/Edge creation/cloning ----------------------------------------------
+makeNewUniqueNodeIdFor <- function(nid) {
+  pat = "^(.+)_(\\d+)$"
+  m = str_match(nid, pat)
+  if (is.na(m[1,1])) { # no match
+    newnm = str_c(nid, "_1")  # should check whether newnm is unique in the network
+    return(newnm)
+  } else {
+    num = as.integer(m[1,3])
+    num = num + 1
+    newnm = str_c(m[1,2], "_", num)
+    return(newnm)
+  }
 }
+
+#produce a clone of node. Give it a unique id in the network
+createCloneOfNode <- function(view, node) {
+  net = view$net
+  onid = node$nid
+  newnid = makeNewUniqueNodeIdFor(onid)
+  
+  newnode = node
+  newnode$nid = newnid
+  newnode$label = str_c(newnode$label, "_cl")
+  newnode$name = newnid
+  return(newnode)
+}
+
+#Make a new node give the id
+createNewNodeForIdWithDefaults <- function(nid) {
+  return(tibble(id=nid, name=nid, icon="", url="", groups="", domain="UI", nodetype="undefined"))
+}
+
+# create a new edge and handle id translation
+createNewEdgeWithDefaults <- function(from,to) {
+  fname = if (existsNodeInView(rv$activeview, from)) from else subset(editmodelog$idmap, id==from)$label
+  tname = if (existsNodeInView(rv$activeview, to)) to else subset(editmodelog$idmap, id==to)$label
+  return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+}
+
+
 
 
 
