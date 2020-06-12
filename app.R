@@ -1,8 +1,10 @@
 library(shiny)
-library(igraph)
 library(shinythemes)
 library(shinyjs)
 library(shinyWidgets)
+library(shinyBS)
+
+library(DT)
 
 source("netData.R")
 source("netOps.R")
@@ -82,23 +84,23 @@ tagList(
                    column(3, uiOutput("viewnodeselectmenu")),
                    # column(1, uiOutput("viewselectmenu"))
                  ),
-                 tags$hr(),
                  visNetworkOutput("graph_panel", height = "700px", width =
                                     "100%"),
                  absolutePanel(
                    id = "editcontrols",
                    class = "panel panel-default",
-                   top = 177,
+                   top = 145,
                    left = 320,
-                   width = 180,
+                   width = 420,
                    fixed = TRUE,
                    draggable = TRUE,
-                   height = "auto", 
-                   uiOutput("editmodemenu")
+                   height = "auto",
+                   tagList(
+                     uiOutput("editmodemenu")
+                  )
                  )
                )
-             )
-           )), 
+           ))), 
   tabPanel("Upload",
            sidebarLayout(
              sidebarPanel(width = 2,
@@ -111,12 +113,12 @@ tagList(
   tabPanel("Data view - Nodes",
            tagList(tags$h2("Nodes"),
                    tags$br(),
-                   tableOutput("dataviewnodes"))),
+                   DT::dataTableOutput("dataviewnodes"))),
   
   tabPanel("Data view - Edges",
            tagList(tags$h2("Edges"),
                    tags$br(),
-                   tableOutput("dataviewedges"))),
+                   DT::dataTableOutput("dataviewedges"))),
   
   tabPanel("Help",
            tagList(helpPageText()))
@@ -192,25 +194,22 @@ server <- function(input, output, session) {
     
     
     restartAll <- function(additionaldata) {
-      #browser()
       ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
 
       rv$thevisgraph = NULL
-#      rv$thevispositions = NULL
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
       rv$themessage = ""
       rv$thecurrentviewname = "Main"
-#      browser()
-        
-      # the is the reactive variable from the module that will produce the data to load
+
+            # the is the reactive variable from the module that will produce the data to load
       # a list of nodes and links
       rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
 
       nodes = c("Patient")
         
       rv$activeview = newViewOnNetwork(ni, "Main")    
-      rv$activeview = addNodesToViewByName(rv$activeview, nodes)
+      rv$activeview = addNodesToViewById(rv$activeview, nodes)
 
       setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
@@ -339,7 +338,7 @@ server <- function(input, output, session) {
     # observeEvent(input$doubleClick, {
     #   #browser()
     #   rv$thenodeselected = input$doubleClick$nodes[[1]]
-    #   rv$activeview = restartViewOnNodeNames(rv$activeview, rv$thenodeselected)
+    #   rv$activeview = restartViewOnNodeIds(rv$activeview, rv$thenodeselected)
     # }) 
     
     
@@ -347,10 +346,12 @@ server <- function(input, output, session) {
     observeEvent(rv$thenodeselected, {
       rv$themessage = " "
       rv$theurl = ""
-      haveurl = rv$thenodeselected != "" && getNodeByName(rv$activeview, rv$thenodeselected)$url != ""
-      
-      if (haveurl) {
-        rv$theurl = getNodeByName(rv$activeview, rv$thenodeselected)$url
+      if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
+          return()
+      rv$theurl = getNodeById(rv$activeview, rv$thenodeselected)$url
+      haveurl = FALSE
+      if (rv$theurl != "") {
+        haveurl = TRUE
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
       }
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
@@ -382,17 +383,6 @@ server <- function(input, output, session) {
       }
     } )
     
-    #add nodes by following links of type from nodes
-    growViewByLinks <- function(nodenames, lt) {
-      linktypes = c(lt)
-      if (lt == "internal")
-        linktypes = rv$thenetworkinfo$linktypes
-      for (n in nodenames) {
-        rv$activeview = addFriendsOfNodeToView(rv$activeview, n, linktypes)
-      }
-      #rv$forcerepaint = TRUE
-    }
-   
     # Force redraw of the graph
     #
     observeEvent(input$showgraph, {
@@ -401,12 +391,12 @@ server <- function(input, output, session) {
     
     # hide event
     observeEvent(input$hidefromview, {
-      rv$activeview = removeNodesFromViewByName(rv$activeview, c(rv$thenodeselected))
+      rv$activeview = removeNodesFromViewById(rv$activeview, c(rv$thenodeselected))
     })
   
     # Focus view on a node
     observeEvent(input$switchfocus, {
-      rv$activeview = restartViewOnNodeNames(rv$activeview, c(rv$thenodeselected))
+      rv$activeview = restartViewOnNodeIds(rv$activeview, c(rv$thenodeselected))
     }) 
     
      # View the whole underlying network
@@ -420,21 +410,76 @@ server <- function(input, output, session) {
       #browseURL(rv$theurl)
     })
     
- 
+#
 
 # Data view output --------------------------------------------------------
-
-    output$dataviewnodes <- renderTable({
-      rv$activeview$net$nodes
-      #flattenedDataFrameForTable(rv$activeview$nodes$name)
-    })    
+ 
+    output$dataviewnodes <-  DT::renderDataTable( 
+      select(rv$activeview$net$nodes, nid, label, nodetype, domain, groups, icon, url),
+              style="Bootstrap", rownames=F, 
+              server=T, selection="single", options=list(pageLength=20)
+    )
     
-    output$dataviewedges <- renderTable({
+    output$dataviewedges <- DT::renderDataTable(
 #      browser()
-      rv$activeview$net$edges
-      #flattenedDataFrameForTable(rv$activeview$edges$eid)
-    })    
+      select(rv$activeview$net$edges,from, to, label, linktype, eid),
+        style="Bootstrap", rownames=F, 
+        server=T, selection="single", options=list(pageLength=20)
+    )
     
+
+# Editbox for node(s) or edges -----------------------------------------------------
+    
+    editablenodetable = reactiveValues(
+      nodes = NULL
+    )
+    
+    observeEvent(input$startnodeeditor, {
+      editablenodetable$nodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
+      showModal(
+        modalDialog(
+          title = "Edit node(s)",
+          size="l",
+          tagList(
+            DT::dataTableOutput("editnodetable", width="90%"),
+          ),
+          footer = tagList(
+            modalButton("Cancel"),
+            actionButton("saveeditednodes", "Save")
+          )
+        )
+      )
+    })
+    
+    # Save the changes to the network - should watch out for changes to id's.
+    # Should keep the original nodes, removebyId, and then add the changes
+    # in addition: these steps occur on multiple places (clone, etc) , should be handled generically.
+    observeEvent(input$saveeditednodes, {
+      browser()
+      net = view$net
+      net = addNodesToNetwork(net, editablenodetable$nodes)
+      net = updateDerivedNetworkInfo(net) # add presentation stuff
+      view$net = net
+      rv$thenetwerkinfo = net  # Should not be here
+      view = addNodesToViewById(view, newnode$nid)
+      return(view)
+    })
+
+    observeEvent(input$editnodetable_cell_edit, {
+      info = input$editnodetable_cell_edit
+      cat('caught table change\n')
+      str(info)  # check what info looks like (a data frame of 3 columns)
+      editablenodetable$nodes <<- editData(editablenodetable$nodes, info)
+      # replaceData(proxy5, d5, resetPaging = FALSE)  # important
+      # the above steps can be merged into a single editData() call; see examples below
+    })
+
+    # The table for the modal node editor
+    #
+    output$editnodetable <- DT::renderDataTable(      
+      editablenodetable$nodes,
+                style="Bootstrap", rownames=F,  editable= "cell", #list(target="cell", disable = list(columns=c(1))), 
+                server=T, selection="single", options=list(pageLength=10))
     
     
 # Handle uploading data ----------------------------------------------------
@@ -555,9 +600,9 @@ server <- function(input, output, session) {
 # Search node box + action handling ---------------------------------------
 
   #Starting point menu for showing nodes from different domains.
-  output$searchnodemenu <- renderUI({
+  output$searchnodemenu <- renderUI({  # probably should be a list of labels...
     #    browser()
-    names= rv$activeview$net$nodes$name
+    names= rv$activeview$net$nodes$nid
     fixedRow(
         column(9, selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE)),
         column(3, tagList(
@@ -575,7 +620,7 @@ server <- function(input, output, session) {
   observeEvent(input$addnodefromsearch, {
     nodes = input$addsearchnodes
     if (!is.null(nodes) & length(nodes) > 0) {
-      rv$activeview = addNodesToViewByName(rv$activeview, nodes)
+      rv$activeview = addNodesToViewById(rv$activeview, nodes)
         #      rv$forcerepaint = TRUE 
     }
   }) 
@@ -650,7 +695,8 @@ server <- function(input, output, session) {
   editModeMenu  <- function() {
     res = c(
       getMenuEntryScriptForColor("all", "Save changes", "grey", "editmodesavechanges"),
-      getMenuEntryScriptForColor("all", "Cancel edit", "grey", "editmodecancel")
+      getMenuEntryScriptForColor("all", "Cancel", "grey", "editmodecancel"),
+      getMenuEntryScriptForColor("all", "Launch editor", "grey", "startnodeeditor")
     )
   }
   
@@ -676,11 +722,24 @@ server <- function(input, output, session) {
 
   output$editmodemenu <- renderUI({
     tagList(
-        checkboxInput("manipulationmode", "Edit mode", FALSE),
+      fixedRow(
+        column(2, offset=1, checkboxInput("manipulationmode", "Draw mode", FALSE)),
+        column(5, tagList(
+          tags$small("Changes"),
+          tags$br(),
           HTML(
-            editModeMenu()
+            c(      getMenuEntryScriptForColor("all", "Save changes", "grey", "editmodesavechanges"),
+                    getMenuEntryScriptForColor("all", "Cancel", "grey", "editmodecancel")
+            )
+          ))),
+        column(4, tagList(
+          tags$small("Editing"),
+          tags$br(),
+          HTML(
+            getMenuEntryScriptForColor("all", "Launch editor", "grey", "startnodeeditor")
           )
-    )
+        ))
+      ))
   })
   
 # Event Experiments -------------------------------------------------------
@@ -691,6 +750,11 @@ server <- function(input, output, session) {
   # 
   # observeEvent(input$afterdrawing, {
   # })
+  
+
+# Node Editor -------------------------------------------------------------
+
+
   
 
 # Edit Mode actions -------------------------------------------------------
@@ -722,7 +786,7 @@ server <- function(input, output, session) {
     if (is.null(name) | name == "") {
       return(view)
     }
-    n = getNodeByName(view, name)
+    n = getNodeById(view, name)
     newnode = createCloneOfNode(view, n)
     newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
     
@@ -732,10 +796,24 @@ server <- function(input, output, session) {
     net = updateDerivedNetworkInfo(net) # add presentation stuff
     view$net = net
     rv$thenetwerkinfo = net  # Should not be here
-    view = addNodesToViewByName(view, newnode$nid)
+    view = addNodesToViewById(view, newnode$nid)
     view = addEdgesToViewByEid(view, newedge$eid)
     return(view)
   }
+  
+  
+  #Make a new node give the id
+  genNewNodeForIdWithDefaults <- function(view, nid) {
+    return(tibble(nid=nid, label=nid, icon="", url="", groups="", image="", domain="UI", nodetype="undefined"))
+  }
+  
+  # create a new edge and handle id translation
+  genNewEdgeWithDefaults <- function(view, from,to) {
+    fname = if (existsNodeInView(view, from)) from else subset(editmodelog$idmap, id==from)$label
+    tname = if (existsNodeInView(view, to)) to else subset(editmodelog$idmap, id==to)$label
+    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+  }
+  
   
   #Capture the changes during an edit session
   #
@@ -780,7 +858,7 @@ server <- function(input, output, session) {
     
     view = rv$activeview
     
-    view = addNodesToViewByName(view, editmodelog$nodes$nid)
+    view = addNodesToViewById(view, editmodelog$nodes$nid)
     view = addEdgesToViewByEid(view, editmodelog$edges$eid)
     rv$activeview = view
   }
@@ -797,7 +875,7 @@ server <- function(input, output, session) {
       if (cmd == "addNode") {
         nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
         nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
-        newnode = createNewNodeForIdWithDefaults(nlabel)
+        newnode = genNewNodeForIdWithDefaults(rv$activeview, nlabel)
         editModeLogIdMap(nid, nlabel)
         editModeLogAddNodes(newnode)
       }
@@ -806,7 +884,7 @@ server <- function(input, output, session) {
         
         nfrom = input$graph_panel_graphChange$from
         nto = input$graph_panel_graphChange$to
-        newedge = createNewEdgeWithDefaults(nfrom, nto)
+        newedge = genNewEdgeWithDefaults(rv$activeview, nfrom, nto)
         editModeLogAddEdges(newedge)
       }
     })

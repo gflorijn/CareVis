@@ -39,7 +39,7 @@ setupVisualDefinitionsForNetwork <- function(net) {
   nd$color = mapvalues(nd$domain, from=net$domains, to=net$domaincolors, warn_missing = TRUE)
   ne$color = mapvalues(ne$linktype, from=net$linktypes, to=net$linktypecolors, warn_missing = TRUE)
   
-  nd$image = str_c(net$imagepath, "Images/", if_else( (nd$icon!=""), nd$icon, nd$name), ".png")
+  nd$image = str_c(net$imagepath, "Images/", if_else( (nd$icon!=""), nd$icon, nd$label), ".png")
   nd$brokenImage = str_c(net$imagepath, "Images/NotFound", ".png")
 
   # nd$groupnames = vapply(nd$groups, toString, character(1L))

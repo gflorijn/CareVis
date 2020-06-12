@@ -1,10 +1,6 @@
 # laad data voor zorgnet visualisatie
 
-
-require("igraph", quietly=T)
 require("jsonlite", quietly=T)
-require("r2d3", quietly=T)
-require("d3r", quietly=T)
 require("tidyverse", quietly=T)
 
 # laad de data  een bepaald perspectief. Elk perspectief omvat nodes.
@@ -83,10 +79,8 @@ readNetworkData <-  function(layers) {
 prepareNetworkDataForBrowsing <- function(nls) {
   #browser()
   # add some columns for graph handling
-  nodes = nls$nodes
-  nodes$name = nodes$nid
-  
-  edges = nls$edges
+  nodes = as_tibble(nls$nodes)
+  edges = as_tibble(nls$edges)
   edges$eid = getEidForEdge(edges$from,edges$to, edges$label)
   
   return(list(nodes=nodes, edges=edges))
@@ -111,9 +105,9 @@ readNetworkDataFromJSON <-  function(jsonfile) {
 #add additional data to an existing network structure. Should be in "raw" format, should also be checked. 
 #Avoids rereading all data
 combineNetworks <- function(net1, net2) {
-  net2names = net2$nodes$name
+  net2names = net2$nodes$nid
   net2eids = net2$edges$eid
-  nda = subset(net1$nodes, !(net1$nodes$name %in% net2names))
+  nda = subset(net1$nodes, !(net1$nodes$nid %in% net2names))
   eda = subset(net1$edges, !(net1$edges$eid %in% net2eids ))
   net1$nodes = dplyr::bind_rows(nda, net2$nodes)
   net1$edges = dplyr::bind_rows(eda, net2$edges)
@@ -138,43 +132,33 @@ addDerivedNetworkData <-  function(net) {
 
 
 # Node/Edge creation/cloning ----------------------------------------------
-makeNewUniqueNodeIdFor <- function(nid) {
+makeNewUniqueNodeIdFor <- function(net, nid) {
   pat = "^(.+)_(\\d+)$"
   m = str_match(nid, pat)
   if (is.na(m[1,1])) { # no match
-    newnm = str_c(nid, "_1")  # should check whether newnm is unique in the network
-    return(newnm)
+    num = 1
+    # newnm = str_c(nid, "_1")  # should check whether newnm is unique in the network
+    # return(list(cnt=1, name=newnm))
   } else {
     num = as.integer(m[1,3])
-    num = num + 1
-    newnm = str_c(m[1,2], "_", num)
-    return(newnm)
   }
+    newnm = str_c(nid, "_", num)
+    while(existsNodeInView(net, newnm)) {
+      num = num+1
+      newnm = str_c(m[1,2], "_", num)
+    }
+    return(list(cnt=num, name=newnm))
 }
 
 #produce a clone of node. Give it a unique id in the network
 createCloneOfNode <- function(view, node) {
   net = view$net
   onid = node$nid
-  newnid = makeNewUniqueNodeIdFor(onid)
-  
+  newnid = makeNewUniqueNodeIdFor(view$net, onid)
   newnode = node
-  newnode$nid = newnid
-  newnode$label = str_c(newnode$label, "_cl")
-  newnode$name = newnid
+  newnode$nid = newnid$name
+  newnode$label = str_c(newnode$label, "_cl",newnid$cnt)
   return(newnode)
-}
-
-#Make a new node give the id
-createNewNodeForIdWithDefaults <- function(nid) {
-  return(tibble(id=nid, name=nid, icon="", url="", groups="", domain="UI", nodetype="undefined"))
-}
-
-# create a new edge and handle id translation
-createNewEdgeWithDefaults <- function(from,to) {
-  fname = if (existsNodeInView(rv$activeview, from)) from else subset(editmodelog$idmap, id==from)$label
-  tname = if (existsNodeInView(rv$activeview, to)) to else subset(editmodelog$idmap, id==to)$label
-  return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
 }
 
 
