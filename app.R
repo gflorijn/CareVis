@@ -306,50 +306,45 @@ server <- function(input, output, session) {
 # Node selection and menu handling ----------------------------------------
 
 
-    # the graph panel has been initialized - set up inputs to get from them
+    # the graph panel has been initialized - can set up inputs to get from them
     # 
     observeEvent(input$graph_panel_initialized, {
-      # rv$thegraphproxy = visNetworkProxy("graph_panel")
-      # rv$thegraphproxy = visGetPositions(rv$thegraphproxy, nodes=NULL, input="graph_panel_positions")
-      #rv$thegraphproxy = visGetNodes(rv$thegraphproxy,input="graph_panel_nodes")
     })
 # 
-
-    # observeEvent(list(input$graph_panel_positions), {
-    #   rv$thevispositions = input$graph_panel_positions
-    # })   
-     # ==========
-    # Selectie van een node - twee methodes. dubbelop?
     
-    observeEvent(input$current_node_id,  {
-      #cat("input_current_node ", input$current_node_id, "\n")
+    # Node selection - see visEvents
+    observeEvent(input$select_current_nodes,  {
+      #cat("select_current_nodes ", input$select_current_nodes, "\n")
+      rv$thenodeselected = input$select_current_nodes
+      updateTextInput(session, "nodefield", value = rv$thenodeselected)
     })
-
-    observeEvent(input$graph_panel_selected, {
-      #cat("Node selected ", input$graph_panel_selected, "\n")
-      rv$thenodeselected = input$graph_panel_selected
+    
+    #Edge selection - see visEvents
+    observeEvent(input$select_current_edges,  {
+      #cat("select_current_edges ", input$select_current_edges, "\n")
+      rv$theedgeselected = input$input$select_current_edges
       updateTextInput(session, "nodefield", value = rv$thenodeselected)
     })
     
     
-    # Selectie van een groep, (nog) niet gebruikt
+    # Selection of a group - not used
     #  observeEvent(input$graph_panel_selectedBy, {
     #    cat("Observe-graph_panel_selectedBy ", input$graph_panel_selectedBy, "\n")
     #  })
     
-    # # Rechter muis knop. Nu nog geen actie aan verbonden
+    # Right mouse click - not used
     # observeEvent(input$oncontext, {
     # }) 
     
-    # Double click ==> focus on the node selected. Usage set in event-setting 
-    observeEvent(input$doubleClick, {
-      #browser()
-      rv$thenodeselected = input$doubleClick$nodes[[1]]
-      rv$activeview = restartViewOnNodeNames(rv$activeview, rv$thenodeselected)
-    }) 
+    # Double click not used
+    # observeEvent(input$doubleClick, {
+    #   #browser()
+    #   rv$thenodeselected = input$doubleClick$nodes[[1]]
+    #   rv$activeview = restartViewOnNodeNames(rv$activeview, rv$thenodeselected)
+    # }) 
     
     
-    # == UI for node selectie afhandeling
+    # == UI for node selection handling
     observeEvent(rv$thenodeselected, {
       rv$themessage = " "
       rv$theurl = ""
@@ -363,21 +358,35 @@ server <- function(input, output, session) {
     })
     
     #react to click on linkmenu for selected node - the event has the link type to follow
-    observeEvent(input$nodemenuclick, {
-      if (rv$thenodeselected != "")
-        growViewByLinks(c(rv$thenodeselected), input$nodemenuclick)
-    } )
+    observeEvent(
+      input$nodemenuclick,
+      {
+        if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
+          return
+        }
+      linktypes = c(input$nodemenuclick)
+      if (linktypes == "all")
+        linktypes = rv$activeview$net$linktypes
+      rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
+} )
     
     #click on linkmenu for all nodes in view
     observeEvent(input$viewmenuclick, {
-        # browser()
-        growViewByLinks(getNodeNamesInView(rv$activeview), input$viewmenuclick)
+      linktypes = c(input$viewmenuclick)
+      if (linktypes == "internal") {
+        rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
+      }
+      else {
+        if (linktypes == "all") #todo: simplify this
+          linktypes=rv$activeview$net$linktypes
+        rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
+      }
     } )
     
     #add nodes by following links of type from nodes
     growViewByLinks <- function(nodenames, lt) {
       linktypes = c(lt)
-      if (lt == "all")
+      if (lt == "internal")
         linktypes = rv$thenetworkinfo$linktypes
       for (n in nodenames) {
         rv$activeview = addFriendsOfNodeToView(rv$activeview, n, linktypes)
@@ -619,6 +628,7 @@ server <- function(input, output, session) {
              getViewMenuEntryScriptFor("object", "o"),
              getViewMenuEntryScriptFor("part", "p"), 
              getViewMenuEntryScriptFor("refer", "r"),
+             getMenuEntryScriptForColor("internal", "+", "black", "viewmenuclick"),
              getMenuEntryScriptForColor("all", "*", "black", "viewmenuclick"),
 #             tags$b(" -- "),
              viewSelectMenu()
@@ -715,7 +725,7 @@ server <- function(input, output, session) {
     }
     n = getNodeByName(view, name)
     newnode = createCloneOfNode(n, str_c(n$name, "_c"))
-    newedge = tibble(from=newnode$id, to=name,  label="", linktype="clone", eid=getEidForEdge(newnode$id,name,"") )
+    newedge = tibble(from=newnode$id, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$id,name,"") )
     
     net = view$net
     net = addNodesToNetwork(net, newnode)
@@ -857,7 +867,11 @@ server <- function(input, output, session) {
   # Render the graph.
   output$graph_panel <- renderVisNetwork({
 
-      vnt = visNetwork(nodes=graph_panel_data$nodes, edges=graph_panel_data$edges)
+      # set "id" to edge id
+      nds = graph_panel_data$nodes
+      eds = graph_panel_data$edges
+      eds$id = eds$eid
+      vnt = visNetwork(nodes=nds, edges=eds)
   
       # Allow interaction - note: nodes can be in multiple groups
       # Allow maniuplation - should be switch?
@@ -872,7 +886,14 @@ server <- function(input, output, session) {
   
       if (!input$undirected)
         vnt = visEdges(vnt, arrows="to")
-  
+    
+      vnt = visEvents(vnt,
+                      select = "function(data) {
+                          Shiny.onInputChange('select_current_nodes', data.nodes);
+                          Shiny.onInputChange('select_current_edges', data.edges);
+                  ;}")
+      
+      
       #      vnt = visEvents(vnt,
       #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
       #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",

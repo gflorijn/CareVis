@@ -41,6 +41,14 @@ addFriendsOfNodeToView <- function(view, nodename, linktypes) {
   return(view)
 }
 
+addFriendsAndEdgesOfNodesInView <- function(view, linktypes) {
+  nodenames = view$nodes$id
+  for (n in nodenames) {
+    view = addFriendsOfNodeToView(view, n, linktypes)
+  }
+  return(view)
+}
+
 #
 addNodesToViewByName <-  function(view, nodeids) {
   #browser()
@@ -48,6 +56,13 @@ addNodesToViewByName <-  function(view, nodeids) {
   newnodes = subset(basenet$nodes, basenet$nodes$name %in% nodeids)
   nondups = subset(view$nodes, !(view$nodes$name %in% nodeids))
   view$nodes = bind_rows(nondups, newnodes)
+  return(view)
+}
+
+addEdgesBetweenNodesInView <- function(view) {
+  viewnodes = view$nodes$id
+  viewedges = subset(view$net$edges, (from %in% viewnodes)|(to %in% viewnodes))
+  view$edges = viewedges
   return(view)
 }
 
