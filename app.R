@@ -71,7 +71,6 @@ tagList(
                                              TRUE)),
                    column(2, checkboxInput("images", "Icons", TRUE)),
                    column(2, checkboxInput("linklabels", "Link names", TRUE)),
-                   column(2, checkboxInput("manipulationmode", "Edit mode", FALSE)),
                    column(2, checkboxInput("igraphlayout", "iGraph layout"))
                    # column(2, checkboxInput("smooth", "Smooth"))
                  ),
@@ -89,9 +88,9 @@ tagList(
                  absolutePanel(
                    id = "editcontrols",
                    class = "panel panel-default",
-                   top = 200,
+                   top = 177,
                    left = 320,
-                   width = 250,
+                   width = 180,
                    fixed = TRUE,
                    draggable = TRUE,
                    height = "auto", 
@@ -677,10 +676,10 @@ server <- function(input, output, session) {
 
   output$editmodemenu <- renderUI({
     tagList(
-      HTML("&nbsp;&nbsp; Edit mode &nbsp;"),
-      HTML(
-        editModeMenu()
-      )
+        checkboxInput("manipulationmode", "Edit mode", FALSE),
+          HTML(
+            editModeMenu()
+          )
     )
   })
   
