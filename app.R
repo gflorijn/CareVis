@@ -2,7 +2,7 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 library(shinyWidgets)
-library(editData)
+
 
 library(DT)
 
@@ -304,7 +304,7 @@ server <- function(input, output, session) {
         actionLink("demotutorialload", "Add to network"),
         tags$p(),
         tags$p("PGO - Illustration of components involved in a PGO (already loaded)"),
-        downloadLink("demoPGOjson", "Download json file"),
+        # downloadLink("demoPGOjson", "Download json file"),
         tags$br(),
       ))
     })
@@ -323,14 +323,14 @@ server <- function(input, output, session) {
       restartAll(thedata)
     })
 
-    output$demoPGOjson <- downloadHandler(
-      # filename <- function() {
-      #   "demo-PGO.json"
-      # },
-      # content <- function(file) {
-      #   file.copy("Data/PGO.json", file)
-      # }
-    )
+    # output$demoPGOjson <- downloadHandler(
+    #   # filename <- function() {
+    #   #   "demo-PGO.json"
+    #   # },
+    #   # content <- function(file) {
+    #   #   file.copy("Data/PGO.json", file)
+    #   # }
+    # )
     
 
 # Node selection and menu handling ----------------------------------------
@@ -695,6 +695,7 @@ server <- function(input, output, session) {
       HTML(
         c (
             smallHTMLUIButton("a", "nodemenuclick", "actor", getLinkColor("actor")),
+            smallHTMLUIButton("u", "nodemenuclick", "use", getLinkColor("use")),
             smallHTMLUIButton("s", "nodemenuclick", "system", getLinkColor("system")),
             smallHTMLUIButton("o", "nodemenuclick", "object", getLinkColor("object")),
             smallHTMLUIButton("r", "nodemenuclick", "refer", getLinkColor("refer")),
@@ -713,6 +714,7 @@ server <- function(input, output, session) {
       HTML(
         c (
           smallHTMLUIButton("a", "viewmenuclick", "actor", getLinkColor("actor")),
+          smallHTMLUIButton("u", "viewmenuclick", "use", getLinkColor("use")),
           smallHTMLUIButton("s", "viewmenuclick", "system", getLinkColor("system")),
           smallHTMLUIButton("o", "viewmenuclick", "object", getLinkColor("object")),
           smallHTMLUIButton("r", "viewmenuclick", "refer", getLinkColor("refer")),

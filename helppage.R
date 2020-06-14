@@ -16,25 +16,26 @@ helpPageText <- function() {
         tags$li("u(se) links"), 
         tags$li("s(ystem) links"), 
         tags$li("o(bject) links"), 
-        tags$li("p(art) links"),
         tags$li("r(efer) links"),
         tags$li("* alle  links")
       ),
       tags$p(
-        "Je kunt deze knoppen ook toepassen op alle nodes die zichtbaar zijn in de view."
+        "Je kunt deze knoppen ook toepassen op alle nodes die zichtbaar zijn in de view.
+        Daar heb je ook de mogelijkheid om alle links te tonen tussen nodes in de view (via #)."
       ),
-      tags$p(
-        "Als het aantal nodes/links wat groot wordt kun je proberen sub-grafen in te klappen door te dubbel-klikken op een node."
-      ),
+      # tags$p(
+      #   "Als het aantal nodes/links wat groot wordt kun je proberen sub-grafen in te klappen door te dubbel-klikken op een node."
+      # ),
       tags$p("De betekenis van andere knoppen:"),
       tags$ul(
         tags$li("H(ide) verwijdert de node uit de view"),
         tags$li("F(ocus) focusseert de view op deze node"),
+        tags$li("C(lone) clone de geselecteerde node"),
         
         tags$li("All- toon alle nodes en links in het onderliggende netwerk"),
         tags$li(">View - maak een apart (read-only) viewpanel voor de huidige weergave"),
-        tags$li("Export - exporteer de view naar een HTML bestand"),
-        tags$li("Redraw - teken de view opnieuw (leidt tot andere layout)"),
+        tags$li("JSON - download een json versie van de view"),
+        tags$li("Redraw - teken de view opnieuw (leidt mogelijk tot andere layout)"),
         tags$li("Restart - breng de view terug naar de begintoestand")
       )
     )
