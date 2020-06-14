@@ -8,8 +8,8 @@ require("tidyverse", quietly=T)
 #als het argument nodeslinks niet null is worden de ingelezen nodes en links toegevoegd 
 #aan de meegegeven argumenten zodat er uiteindelijk 1 graaf ontstaat
 #
-loadNetworkLayer <- function(nodesedges=NULL, name) {
-  cat('load layer: ', name, "\n")
+loadNetworkSlice <- function(nodesedges=NULL, name) {
+  cat('load slice: ', name, "\n")
   
   nls = fromJSON(paste0("Data/", name, ".json"))
   lnodes=nls$nodes
@@ -25,7 +25,7 @@ loadNetworkLayer <- function(nodesedges=NULL, name) {
   err = FALSE
   n = checkNodesInedges(nodenames, ledges)
   if (length(n) > 0) {
-    simpleMessage(cat("Layer ", name, ":  unknown nodes in edges file: ", unique(n), ". Layer skipped.\n"))
+    simpleMessage(cat("Slice ", name, ":  unknown nodes in edges file: ", unique(n), ". Slice skipped.\n"))
     err = TRUE
   }
   if (err) {
@@ -54,12 +54,12 @@ checkNodesInedges <- function(nodenames, edges) {
   c(edges$from[nofrom], edges$to[noto])
 }
 
-# Read all layers
-readLayers <- function(names) {
+# Read all slices
+readSlices <- function(names) {
   #cat("n = ", namen)
   lnl = NULL
   for (i in names) {
-    lnl = loadNetworkLayer(lnl, i)
+    lnl = loadNetworkSlice(lnl, i)
   }
   lnl
 }
@@ -70,8 +70,8 @@ readLayers <- function(names) {
 # $nodes - the nodes
 # $edges - the edges
 
-readNetworkData <-  function(layers) {
-  nls = readLayers(layers)
+readNetworkData <-  function(slices) {
+  nls = readSlices(slices)
   return(prepareNetworkDataForBrowsing(nls))
 }
 
@@ -96,7 +96,7 @@ getEidForEdge <- function(from, to, label) {
 # $nodes - the vertices
 # $edges - the edges
 # $network - the igraph
-# $layers - the layers loaded
+# $slices - the slices loaded
 readNetworkDataFromJSON <-  function(jsonfile) {
   nls = fromJSON(jsonfile)
   return(prepareNetworkDataForBrowsing(nls))
@@ -157,7 +157,7 @@ createCloneOfNode <- function(view, node) {
   newnid = makeNewUniqueNodeIdFor(view$net, onid)
   newnode = node
   newnode$nid = newnid$name
-  newnode$label = str_c(newnode$label, "_cl",newnid$cnt)
+  newnode$label = newnode$nid
   return(newnode)
 }
 

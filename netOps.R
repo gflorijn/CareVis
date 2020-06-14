@@ -20,6 +20,13 @@ restartViewOnNodesFromDomain <- function(view, d) {
   return(restartViewOnNodeIds(view, domnds$nid))
 }
 
+addNodesFromDomainToView <- function(view, d) {
+  #  browser()
+  domnds = as_tibble(view$net$nodes)
+  domnds = subset(domnds, domnds$domain == d)
+  return(addNodesToView(view, domnds))
+}
+
 # Restart the view
 restartViewOnNodeIds <- function(view, nodeids) {
   view$nodes = tibble()
