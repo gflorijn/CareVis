@@ -25,7 +25,7 @@ loadNetworkSlice <- function(nodesedges=NULL, name) {
   err = FALSE
   n = checkNodesInedges(nodenames, ledges)
   if (length(n) > 0) {
-    simpleMessage(cat("Slice ", name, ":  unknown nodes in edges file: ", unique(n), " - reating them."))
+    simpleMessage(cat("Slice ", name, ":  unknown nodes in edges file: ", unique(n), " - creating them.\n"))
     for (i in unique(n)) {
       lnodes = bind_rows(lnodes, createNewUndefinedNode(i))
     }

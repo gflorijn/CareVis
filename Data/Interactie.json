@@ -450,7 +450,7 @@
       "linktype": "actor"
     },
     {
-      "from": "_Zorgaanbieders",
+      "from": "Zorgaanbieder",
       "to": "i-COV",
       "label": "",
       "linktype": "actor"
@@ -462,7 +462,7 @@
       "linktype": "actor"
     },
     {
-      "from": "_Zorgaanbieders",
+      "from": "Zorgaanbieder",
       "to": "i-Declareren",
       "label": "",
       "linktype": "actor"
