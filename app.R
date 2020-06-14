@@ -575,12 +575,15 @@ server <- function(input, output, session) {
       return(list(nodes=nd, links=nl))
     }
     
+    #Todo = also export relevant visual cues but not internals
    output$downloadviewasjson = downloadHandler(
     filename <- function() {
         "currentview.json"
       },
       content <- function(file) {
          d = rv$activeview
+         d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
+         d$edges = select(d$edges,from, to, label, linktype)
          d$net = NULL
         writeLines(
           toJSON(
