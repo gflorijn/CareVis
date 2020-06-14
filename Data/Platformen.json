@@ -1,13 +1,13 @@
 {
   "nodes": [
     {
-      "nid": "_Platformen",
+      "nid": "Platform",
       "domain": "Platformen",
       "nodetype": "category",
-      "icon": "_Platformen",
+      "icon": "Platform",
       "url": "",
       "groups": "",
-      "label": "_Platformen"
+      "label": "Platform"
     },
     {
       "nid": "Sananet",

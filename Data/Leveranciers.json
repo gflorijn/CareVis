@@ -1,13 +1,13 @@
 {
   "nodes": [
     {
-      "nid": "_Leveranciers",
+      "nid": "Leverancier",
       "domain": "Leveranciers",
       "nodetype": "category",
-      "icon": "_Leveranciers",
+      "icon": "Leverancier",
       "url": "",
       "groups": "",
-      "label": "_Leveranciers"
+      "label": "Leverancier"
     },
     {
       "nid": "Hinq",

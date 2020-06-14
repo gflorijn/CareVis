@@ -1,15 +1,6 @@
 {
   "nodes": [
     {
-      "nid": "_PGO",
-      "label": "_PGO",
-      "domain": "PGO",
-      "nodetype": "category",
-      "icon": "",
-      "url": "",
-      "groups": ""
-    },
-    {
       "nid": "PGO",
       "label": "PGO",
       "domain": "PGO",

@@ -1,15 +1,6 @@
 {
   "nodes": [
     {
-      "nid": "_Patienten",
-      "label": "_Patienten",
-      "nodetype": "category",
-      "domain": "Patienten",
-      "groups": "",
-      "icon": "_Patienten",
-      "url": ""
-    },
-    {
       "nid": "Patient",
       "label": "Patient",
       "nodetype": "actor",

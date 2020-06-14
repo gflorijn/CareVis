@@ -1,15 +1,6 @@
 {
   "nodes": [
     {
-      "nid": "_Gegevens",
-      "domain": "Gegevens",
-      "nodetype": "category",
-      "icon": "_Gegevens",
-      "url": "",
-      "groups": "",
-      "label": "_Gegevens"
-    },
-    {
       "nid": "Medicatieoverzicht",
       "domain": "Gegevens",
       "nodetype": "object",

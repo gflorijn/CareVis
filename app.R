@@ -46,7 +46,7 @@ tagList(
   tabPanel("Main",
            div(
              class = "outer",
-             tags$head(includeCSS("styles.css")),
+             tags$head(includeCSS("Styles.css")),
              
              sidebarLayout(
                sidebarPanel(
@@ -62,8 +62,8 @@ tagList(
                    tags$hr(),
                    downloadButton("downloadviewasjson", "JSON"),
                    tags$hr(),
-                   actionButton(inputId = "interrupt", "Interrupt"),
-                   tags$hr(),
+                   # actionButton(inputId = "interrupt", "Interrupt"),
+                   # tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -266,9 +266,9 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- observeEvent(input$interrupt, {
-    browser()
-     })
+ # observeEvent(input$interrupt, {
+ #    browser()
+ #     })
 
     # handle tabpanel selection event
     #
@@ -575,15 +575,16 @@ server <- function(input, output, session) {
       return(list(nodes=nd, links=nl))
     }
     
-  output$downloadviewasjson = downloadHandler(
-      filename <- function() {
+   output$downloadviewasjson = downloadHandler(
+    filename <- function() {
         "currentview.json"
       },
       content <- function(file) {
-         d = rv$activeview()
+         d = rv$activeview
+         d$net = NULL
         writeLines(
           toJSON(
-           r , pretty=T, rownames = FALSE), file)
+           d , pretty=T, rownames = FALSE), file)
       }
       
     )

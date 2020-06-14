@@ -1,13 +1,13 @@
 {
   "nodes": [
     {
-      "nid": "_Zorgaanbieders",
+      "nid": "Zorgaanbieder",
       "domain": "Zorgaanbieders",
       "nodetype": "category",
-      "icon": "_Zorgaanbieders",
+      "icon": "Zorgaanbieder",
       "url": "",
       "groups": "",
-      "label": "_Zorgaanbieders"
+      "label": "Zorgaanbieder"
     },
     {
       "nid": "Huisarts",

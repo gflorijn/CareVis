@@ -1,13 +1,13 @@
 {
   "nodes": [
     {
-      "nid": "_Standaarden",
+      "nid": "Standaard",
       "domain": "Standaarden",
       "nodetype": "category",
-      "icon": "_Standaarden",
+      "icon": "Standaard",
       "url": "",
       "groups": "",
-      "label": "_Standaarden"
+      "label": "Standaard"
     },
     {
       "nid": "FHIR",

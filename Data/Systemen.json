@@ -1,13 +1,13 @@
 {
   "nodes": [
     {
-      "nid": "_Systemen",
+      "nid": "Systeem",
       "domain": "Systemen",
       "nodetype": "category",
-      "icon": "_Systemen",
+      "icon": "Systeem",
       "url": "",
       "groups": "",
-      "label": "_Systemen"
+      "label": "Systeem"
     },
     {
       "nid": "HIS",

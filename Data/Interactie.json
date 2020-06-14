@@ -1,15 +1,6 @@
 {
   "nodes": [
     {
-      "nid": "_Interactie",
-      "domain": "Interactie",
-      "nodetype": "category",
-      "icon": "_Interactie",
-      "url": "",
-      "groups": "",
-      "label": "_Interactie"
-    },
-    {
       "nid": "i-Verwijzen",
       "domain": "Interactie",
       "nodetype": "interaction",
