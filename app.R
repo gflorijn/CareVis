@@ -2,7 +2,7 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 library(shinyWidgets)
-
+library(editData)
 
 library(DT)
 
