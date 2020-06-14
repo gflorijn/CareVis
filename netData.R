@@ -11,9 +11,9 @@ require("tidyverse", quietly=T)
 loadNetworkSlice <- function(nodesedges=NULL, name) {
   cat('load slice: ', name, "\n")
   
-  nls = fromJSON(paste0("Data/", name, ".json"))
-  lnodes=nls$nodes
-  ledges=nls$edges 
+  newslice = fromJSON(paste0("Data/", name, ".json"))
+  lnodes=newslice$nodes
+  ledges=newslice$edges 
   
   oln = c()
   nodenames = lnodes$nid
@@ -25,13 +25,11 @@ loadNetworkSlice <- function(nodesedges=NULL, name) {
   err = FALSE
   n = checkNodesInedges(nodenames, ledges)
   if (length(n) > 0) {
-    simpleMessage(cat("Slice ", name, ":  unknown nodes in edges file: ", unique(n), ". Slice skipped.\n"))
-    err = TRUE
+    simpleMessage(cat("Slice ", name, ":  unknown nodes in edges file: ", unique(n), " - reating them."))
+    for (i in unique(n)) {
+      lnodes = bind_rows(lnodes, createNewUndefinedNode(i))
+    }
   }
-  if (err) {
-    return(nodesedges)
-  }
-  
   if (is.null(nodesedges)) {
     return(list(nodes=lnodes, edges=ledges))
   }
@@ -161,7 +159,6 @@ createCloneOfNode <- function(view, node) {
   return(newnode)
 }
 
-
-
-
-
+createNewUndefinedNode <- function(nid) {
+  return(tibble(nid=nid, label=nid, icon="", url="", groups="", image="", domain="Undefined", nodetype="undefined"))
+}

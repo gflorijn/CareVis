@@ -523,13 +523,16 @@ server <- function(input, output, session) {
     observeEvent(input$adduploadeddata, {
       #get the data from the module
       thedata = rv$thedatauploader()
-
-      if (thedata$errors) {
-        rv$themessage = "Issues in data - update cancelled."
+      if (!is.null(thedata$missing)) {
+        #add default nodes for missing
+        rv$themessage = "Issues in data - fixing and updating."
+        for (i in thedata$missing) {
+          thedata$nodes = bind_rows(thedata$nodes, createNewUndefinedNode(i))
+        }
       } else {
-        rv$themessage = "Updating network."
-        restartAll(thedata)
+        rv$themessage = "No issues - updating network."
       }
+      restartAll(thedata)
     })
       
 
@@ -886,7 +889,7 @@ server <- function(input, output, session) {
   
   #Make a new node give the id
   genNewNodeForIdWithDefaults <- function(view, nid) {
-    return(tibble(nid=nid, label=nid, icon="", url="", groups="", image="", domain="UI", nodetype="undefined"))
+    return(createNewMinimalNode(nid))
   }
   
   # create a new edge and handle id translation
@@ -974,15 +977,6 @@ server <- function(input, output, session) {
 
 # Rendering the view -----------------------------------------------------
 
-  visualcontrols <- reactive({
-    if (!is.null(input$navigation)) rv$visualcontrols$navigation = input$navigation
-    if (!is.null(input$undirected)) rv$visualcontrols$undirected = input$undirected
-    if(!is.null(input$images)) rv$visualcontrols$images = input$images
-    if(!is.null(input$linklabels)) rv$visualcontrols$linklabels=input$linklabels
-    if(!is.null(input$igraphlayout)) rv$visualcontrols$igraphlayout=input$igraphlayout
-    
-    rv$visualcontrols
-  })
   
   # The observer watching the current view
   observeEvent( {
@@ -997,8 +991,12 @@ server <- function(input, output, session) {
       flushDrawModeChangelog()
       
       # Prepare the graph for visualisation
-      #
-      rv$activeview= addVisualSettingsForView(rv$activeview, visualcontrols()$images, visualcontrols()$linklabels)
+      # Since options for images and linklabesl are set in a uiOutput, the may nog bet initialized yet.
+      doimg = TRUE
+      dolinklabels = TRUE
+      if(!is.null(input$images)) doimg = input$images
+      if(!is.null(input$linklabels)) dolinklabels = input$linklabels
+      rv$activeview= addVisualSettingsForView(rv$activeview, doimg, dolinklabels)
       
       # #activate this to show the node-action menu when hovering over the node
       # V(viewg)$title = HTML(
@@ -1026,14 +1024,17 @@ server <- function(input, output, session) {
       vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, manipulation = input$manipulationmode,
                        selectedBy=list(variable = "groups", multiple = TRUE))
   
-      if (visualcontrols()$igraphlayout) {
-        vnt = visIgraphLayout(vnt, type="full")
+      if (!is.null(input$igraphlayout)) {
+          if (input$igraphlayout == TRUE)
+             vnt = visIgraphLayout(vnt, type="full")
       }
-      if (visualcontrols()$navigation)
-        vnt = visInteraction(vnt, navigationButtons = TRUE)
+      if (!is.null(input$navigation))
+        vnt = visInteraction(vnt, navigationButtons = input$navigation)
   
-      if (!visualcontrols()$undirected)
-        vnt = visEdges(vnt, arrows="to")
+      if (!is.null(input$undirected)) {
+          if (!input$undirected)
+            vnt = visEdges(vnt, arrows="to")
+      }
     
       vnt = visEvents(vnt,
                       select = "function(data) {

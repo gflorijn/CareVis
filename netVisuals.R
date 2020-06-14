@@ -61,9 +61,6 @@ addVisualSettingsForView <- function(view, doimages, dolinklabels) {
     }
 
 
-    # Hide category nodes
-    view$nodes = subset(view$nodes, view$nodes$nodetype != "category")
-
     #view$nodes$widthConstraint = TRUE  #Applies to long labels inside shapes - not useful for images
 
     if (!dolinklabels) { # hiermee verdwijnen de labels, TODO

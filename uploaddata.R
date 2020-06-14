@@ -30,7 +30,13 @@ uploadData <- function(input, output, session, viewid, netinfo) {
     if (is.null(jfile)) 
       return(NULL)
  #   browser()
-    newnet = readNetworkDataFromJSON(jfile$datapath)
+    newnet = tryCatch({
+      readNetworkDataFromJSON(jfile$datapath)
+    }, warning = function(w) {
+      w
+    }, error = function(e) {
+      w
+    })
     return(newnet)
   })
 
@@ -53,9 +59,11 @@ uploadData <- function(input, output, session, viewid, netinfo) {
   
 
   checkdata <- reactive({
+    if (is.null(jsonContents()))
+        return(NULL)
     newnds = jsonContents()$nodes
     existnds = netinfo$nodes
-    allnodes = c(newnds$name, existnds$name)
+    allnodes = c(newnds$nid, existnds$nid)
     newlks = jsonContents()$edges
 #browser()    
     haveerrors = FALSE
@@ -68,17 +76,14 @@ uploadData <- function(input, output, session, viewid, netinfo) {
     #   msg = c(msg1, msg2, ". ")
     #   haveerrors = TRUE
     # }
-    mis = checkNodesInLinks(allnodes, newlks)
+#    browser()
+    mis = checkNodesInedges(allnodes, newlks)
     if (length(mis) > 0) {
-      msg1 = c(msg, " Missing node definitions for ")
+      msg1 = c(msg, "Warning: missing node definitions for ")
       msg2 = unique(mis)
-      msg = c(msg1, msg2, ".")
-      haveerrors = TRUE
+      msg = c(msg1, msg2, ". Adding them")
     }
-    if (!haveerrors) {
-      msg = "No issues found."
-    }
-    list(haveerrors=haveerrors, loadmsg = msg)
+    list(haveerrors=haveerrors, loadmsg = msg, missing=unique(mis))
   })
   
   output$loadmsg <- renderText({
@@ -86,7 +91,7 @@ uploadData <- function(input, output, session, viewid, netinfo) {
   })
   
   loadedData <- reactive({
-    list(nodes=jsonContents()$nodes, edges=jsonContents()$edges, errors=checkdata()$haveerrors)
+    list(nodes=jsonContents()$nodes, edges=jsonContents()$edges, missing=checkdata()$missing)
   })
   
   return(loadedData)
