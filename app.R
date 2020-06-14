@@ -975,11 +975,11 @@ server <- function(input, output, session) {
 # Rendering the view -----------------------------------------------------
 
   visualcontrols <- reactive({
-    if (!is.null(input$navigation)) rv$visualscontrols$navigation = input$navigation
-    if (!is.null(input$undirected)) rv$visualscontrols$undirected = input$undirected
-    if(!is.null(input$undirected)) rv$visualscontrols$images = input$images
-    if(!is.null(input$linklabels)) rv$visualscontrols$linklabels=input$linklabels
-    if(!is.null(input$igraphlayout)) rv$visualscontrols$igraphlayout=input$igraphlayout
+    if (!is.null(input$navigation)) rv$visualcontrols$navigation = input$navigation
+    if (!is.null(input$undirected)) rv$visualcontrols$undirected = input$undirected
+    if(!is.null(input$images)) rv$visualcontrols$images = input$images
+    if(!is.null(input$linklabels)) rv$visualcontrols$linklabels=input$linklabels
+    if(!is.null(input$igraphlayout)) rv$visualcontrols$igraphlayout=input$igraphlayout
     
     rv$visualcontrols
   })
@@ -996,10 +996,8 @@ server <- function(input, output, session) {
       
       flushDrawModeChangelog()
       
-      #browser()
       # Prepare the graph for visualisation
       #
-      browser
       rv$activeview= addVisualSettingsForView(rv$activeview, visualcontrols()$images, visualcontrols()$linklabels)
       
       # #activate this to show the node-action menu when hovering over the node

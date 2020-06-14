@@ -16,13 +16,13 @@ extendNetworkInfoForVisualisation <-  function(nstruct) {
   
   # See display.brewer.all() for examples
   #
-  dcolors = brewer.pal(length(ns$domains),"Set3")
+  dcolors = brewer.pal(length(ns$nodetypes),"Set3")
   ltcolors = brewer.pal(length(ns$linktypes), "Accent")
   ltcolors[4] = ltcolors[8]
   #ip <- "http://localhost:8001/www/"
   ip <- ""
   
-  ns[["domaincolors"]] = dcolors
+  ns[["nodetypecolors"]] = dcolors
   ns[["linktypecolors"]] = ltcolors
   ns[["imagepath"]] = ip
   
@@ -36,7 +36,7 @@ setupVisualDefinitionsForNetwork <- function(net) {
   nd = net$nodes
   ne = net$edges
   
-  nd$color = mapvalues(nd$domain, from=net$domains, to=net$domaincolors, warn_missing = TRUE)
+  nd$color = mapvalues(nd$nodetype, from=net$nodetypes, to=net$nodetypecolors, warn_missing = TRUE)
   ne$color = mapvalues(ne$linktype, from=net$linktypes, to=net$linktypecolors, warn_missing = TRUE)
   
   nd$image = str_c(net$imagepath, "Images/", if_else( (nd$icon!=""), nd$icon, nd$label), ".png")
