@@ -666,7 +666,8 @@ server <- function(input, output, session) {
          column(4,
             HTML(
               c(
-                smallHTMLUIButton("+", "addnodefromsearch", "", "grey")
+                smallHTMLUIButton("+", "addnodefromsearch", "", "grey"),
+                smallHTMLUIButton(">", "focusnodefromsearch", "", "grey")
               )))
     )
   })
@@ -682,7 +683,14 @@ server <- function(input, output, session) {
         #      rv$forcerepaint = TRUE 
     }
   }) 
-
+  observeEvent(input$focusnodefromsearch, {
+    nodes = input$addsearchnodes
+    if (!is.null(nodes) & length(nodes) > 0) {
+      rv$activeview = restartViewOnNodeIds(rv$activeview, nodes)
+      #      rv$forcerepaint = TRUE 
+    }
+  }) 
+  
 # Visual menu settings for node manipulation ------------------------------
   
   getLinkColor <- function(l) {
