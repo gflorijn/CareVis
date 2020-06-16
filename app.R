@@ -12,6 +12,7 @@ source("netVisuals.R")
 source("frozenview.R")
 source("uploaddata.R")
 source("helppage.R")
+source("MyeditableDT.R")
 
 
 smallHTMLUIButton <- function(label, eventid, eventdata, color) {
@@ -62,8 +63,8 @@ tagList(
                    tags$hr(),
                    downloadButton("downloadviewasjson", "JSON"),
                    tags$hr(),
-                   # actionButton(inputId = "interrupt", "Interrupt"),
-                   # tags$hr(),
+                   actionButton(inputId = "interrupt", "Interrupt"),
+                   tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -266,9 +267,9 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- # observeEvent(input$interrupt, {
- #    browser()
- #     })
+ observeEvent(input$interrupt, {
+    browser()
+     })
 
     # handle tabpanel selection event
     #
@@ -467,7 +468,7 @@ server <- function(input, output, session) {
 
     output$editnodespane = renderUI({
       tagList(
-        editableDTUI("EditViewData"),
+        MyeditableDTUI("EditViewData"),
         verbatimTextOutput(("editoutput"))
       )
     })
@@ -480,7 +481,7 @@ server <- function(input, output, session) {
     editablenodetable = reactiveValues(
       srcnodes = NULL, # the source table currently being edited
       editwatcher = NULL # the current edit state
-    )
+   )
     
     editsrcdata = reactive({
       editablenodetable$srcnodes 
@@ -488,9 +489,9 @@ server <- function(input, output, session) {
     
     observeEvent(input$starttableedit, {
       editablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-      
       if (is.null(editablenodetable$editwatcher)) { #first time!
-        editablenodetable$editwatcher = callModule(editableDT, "EditViewData", data=editsrcdata)
+        editablenodetable$editwatcher = callModule(MyeditableDT, "EditViewData", 
+                                                   dataholder=reactive(editablenodetable))
       }
     })
     
@@ -578,12 +579,12 @@ server <- function(input, output, session) {
     #Todo = also export relevant visual cues but not internals
    output$downloadviewasjson = downloadHandler(
     filename <- function() {
-        "currentview.json"
+        paste0(rv$activeview$view$info$name, ".json")
       },
       content <- function(file) {
          d = rv$activeview
          d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
-         d$edges = select(d$edges,from, to, label, linktype)
+         d$edges = select(d$edges,from, to, label, linktype, eid)
          d$net = NULL
         writeLines(
           toJSON(
@@ -795,20 +796,20 @@ server <- function(input, output, session) {
              conditionalPanel(
                "input.edittablemode",
                verticalLayout(
-                 column(12, editableDTUI("edittablepanel")),
-                 column(12, offset= 1,
-                        fixedRow(
-                           HTML(
-                             c(
-                               smallHTMLUIButton("Start", "edittablepanelstartsession", "", "grey"),
-                               smallHTMLUIButton("Save", "edittablepanelsave", "", "grey"),
-                               smallHTMLUIButton("Cancel", "edittablepanelcancel", "", "grey")
-                             )
-                           )
-                   # actionButton("edittablepanelstartsession", "Start"),
-                   # actionButton("edittablepanelsave", "Save"),
-                   # actionButton("edittablepanelcancel", "Cancel")
-                 ))
+                 column(12,
+                        # fixedRow(
+                        #   HTML(
+                        #     c(
+                        #       smallHTMLUIButton("Save", "edittablepanelsave", "", "grey"),
+                        #       smallHTMLUIButton("Cancel", "edittablepanelcancel", "", "grey")
+                        #     )
+                        #   ))
+#                          actionButton("edittablepanelstartsession", "Start"),
+                          actionButton("edittablepanelsave", "Save changes"),
+                          tags$hr()
+#                          actionButton("edittablepanelcancel", "Cancel")
+                  ),
+                 column(12, MyeditableDTUI("edittablepanel"))
                  # textOutput("edittabletest")
                )
              )
@@ -817,26 +818,34 @@ server <- function(input, output, session) {
     
   })
   
+ myeditablenodetable = reactiveValues(srcnodes=NULL, editwatcher=NULL)
+ 
+ observeEvent(input$edittablemode, {
+   if (input$edittablemode) {
+     myeditablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
+     if (is.null(myeditablenodetable$editwatcher)) { #first time!
+       myeditablenodetable$editwatcher = callModule(MyeditableDT, "edittablepanel", dataholder=reactive(myeditablenodetable))
+     }
+   }
+ })
  
   # output$edittabletest = renderPrint({
   #   if (!is.null(editablenodetable$editwatcher))
   #     str(editablenodetable$editwatcher())
   # })
-  
-  
-  observeEvent(input$edittablepanelstartsession, {
-    editablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-    
-    if (is.null(editablenodetable$editwatcher)) { #first time!
-      editablenodetable$editwatcher = callModule(editableDT, "edittablepanel", data=editsrcdata)
-    }
-  })
-  
+ 
+  # observeEvent(input$edittablepanelstartsession, {
+  #   myeditablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
+  #   if (is.null(editablenodetable$editwatcher)) { #first time!
+  #     myeditablenodetable$editwatcher = callModule(MyeditableDT, "edittablepanel", dataholder=reactive(myeditablenodetable))
+  #   }
+  # })
+  # 
   observeEvent(input$edittablepanelsave, {
-    rv$activeview = updateCurrentViewAfterEdit(rv$activeview, editablenodetable$editwatcher())
+    rv$activeview = updateCurrentViewAfterEdit(rv$activeview, myeditablenodetable$editwatcher())
   })
   observeEvent(input$edittablepanelcancel, {
-    editablenodetable$srcnodes = tibble()
+    myeditablenodetable$srcnodes = tibble()
   })
   
   

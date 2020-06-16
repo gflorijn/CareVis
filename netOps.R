@@ -10,7 +10,7 @@ require("tidyverse", quietly = TRUE)
 # create a view on a network
 newViewOnNetwork <- function(net, name) {
   return(
-    list(slice=list(name = name), net = net, nodes = tibble(), edges = tibble())
+    list(info=list(name = name), net = net, nodes = tibble(), edges = tibble())
   )
 }
 restartViewOnNodesFromDomain <- function(view, d) {

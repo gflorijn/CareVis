@@ -19,9 +19,46 @@
       "label": "Huisarts"
     },
     {
+      "nid": "Verpleegkundige",
+      "label": "Verpleegkundige",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "icon": "Verpleegkundige",
+      "url": ""
+    },
+    {
+      "nid": "Specialist",
+      "label": "Specialist",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "icon": "Arts",
+      "url": ""
+    },
+    {
+      "nid": "Wijkverpleger",
+      "label": "Wijkverpleger",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "icon": "Persoon2",
+      "url": ""
+    },
+    {
+      "nid": "Psychiater",
+      "label": "Psychiater",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "icon": "Persoon4",
+      "url": ""
+    },
+
+    {
       "nid": "Ziekenhuis",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "Ziekenhuis",
       "url": "",
       "groups": "",
@@ -30,25 +67,25 @@
     {
       "nid": "Apotheek",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "Apotheek",
       "url": "",
       "groups": "",
       "label": "Apotheek"
     },
     {
-      "nid": "Paramedici",
+      "nid": "Fysiotherapeut",
       "domain": "Zorgaanbieders",
       "nodetype": "actor",
       "icon": "Paramedici",
       "url": "",
       "groups": "",
-      "label": "Paramedici"
+      "label": "Fysiotherapeut"
     },
     {
       "nid": "VVT",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "VVT",
       "url": "",
       "groups": "",
@@ -57,7 +94,7 @@
     {
       "nid": "Ziekenhuis2",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "Ziekenhuis2",
       "url": "",
       "groups": "",
@@ -66,7 +103,7 @@
     {
       "nid": "Laboratorium",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "Laboratorium",
       "url": "",
       "groups": "",
@@ -75,7 +112,7 @@
     {
       "nid": "GGZ",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "GGZ",
       "url": "",
       "groups": "",
@@ -84,12 +121,32 @@
     {
       "nid": "Huisartsenpost",
       "domain": "Zorgaanbieders",
-      "nodetype": "actor",
+      "nodetype": "party",
       "icon": "Huisartsenpost",
       "url": "",
       "groups": "",
       "label": "Huisartsenpost"
     }
   ],
-  "edges": []
+  "edges": [
+  {
+    "from": "Verpleegkundige",
+    "to": "Ziekenhuis",
+    "label": "",
+    "linktype": "refer"
+  },
+  {
+    "from": "Specialist",
+    "to": "Ziekenhuis",
+    "label": "",
+    "linktype": "refer"
+  },
+  {
+     "from": "Wijkverpleger",
+     "to": "VVT",
+     "label": "",
+     "linktype": "refer"
+   }
+
+]
 }
