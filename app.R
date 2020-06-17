@@ -10,7 +10,7 @@ source("netData.R")
 source("netOps.R")
 source("netVisuals.R")
 source("frozenview.R")
-source("uploaddata.R")
+source("uploadView.R")
 source("helppage.R")
 source("MyeditableDT.R")
 
@@ -44,7 +44,7 @@ tagList(
   id = "theAppPage",
   inverse = TRUE,
 
-  tabPanel("Main",
+  tabPanel("Browser",
            div(
              class = "outer",
              tags$head(includeCSS("Styles.css")),
@@ -71,14 +71,7 @@ tagList(
                mainPanel(
                  width = 11,
                  fluidRow(
-                   tagList(
-                      column(10, 
-                            tagList(
-                              h4("Messages: "),
-                              textOutput("generalmessage")
-                            )
-                     )
-                   )
+                   column(11, uiOutput("statusbar"))
                  ),
                  fixedRow(
                    column(3, uiOutput("slicesmenu")),
@@ -132,7 +125,7 @@ tagList(
                             actionButton("adduploadeddata", "Add data to network")
                           )),
              mainPanel(width = 10,
-                       uploadDataUI("upload"),)
+                       uploadViewUI("upload"),)
            )),
   tabPanel("Data view - Nodes",
            tagList(tags$h2("Nodes"),
@@ -230,30 +223,47 @@ server <- function(input, output, session) {
       rv$thenetworkinfo = ni
       rv$thenodeselected = ""
       rv$themessage = ""
-      rv$thecurrentviewname = "Main"
+      rv$thecurrentviewname = "aView"
 
             # the is the reactive variable from the module that will produce the data to load
       
       
       # a list of nodes and links
-      rv$thedatauploader = callModule(uploadData, "upload", "upload", rv$thenetworkinfo)
+      rv$thedatauploader = callModule(uploadView, "upload", "upload", rv$thenetworkinfo)
 
       nodes = c("Patient")
         
-      rv$activeview = newViewOnNetwork(ni, "Main")    
+      rv$activeview = newViewOnNetwork(ni, "aView")    
       rv$activeview = addNodesToViewById(rv$activeview, nodes)
 
       setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
-      updateTabsetPanel(session, "theAppPage", selected = "Main")
+      updateTabsetPanel(session, "theAppPage", selected = "Browser")
+    }
+    
+    restartBrowserOnViewData <- function(viewdata) {
+      # laad de data uit newview in het netwerk
+      rv$thenetworkinfo = combineNetworks(rv$thenetworkinfo, viewdata)
+      rv$thenetworkinfo = updateDerivedNetworkInfo(rv$thenetworkinfo) # add presentation stuff
+      newview = newViewOnNetwork(rv$thenetworkinfo, viewdata$info$name)
+      newview = addNodesToViewById(newview, viewdata$nodes$nid)
+      newview = addEdgesToViewByEid(newview, viewdata$edges$eid)
+      newview$info = viewdata$info
+      # update de contents van newview op basis van die data
+      rv$activeview = newview
+      setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
+      
+      updateTabsetPanel(session, "theAppPage", selected = "Browser")
+      
+      return(rv$activeview)
     }
     
     #
     # Initialise the data determining the view.
-    # Should perhaps also call the render UI functions for dynamic UI's
     isolate ({
       restartAll(NULL)
-      })
+    })
+    
     
     # Quit button
     observeEvent(input$quit, {
@@ -267,9 +277,16 @@ server <- function(input, output, session) {
       restartAll(NULL)
     })
 
- observeEvent(input$interrupt, {
-    browser()
-     })
+    # Force redraw of the graph
+    #
+    observeEvent(input$showgraph, {
+      rv$forcerepaint = TRUE
+    })
+    
+    # Only for debugging
+    observeEvent(input$interrupt, {
+      browser()
+    })
 
     # handle tabpanel selection event
     #
@@ -278,9 +295,6 @@ server <- function(input, output, session) {
     })
 
 
-# About ----------------------------------------------------------
-
- 
     observeEvent(input$showabout, {
       showModal(modalDialog(
         easyClose = TRUE,
@@ -342,10 +356,6 @@ server <- function(input, output, session) {
     observeEvent(input$graph_panel_initialized, {
     })
 # 
-    #todo - kan weg - onder node select menu!
-    output$selectionfield <- renderText({
-      paste0("Selected node: ", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"))
-    })
     
     # Node selection - see visEvents
     observeEvent(input$select_current_nodes,  {
@@ -417,12 +427,6 @@ server <- function(input, output, session) {
         rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
       }
     } )
-    
-    # Force redraw of the graph
-    #
-    observeEvent(input$showgraph, {
-      rv$forcerepaint = TRUE
-    })
     
     # hide event
     observeEvent(input$hidefromview, {
@@ -519,21 +523,28 @@ server <- function(input, output, session) {
     
 # Handle uploading data ----------------------------------------------------
 
-    # Try to add the loaded nodes and links to the network and restart all
+    # Try to add a view
     #
     observeEvent(input$adduploadeddata, {
       #get the data from the module
       thedata = rv$thedatauploader()
+      
+      rv$themessage = thedata$errors
+      if (is.null(thedata$view))
+          return()
+      
       if (!is.null(thedata$missing)) {
         #add default nodes for missing
         rv$themessage = "Issues in data - fixing and updating."
         for (i in thedata$missing) {
-          thedata$nodes = bind_rows(thedata$nodes, createNewUndefinedNode(i))
+          thedata$view$nodes = bind_rows(thedata$view$nodes, createNewUndefinedNode(i))
         }
       } else {
         rv$themessage = "No issues - updating network."
       }
-      restartAll(thedata)
+      # restartAll(thedata)
+      restartBrowserOnViewData(thedata$view)
+      
     })
       
 
@@ -611,9 +622,26 @@ server <- function(input, output, session) {
 
 # Output rendering and reaction -------------------------------------------
 
-     
-  output$generalmessage <- renderText({
-    rv$themessage
+   # Onder node select menu
+   output$selectionfield <- renderText({
+    paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
+  })
+  
+  output$statusbar <- renderUI({
+      fixedRow(
+        column(4,textOutput("activeviewtext")),
+        column(8,textOutput("generalmessagetext")),
+        tags$hr()
+      )
+  })
+  
+  
+  output$activeviewtext <- renderText({
+    paste0("Active view: ", rv$activeview$info$name)
+  })  
+  
+  output$generalmessagetext <- renderText({
+    paste0("Messages: ", rv$themessage)
   })
 
 

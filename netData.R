@@ -93,11 +93,12 @@ getEidForEdge <- function(from, to, label) {
 # The list has three entries:
 # $nodes - the vertices
 # $edges - the edges
-# $network - the igraph
-# $slices - the slices loaded
-readNetworkDataFromJSON <-  function(jsonfile) {
-  nls = fromJSON(jsonfile)
-  return(prepareNetworkDataForBrowsing(nls))
+readViewFromJSON <-  function(jsonfile) {
+  view = fromJSON(jsonfile)
+  view$nodes = as_tibble(view$nodes)
+  view$edges = as_tibble(view$edges)
+  view$edges$eid = getEidForEdge(view$edges$from,view$edges$to, view$edges$label)
+  return(view)
 }
 
 #add additional data to an existing network structure. Should be in "raw" format, should also be checked. 

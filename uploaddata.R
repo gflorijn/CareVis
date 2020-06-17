@@ -1,5 +1,5 @@
 #
-# Module for frozen view panes
+# Module for uploading
 #
 
 
@@ -35,7 +35,7 @@ uploadData <- function(input, output, session, viewid, netinfo) {
     }, warning = function(w) {
       w
     }, error = function(e) {
-      w
+      e
     })
     return(newnet)
   })
