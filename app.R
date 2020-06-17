@@ -37,7 +37,7 @@ tagList(
   extendShinyjs(text = jscode, functions = c("closeWindow")),
   useShinyjs(),
 
-  navbarPage("NetVis",
+  navbarPage(smallHTMLUIButton("NetVis", "showabout", "", "darkblue"),
              
   #shinythemes::themeSelector(),
   theme=shinytheme("spacelab"),
@@ -53,15 +53,15 @@ tagList(
                sidebarPanel(
                  width = 1,
                  verticalLayout(
-                   actionButton("showabout", "About", width="90%"),
-                   tags$hr(),
+                   # actionButton("showabout", "About", width="90%"),
+                   # tags$hr(),
+                   # actionButton("uploadview", "Open"),
+                   # tags$hr(),
+                   # downloadButton("downloadviewasjson", "Save"),
+                   # tags$hr(),
                    actionButton("showgraph", "Redraw"),
                    tags$hr(),
                    actionButton("restart", "Restart"),
-                   tags$hr(),
-                   actionButton("showdemos", "Examples"),
-                   tags$hr(),
-                   downloadButton("downloadviewasjson", "JSON"),
                    tags$hr(),
                    actionButton(inputId = "interrupt", "Interrupt"),
                    tags$hr(),
@@ -85,7 +85,7 @@ tagList(
                  #  column(2, uiOutput("visualoptionsmenu"))
                  # ),
                  # tags$hr(),
-                 visNetworkOutput("graph_panel", height = "700px", width = "100%"),
+                 visNetworkOutput("graph_panel", height = "750px", width = "100%"),
                  absolutePanel(
                    id = "editcontrols",
                    class = "panel panel-default",
@@ -118,15 +118,15 @@ tagList(
                    )
             )
             )),
-  tabPanel("Upload",
-           sidebarLayout(
-             sidebarPanel(width = 2,
-                          tagList(
-                            actionButton("adduploadeddata", "Add data to network")
-                          )),
-             mainPanel(width = 10,
-                       uploadViewUI("upload"),)
-           )),
+  # tabPanel("Upload",
+  #          sidebarLayout(
+  #            sidebarPanel(width = 2,
+  #                         tagList(
+  #                           actionButton("adduploadeddata", "Add data to network")
+  #                         )),
+  #            mainPanel(width = 10,
+  #                      uploadViewUI("upload"),)
+  #          )),
   tabPanel("Data view - Nodes",
            tagList(tags$h2("Nodes"),
                    tags$br(),
@@ -138,7 +138,11 @@ tagList(
                    DT::dataTableOutput("dataviewedges"))),
   
   tabPanel("Help",
-           tagList(helpPageText()))
+           tagList(
+             helpPageText(),
+             tags$hr(),
+             actionButton("showdemos", "Some examples"),
+           ))
   
 )
 )
@@ -251,6 +255,7 @@ server <- function(input, output, session) {
       newview$info = viewdata$info
       # update de contents van newview op basis van die data
       rv$activeview = newview
+      updateTextInput(session, "activemenuname", value=rv$activeview$info$name)
       setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
@@ -523,10 +528,23 @@ server <- function(input, output, session) {
     
 # Handle uploading data ----------------------------------------------------
 
+    observeEvent(input$uploadview, {
+      showModal(modalDialog(
+        easyClose = TRUE,
+        title = "Load view",
+        tagList(
+          uploadViewUI("upload"), #Call module done during initialization
+          actionButton("adduploadeddata", "Done"),
+        )
+      ))
+    })
+    
     # Try to add a view
     #
     observeEvent(input$adduploadeddata, {
       #get the data from the module
+
+      removeModal()
       thedata = rv$thedatauploader()
       
       rv$themessage = thedata$errors
@@ -576,33 +594,6 @@ server <- function(input, output, session) {
 
 
 # Export the graph --------------------------------------------------------
-
-    #Todo: Remove this
-    removeInternalColums <- function(nodeslinks) {
-      nd = nodeslinks$nodes
-      nl = nodeslinks$edges
-
-      nd$brokenImage = NULL
-      nd$image = NULL
-      return(list(nodes=nd, links=nl))
-    }
-    
-    #Todo = also export relevant visual cues but not internals
-   output$downloadviewasjson = downloadHandler(
-    filename <- function() {
-        paste0(rv$activeview$view$info$name, ".json")
-      },
-      content <- function(file) {
-         d = rv$activeview
-         d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
-         d$edges = select(d$edges,from, to, label, linktype, eid)
-         d$net = NULL
-        writeLines(
-          toJSON(
-           d , pretty=T, rownames = FALSE), file)
-      }
-      
-    )
     
   #
   # Export the graph
@@ -623,28 +614,88 @@ server <- function(input, output, session) {
 # Output rendering and reaction -------------------------------------------
 
    # Onder node select menu
-   output$selectionfield <- renderText({
-    paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
+  output$selectionfield <- renderUI({
+    m = paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
+    HTML(m)
   })
   
   output$statusbar <- renderUI({
+    tagList(
       fixedRow(
-        column(4,textOutput("activeviewtext")),
-        column(8,textOutput("generalmessagetext")),
-        tags$hr()
+        column(2,htmlOutput("activeviewtext")),
+        column(2,htmlOutput("activeviewmenu")),
+        column(6,htmlOutput("generalmessagetext"))
       )
+      
+    )
   })
   
-  
-  output$activeviewtext <- renderText({
-    paste0("Active view: ", rv$activeview$info$name)
+  output$activeviewtext <- renderUI({
+    m = paste0("<b>Active view: </b>", rv$activeview$info$name)    
+    HTML(m)
   })  
   
-  output$generalmessagetext <- renderText({
-    paste0("Messages: ", rv$themessage)
+  output$activeviewmenu <- renderUI({
+    # HTML(
+    #   c(
+        # smallHTMLUIButton("Save (as)", "saveview", "", "grey"),
+        # smallHTMLUIButton("Open new", "uploadview", "", "grey")
+    #   )
+    # )
+    tagList(
+      fixedRow(
+        actionLink("saveview","Save (as)"),
+#        downloadLink("downloadviewasjson","Save (as)"),
+        HTML("---"),
+          actionLink("uploadview","Open new")
+      ),
+      fixedRow(
+        HTML("&nbsp;")
+      )
+    )
+    
+  })
+  
+  output$generalmessagetext <- renderUI({
+    m = paste0("<b> Messages: </b>", rv$themessage)
+    HTML(m)
   })
 
-
+  
+  observeEvent(input$saveview, {
+    showModal(modalDialog(
+      easyClose = TRUE,
+      title = "Save view",
+      tagList(
+        textInput("newfilename", label="Save view as ", value=rv$activeview$info$name),
+        downloadButton("downloadviewasjson", "Save")
+      )
+    ))
+  })
+  
+  
+  output$downloadviewasjson = downloadHandler(
+    filename <- function() {
+      removeModal()
+      if (!is.null(input$newfilename) & input$newfilename != "")
+        rv$activeview$info$name = input$newfilename
+      return(paste0(rv$activeview$info$name, ".json"))
+    },
+    content <- function(file) {
+      d = rv$activeview
+      if (nrow(d$nodes) > 0)
+        d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
+      if (nrow(d$edges) > 0)
+        d$edges = select(d$edges,from, to, label, linktype, eid)
+      d$net = NULL
+      writeLines(
+        toJSON(
+          d , pretty=T, rownames = FALSE), file)
+    }
+    
+  )
+  
+  
 # Starting points selector + handling -------------------------------------
 
     
@@ -737,12 +788,13 @@ server <- function(input, output, session) {
             smallHTMLUIButton("o", "nodemenuclick", "object", getLinkColor("object")),
             smallHTMLUIButton("r", "nodemenuclick", "refer", getLinkColor("refer")),
             smallHTMLUIButton("*", "nodemenuclick", "all", "black"),
+            "--",
             smallHTMLUIButton("H", "hidefromview", "", "grey"),
             smallHTMLUIButton("F", "switchfocus", "", "grey"),
             smallHTMLUIButton("C", "editclonenode", "", "grey")
         )
       ),
-      tags$small(textOutput("selectionfield"))
+      tags$small(htmlOutput("selectionfield"))
     )
   })
 
@@ -757,6 +809,7 @@ server <- function(input, output, session) {
           smallHTMLUIButton("r", "viewmenuclick", "refer", getLinkColor("refer")),
           smallHTMLUIButton("#", "viewmenuclick", "internal", "black"),
           smallHTMLUIButton("*", "viewmenuclick", "all", "black"),
+          "--",
           smallHTMLUIButton("All", "showall", "", "grey"),
           smallHTMLUIButton(">View", "switchtoview", "", "grey")
         )
