@@ -475,57 +475,43 @@ server <- function(input, output, session) {
 # Editbox for node(s) or edges -----------------------------------------------------
     
 
-    output$editnodespane = renderUI({
-      tagList(
-        MyeditableDTUI("EditViewData"),
-        verbatimTextOutput(("editoutput"))
-      )
-    })
-    
-    output$editoutput = renderPrint({
-      if (!is.null(editablenodetable$editwatcher))
-        str(editablenodetable$editwatcher())
-    })
-
-    editablenodetable = reactiveValues(
-      srcnodes = NULL, # the source table currently being edited
-      editwatcher = NULL # the current edit state
-   )
-    
-    editsrcdata = reactive({
-      editablenodetable$srcnodes 
-    })
-    
-    observeEvent(input$starttableedit, {
-      editablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-      if (is.null(editablenodetable$editwatcher)) { #first time!
-        editablenodetable$editwatcher = callModule(MyeditableDT, "EditViewData", 
-                                                   dataholder=reactive(editablenodetable))
-      }
-    })
-    
-    observeEvent(input$committablechanges, {
-      rv$activeview = updateCurrentViewAfterEdit(rv$activeview, editablenodetable$editwatcher())
-    })
-    observeEvent(input$canceltablechanges, {
-      editablenodetable$srcnodes = tibble()
-    })
-    
-    updateCurrentViewAfterEdit <- function(view, nodes) {
-      # Save the changes to the network - should watch out for changes to id's.
-      # Should keep the original nodes, removebyId, and then add the changes
-      # in addition: these steps occur on multiple places (clone, etc) , should be handled generically.
-      #browser()
-      net = view$net
-      net = addNodesToNetwork(net, nodes)
-      net = updateDerivedNetworkInfo(net) # add presentation stuff
-      view$net = net
-      rv$thenetwerkinfo = net  # Should not be here
-      view = addNodesToViewById(view, nodes$nid)
-      return(view)
-    }
-    
-    
+   #  output$editnodespane = renderUI({
+   #    tagList(
+   #      MyeditableDTUI("EditViewData"),
+   #      verbatimTextOutput(("editoutput"))
+   #    )
+   #  })
+   #  
+   #  output$editoutput = renderPrint({
+   #    if (!is.null(editablenodetable$editwatcher))
+   #      str(editablenodetable$editwatcher())
+   #  })
+   # 
+   #  editablenodetable = reactiveValues(
+   #    srcnodes = NULL, # the source table currently being edited
+   #    editwatcher = NULL # the current edit state
+   # )
+   #  
+   #  editsrcdata = reactive({
+   #    editablenodetable$srcnodes 
+   #  })
+   #  
+   #  observeEvent(input$starttableedit, {
+   #    editablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
+   #    if (is.null(editablenodetable$editwatcher)) { #first time!
+   #      editablenodetable$editwatcher = callModule(MyeditableDT, "EditViewData", 
+   #                                                 dataholder=reactive(editablenodetable))
+   #    }
+   #  })
+   #  
+   #  observeEvent(input$committablechanges, {
+   #    rv$activeview = updateCurrentViewAfterEdit(rv$activeview, editablenodetable$editwatcher())
+   #  })
+   #  observeEvent(input$canceltablechanges, {
+   #    editablenodetable$srcnodes = tibble()
+   #  })
+   #  
+   #  
 # Handle uploading data ----------------------------------------------------
 
     observeEvent(input$uploadview, {
@@ -923,12 +909,28 @@ server <- function(input, output, session) {
   # })
   # 
   observeEvent(input$edittablepanelsave, {
+    browser()
     rv$activeview = updateCurrentViewAfterEdit(rv$activeview, myeditablenodetable$editwatcher())
   })
-  observeEvent(input$edittablepanelcancel, {
+
+    observeEvent(input$edittablepanelcancel, {
     myeditablenodetable$srcnodes = tibble()
   })
   
+   updateCurrentViewAfterEdit <- function(view, nodes) {
+     # Save the changes to the network - should watch out for changes to id's.
+     # Should keep the original nodes, removebyId, and then add the changes
+     # in addition: these steps occur on multiple places (clone, etc) , should be handled generically.
+     #browser()
+     net = view$net
+     net = addNodesToNetwork(net, nodes)
+     net = updateDerivedNetworkInfo(net) # add presentation stuff
+     view$net = net
+     rv$thenetwerkinfo = net  # Should not be here
+     view = addNodesToViewById(view, nodes$nid)
+     return(view)
+   }
+
   
   
 # Event Experiments -------------------------------------------------------
