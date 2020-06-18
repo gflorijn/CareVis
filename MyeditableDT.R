@@ -88,7 +88,8 @@ MyeditableDT <- function(input, output, session, dataholder=reactive(NULL),input
      editsessionstate$thedt =      datatable(
       df(),
       selection = input$selection,
-      caption = NULL
+      caption = NULL,
+      options=list(pageLength = 5)
     )
      editsessionstate$thedt
   })

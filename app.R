@@ -63,8 +63,8 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   # actionButton(inputId = "interrupt", "Interrupt"),
-                   # tags$hr(),
+                   actionButton(inputId = "interrupt", "Interrupt"),
+                   tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -104,20 +104,20 @@ tagList(
            
   ))),
   
-  tabPanel("Edit nodes",
-           sidebarLayout(
-             sidebarPanel(width = 2,
-                    actionButton("starttableedit", "Update view"), tags$hr(),
-                    actionButton("committablechanges", "Save changes"), tags$hr(),
-                    actionButton("canceltablechanges", "Cancel")
-             ),
-             mainPanel(width = 10,
-                       tagList(tags$h2("Node editor"),
-                   tags$br(),
-                   uiOutput("editnodespane")
-                   )
-            )
-            )),
+  # tabPanel("Edit nodes",
+  #          sidebarLayout(
+  #            sidebarPanel(width = 2,
+  #                   actionButton("starttableedit", "Update view"), tags$hr(),
+  #                   actionButton("committablechanges", "Save changes"), tags$hr(),
+  #                   actionButton("canceltablechanges", "Cancel")
+  #            ),
+  #            mainPanel(width = 10,
+  #                      tagList(tags$h2("Node editor"),
+  #                  tags$br(),
+  #                  uiOutput("editnodespane")
+  #                  )
+  #           )
+  #           )),
   # tabPanel("Upload",
   #          sidebarLayout(
   #            sidebarPanel(width = 2,
@@ -288,10 +288,10 @@ server <- function(input, output, session) {
       rv$forcerepaint = TRUE
     })
     
-    # # Only for debugging
-    # observeEvent(input$interrupt, {
-    #   browser()
-    # })
+    # Only for debugging
+    observeEvent(input$interrupt, {
+      browser()
+    })
 
     # handle tabpanel selection event
     #
@@ -459,14 +459,14 @@ server <- function(input, output, session) {
 # Data view output --------------------------------------------------------
  
     output$dataviewnodes <-  DT::renderDataTable( 
-      select(rv$activeview$net$nodes, nid, label, nodetype, domain, groups, icon, url),
+      select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url),
               style="Bootstrap", rownames=F, 
               server=T, selection="single", options=list(pageLength=20)
     )
     
     output$dataviewedges <- DT::renderDataTable(
 #      browser()
-      select(rv$activeview$net$edges,from, to, label, linktype, eid),
+      select(rv$activeview$edges,from, to, label, linktype, eid),
         style="Bootstrap", rownames=F, 
         server=T, selection="single", options=list(pageLength=20)
     )
@@ -617,7 +617,7 @@ server <- function(input, output, session) {
   })
   
   output$activeviewtext <- renderUI({
-    m = paste0("<b>Active view: </b>", rv$activeview$info$name)    
+    m = paste0("Active view: <b>", rv$activeview$info$name, "</b")    
     HTML(m)
   })  
   
@@ -630,12 +630,14 @@ server <- function(input, output, session) {
     # )
     tagList(
       fixedRow(
-        actionLink("saveview","Save view (as)"),
-#        downloadLink("downloadviewasjson","Save (as)"),
-        HTML("---"),
-        actionLink("uploadview","Open view"),
-        HTML("---"),
-        actionLink("restart","New view")
+        div(
+          actionLink("saveview","Save view (as)"),
+  #        downloadLink("downloadviewasjson","Save (as)"),
+          HTML("---"),
+          actionLink("uploadview","Open view"),
+          HTML("---"),
+          actionLink("restart","New view")
+        )
       ),
       fixedRow(
         HTML("&nbsp;")
@@ -645,7 +647,7 @@ server <- function(input, output, session) {
   })
   
   output$generalmessagetext <- renderUI({
-    m = paste0("<b> Messages: </b>", rv$themessage)
+    m = paste0("Messages: <b>", rv$themessage, "</b>")
     HTML(m)
   })
 
@@ -682,8 +684,103 @@ server <- function(input, output, session) {
     }
     
   )
+
+
+# Node/Edge change handling -----------------------------------------------
+
   
+  addCloneOfNodeToView <- function (view, name) {
+    #browser()
+    if (is.null(name) | name == "") {
+      return(view)
+    }
+    n = getNodeById(view, name)
+    newnode = createCloneOfNode(view, n)
+    #    newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
+    return(addNewNodeToView(view, name))
+  }
   
+  addNewNodeToView <- function(view, newnode) {   
+    net = view$net
+    net = addNodesToNetwork(net, newnode)
+    #    net = addEdgesToNetwork(net, newedge)
+    net = updateDerivedNetworkInfo(net) # add presentation stuff
+    view$net = net
+    rv$thenetwerkinfo = net  # Should not be here
+    view = addNodesToViewById(view, newnode$nid)
+    #    view = addEdgesToViewByEid(view, newedge$eid)
+    return(view)
+  }
+  
+  replaceNodeInView <- function(view, oldnode, newnode) {
+    # should handle the case where nid has changed and update edges...
+    if (oldnode$nid != newnode$nid)
+      cat("Warning: replace node needs to change relations\n")
+    #for now:
+    return(addNewNodeToView(view, newnode))   
+  }
+  
+  #Make a new node give the id
+  genNewNodeForIdWithDefaults <- function(view, nid) {
+    return(createNewMinimalNode(nid))
+  }
+  
+  # create a new edge and handle id translation
+  genNewEdgeWithDefaults <- function(view, from,to) {
+    fname = if (existsNodeInView(view, from)) from else subset(drawmodelog$idmap, id==from)$label
+    tname = if (existsNodeInView(view, to)) to else subset(drawmodelog$idmap, id==to)$label
+    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+  }
+
+# Simple edit node --------------------------------------------------------
+
+  nep_editor = reactiveValues(
+    original = NULL
+  )
+  
+  observeEvent(input$exist_node_editor, {
+   if (!is.null(rv$thenodeselected) & rv$thenodeselected != "")
+     nodeChangeModal(getNodeById(rv$activeview, rv$thenodeselected), "nep_edit_done")
+ })
+ 
+  observeEvent(input$new_node_editor, {
+      nodeChangeModal(createNewUndefinedNode("new"), "nep_new_done")
+  })
+  
+  observeEvent(input$nep_edit_done, {
+    removeModal()
+    newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
+                 icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
+    rv$activeview = replaceNodeInView(rv$activeview, nep_editor$original, newnode)
+  })  
+
+  observeEvent(input$nep_new_done, {
+    removeModal()
+    newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
+                 icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
+    rv$activeview = addNewNodeToView(rv$activeview, newnode)
+  })    
+  
+  nodeChangeModal <- function(node, actionlabel) {
+    nep_editor$original = node
+    showModal(modalDialog(
+      title = "Node editor",
+      easyClose = TRUE,
+      size="m",
+      footer = fixedRow(actionButton(actionlabel, "Done"), modalButton("Cancel")),
+
+      fixedRow(column(3, HTML("nid:")), column(7, textInput("nep_nid", value = node$nid , label=NULL))),
+      fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = node$label , label=NULL))),
+      fixedRow(column(3, HTML("nodetype:")), column(7, textInput("nep_nodetype", value = node$nodetype , label=NULL))),
+      fixedRow(column(3, HTML("icon:")), column(7, textInput("nep_icon", value = node$icon , label=NULL))),
+      fixedRow(column(3, HTML("domain:")), column(7, textInput("nep_domain", value = node$domain , label=NULL))),
+      fixedRow(column(3, HTML("groups:")), column(7, textInput("nep_groups", value = node$groups , label=NULL))),
+      fixedRow(column(3, HTML("url:")), column(7, textInput("nep_url", value = node$url , label=NULL))),
+     )
+    )
+  }
+  
+
 # Starting points selector + handling -------------------------------------
 
     
@@ -779,7 +876,10 @@ server <- function(input, output, session) {
             "--",
             smallHTMLUIButton("H", "hidefromview", "", "grey"),
             smallHTMLUIButton("F", "switchfocus", "", "grey"),
-            smallHTMLUIButton("C", "editclonenode", "", "grey")
+            "--",
+            smallHTMLUIButton("C", "editclonenode", "", "grey"),
+            smallHTMLUIButton("E", "exist_node_editor", "", "grey"),
+            smallHTMLUIButton("N", "new_node_editor", "", "grey")
         )
       ),
       tags$small(htmlOutput("selectionfield"))
@@ -973,40 +1073,7 @@ server <- function(input, output, session) {
 # Output rendering for the graph panel ------------------------------------
 
   
-
-  addCloneOfNodeToView <- function (view, name) {
-    #browser()
-    if (is.null(name) | name == "") {
-      return(view)
-    }
-    n = getNodeById(view, name)
-    newnode = createCloneOfNode(view, n)
-#    newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
-    
-    net = view$net
-    net = addNodesToNetwork(net, newnode)
-#    net = addEdgesToNetwork(net, newedge)
-    net = updateDerivedNetworkInfo(net) # add presentation stuff
-    view$net = net
-    rv$thenetwerkinfo = net  # Should not be here
-    view = addNodesToViewById(view, newnode$nid)
-#    view = addEdgesToViewByEid(view, newedge$eid)
-    return(view)
-  }
-  
-  
-  #Make a new node give the id
-  genNewNodeForIdWithDefaults <- function(view, nid) {
-    return(createNewMinimalNode(nid))
-  }
-  
-  # create a new edge and handle id translation
-  genNewEdgeWithDefaults <- function(view, from,to) {
-    fname = if (existsNodeInView(view, from)) from else subset(drawmodelog$idmap, id==from)$label
-    tname = if (existsNodeInView(view, to)) to else subset(drawmodelog$idmap, id==to)$label
-    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
-  }
-  
+ 
   
   #Capture the changes during an edit session
   #
