@@ -29,7 +29,11 @@ frozenView <- function(input, output, session, viewid, theview) {
   )
   
   output$viewdrawnet <- renderVisNetwork({
-    vnt = visNetwork(nodes=theview$nodes, edges=theview$edges)
+    dnodes = theview$nodes
+    dnodes$id = dnodes$nid
+    dedges = theview$edges
+    dedges$id = dedges$eid
+    vnt = visNetwork(nodes=dnodes, edges=dedges)
     
     # Allow interaction - note: nodes can be in multiple groups
     # Allow maniuplation
