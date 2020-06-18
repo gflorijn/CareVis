@@ -370,8 +370,8 @@ server <- function(input, output, session) {
     
     #Edge selection - see visEvents
     observeEvent(input$select_current_edges,  {
-      #cat("select_current_edges ", input$select_current_edges, "\n")
-      rv$theedgeselected = input$input$select_current_edges
+#      cat("select_current_edges ", input$select_current_edges, "\n")
+      rv$theedgeselected = input$select_current_edges
     })
     
     
@@ -712,6 +712,16 @@ server <- function(input, output, session) {
     return(view)
   }
   
+  addNewEdgeToView <- function(view, newedge) {   
+    net = view$net
+    net = addEdgesToNetwork(net, newedge)
+    net = updateDerivedNetworkInfo(net) # add presentation stuff
+    view$net = net
+    rv$thenetwerkinfo = net  # Should not be here
+    view = addEdgesToViewByEid(view, newedge$eid)
+    return(view)
+  }
+  
   replaceNodeInView <- function(view, oldnode, newnode) {
     # should handle the case where nid has changed and update edges...
     if (oldnode$nid != newnode$nid)
@@ -720,6 +730,13 @@ server <- function(input, output, session) {
     return(addNewNodeToView(view, newnode))   
   }
   
+  replaceEdgeInView <- function(view, oldedge, newedge) {
+    # should handle the case where nid has changed and update edges...
+    #for now:
+    if (oldedge$eid != newedge$eid)
+      cat("Warning: replace edge needs to check relations\n")
+    return(addNewEdgeToView(view, newedge))   
+  }
   #Make a new node give the id
   genNewNodeForIdWithDefaults <- function(view, nid) {
     return(createNewMinimalNode(nid))
@@ -739,27 +756,61 @@ server <- function(input, output, session) {
   )
   
   observeEvent(input$exist_node_editor, {
-   if (!is.null(rv$thenodeselected) & rv$thenodeselected != "")
-     nodeChangeModal(getNodeById(rv$activeview, rv$thenodeselected), "nep_edit_done")
+   if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
+     nodeChangeModal(getNodeById(rv$activeview, rv$thenodeselected), "nep_edit_node_done")
+   }
+   else {
+     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "")
+       edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
+   }
  })
- 
+
+  observeEvent(input$exist_edge_editor, { 
+ })
+  
   observeEvent(input$new_node_editor, {
-      nodeChangeModal(createNewUndefinedNode("new"), "nep_new_done")
+      nodeChangeModal(createNewUndefinedNode("new"), "nep_new_node_done")
   })
   
-  observeEvent(input$nep_edit_done, {
+  observeEvent(input$nep_edit_edge_done, {
+    removeModal()
+    newedge = tibble(from=input$nep_from, to=input$nep_to, label=input$nep_label, linktype=input$nep_linktype, 
+                     eid=getEidForEdge(input$nep_from, input$nep_to, input$nep_label))
+    rv$activeview = replaceEdgeInView(rv$activeview, nep_editor$original, newedge)
+  })  
+  
+  observeEvent(input$nep_edit_node_done, {
     removeModal()
     newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
                  icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
     rv$activeview = replaceNodeInView(rv$activeview, nep_editor$original, newnode)
   })  
 
-  observeEvent(input$nep_new_done, {
+  observeEvent(input$nep_new_node_done, {
     removeModal()
     newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
                  icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
     rv$activeview = addNewNodeToView(rv$activeview, newnode)
   })    
+  
+  edgeChangeModal <- function(edge, actionlabel) {
+    nep_editor$original = edge
+    showModal(modalDialog(
+      title = "Edge editor",
+      easyClose = TRUE,
+      size="m",
+      footer = fixedRow(actionButton(actionlabel, "Done"), modalButton("Cancel")),
+      
+      fixedRow(column(3, HTML("from:")), column(7, textInput("nep_from", value = edge$from , label=NULL))),
+      fixedRow(column(3, HTML("to:")), column(7, textInput("nep_to", value = edge$to , label=NULL))),
+      fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = edge$label , label=NULL))),
+      fixedRow(column(3, HTML("linktype:")), column(7, textInput("nep_linktype", value = edge$linktype , label=NULL))),
+      # fixedRow(column(3, HTML("domain:")), column(7, textInput("nep_domain", value = node$domain , label=NULL))),
+      # fixedRow(column(3, HTML("groups:")), column(7, textInput("nep_groups", value = node$groups , label=NULL))),
+      # fixedRow(column(3, HTML("url:")), column(7, textInput("nep_url", value = node$url , label=NULL))),
+    )
+    )
+  }
   
   nodeChangeModal <- function(node, actionlabel) {
     nep_editor$original = node

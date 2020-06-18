@@ -127,6 +127,11 @@ getNodeById <-  function(view, n) {
   return(nd)
 }
 
+getEdgeByEid <-  function(view, e) {
+  nd = subset(view$edges, eid == e)
+  return(nd)
+}
+
 existsNodeInView <- function(view, n) {
   return(nrow(subset(view$nodes, nid==n)) > 0)
 }
