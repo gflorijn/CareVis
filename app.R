@@ -61,10 +61,10 @@ tagList(
                    # tags$hr(),
                    actionButton("showgraph", "Redraw"),
                    tags$hr(),
-                   actionButton("restart", "Restart"),
-                   tags$hr(),
-                   actionButton(inputId = "interrupt", "Interrupt"),
-                   tags$hr(),
+                   # actionButton("restart", "Restart"),
+                   # tags$hr(),
+                   # actionButton(inputId = "interrupt", "Interrupt"),
+                   # tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -288,10 +288,10 @@ server <- function(input, output, session) {
       rv$forcerepaint = TRUE
     })
     
-    # Only for debugging
-    observeEvent(input$interrupt, {
-      browser()
-    })
+    # # Only for debugging
+    # observeEvent(input$interrupt, {
+    #   browser()
+    # })
 
     # handle tabpanel selection event
     #
@@ -609,8 +609,8 @@ server <- function(input, output, session) {
     tagList(
       fixedRow(
         column(2,htmlOutput("activeviewtext")),
-        column(2,htmlOutput("activeviewmenu")),
-        column(6,htmlOutput("generalmessagetext"))
+        column(3,htmlOutput("activeviewmenu")),
+        column(5,htmlOutput("generalmessagetext"))
       )
       
     )
@@ -624,16 +624,18 @@ server <- function(input, output, session) {
   output$activeviewmenu <- renderUI({
     # HTML(
     #   c(
-        # smallHTMLUIButton("Save (as)", "saveview", "", "grey"),
-        # smallHTMLUIButton("Open new", "uploadview", "", "grey")
+        # smallHTMLUIButton("Save View (as)", "saveview", "", "grey"),
+        # smallHTMLUIButton("Open View", "uploadview", "", "grey")
     #   )
     # )
     tagList(
       fixedRow(
-        actionLink("saveview","Save (as)"),
+        actionLink("saveview","Save view (as)"),
 #        downloadLink("downloadviewasjson","Save (as)"),
         HTML("---"),
-          actionLink("uploadview","Open new")
+        actionLink("uploadview","Open view"),
+        HTML("---"),
+        actionLink("restart","New view")
       ),
       fixedRow(
         HTML("&nbsp;")
@@ -909,7 +911,7 @@ server <- function(input, output, session) {
   # })
   # 
   observeEvent(input$edittablepanelsave, {
-    browser()
+    # browser()
     rv$activeview = updateCurrentViewAfterEdit(rv$activeview, myeditablenodetable$editwatcher())
   })
 
