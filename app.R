@@ -165,9 +165,13 @@ server <- function(input, output, session) {
       forcerepaint = FALSE,
       thecurrentviewname = NULL,
       thedatauploader = NULL,
+      initialgraphdata = list(
+        nodes = tibble(id="start", label="start", shape="dot", groups=""),
+        edges = tibble(from="start", to="start")
+      ),
+      
 
       visualcontrols = list(
-        navigation=TRUE,
         undirected=TRUE,
         images=TRUE,
         linklabels=TRUE,
@@ -193,19 +197,11 @@ server <- function(input, output, session) {
       else { # in case of extending with uploaded data
         n = combineNetworks(netinfo, additionaldata)
       }
-      n = updateDerivedNetworkInfo(n)
       
 #      browser()
       return(n)
     }
     
-    # Add stuff like domain lists and colors
-    updateDerivedNetworkInfo <- function(net) {
-      n = addDerivedNetworkData(net)
-      n = extendNetworkInfoForVisualisation(n)
-      n = setupVisualDefinitionsForNetwork(n)
-      return(n)
-    } 
     
     # 
     # `graph_panel_data` is a list of two data frames: one of nodes, one of edges.
@@ -243,12 +239,12 @@ server <- function(input, output, session) {
       setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
+      return
     }
     
     restartBrowserOnViewData <- function(viewdata) {
       # laad de data uit newview in het netwerk
       rv$thenetworkinfo = combineNetworks(rv$thenetworkinfo, viewdata)
-      rv$thenetworkinfo = updateDerivedNetworkInfo(rv$thenetworkinfo) # add presentation stuff
       newview = newViewOnNetwork(rv$thenetworkinfo, viewdata$info$name)
       newview = addNodesToViewById(newview, viewdata$nodes$nid)
       newview = addEdgesToViewByEid(newview, viewdata$edges$eid)
@@ -256,7 +252,7 @@ server <- function(input, output, session) {
       # update de contents van newview op basis van die data
       rv$activeview = newview
       updateTextInput(session, "activemenuname", value=rv$activeview$info$name)
-      setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
+      loadGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
       
@@ -359,8 +355,9 @@ server <- function(input, output, session) {
     # the graph panel has been initialized - can set up inputs to get from them
     # 
     observeEvent(input$graph_panel_initialized, {
+      cat('can pick proxy here\n')
     })
-# 
+    # 
     
     # Node selection - see visEvents
     observeEvent(input$select_current_nodes,  {
@@ -408,15 +405,13 @@ server <- function(input, output, session) {
     })
     
     #react to click on linkmenu for selected node - the event has the link type to follow
-    observeEvent(
-      input$nodemenuclick,
-      {
-        if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
+    observeEvent(input$nodemenuclick, {
+      if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
           return
         }
       linktypes = c(input$nodemenuclick)
       if (linktypes == "all")
-        linktypes = rv$activeview$net$linktypes
+        linktypes = getLinkTypes(rv$activeview$net)
       rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
 } )
     
@@ -458,7 +453,7 @@ server <- function(input, output, session) {
 
 # Data view output --------------------------------------------------------
  
-    output$dataviewnodes <-  DT::renderDataTable( 
+    output$dataviewnodes <-  DT::renderDataTable(
       select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url),
               style="Bootstrap", rownames=F, 
               server=T, selection="single", options=list(pageLength=20)
@@ -557,7 +552,7 @@ server <- function(input, output, session) {
 
         
     # Spawn a frozen viewpane from the main view
-    observeEvent(input$switchtoview, {
+    observeEvent(input$freezetoview, {
       rv$theviewcounter = rv$theviewcounter + 1
       viewid = paste0("view", rv$theviewcounter)
       tabplabel = paste0("View ", rv$theviewcounter)
@@ -566,9 +561,6 @@ server <- function(input, output, session) {
                       tagList( frozenViewUI(viewid)
                       )}
       )
-      
- #     rv$theigraph = initializeViewOnGraph(rv$theigraph, viewid)
- #     rv$theigraph = znops.copyViewInfo(rv$theigraph, rv$thecurrentviewname, viewid)
       
       gr <- callModule(frozenView, viewid, viewid, rv$activeview)
 
@@ -612,8 +604,8 @@ server <- function(input, output, session) {
         column(3,htmlOutput("activeviewmenu")),
         column(5,htmlOutput("generalmessagetext"))
       )
-      
     )
+    
   })
   
   output$activeviewtext <- renderUI({
@@ -645,7 +637,7 @@ server <- function(input, output, session) {
     )
     
   })
-  
+
   output$generalmessagetext <- renderUI({
     m = paste0("Messages: <b>", rv$themessage, "</b>")
     HTML(m)
@@ -704,7 +696,6 @@ server <- function(input, output, session) {
     net = view$net
     net = addNodesToNetwork(net, newnode)
     #    net = addEdgesToNetwork(net, newedge)
-    net = updateDerivedNetworkInfo(net) # add presentation stuff
     view$net = net
     rv$thenetwerkinfo = net  # Should not be here
     view = addNodesToViewById(view, newnode$nid)
@@ -715,7 +706,6 @@ server <- function(input, output, session) {
   addNewEdgeToView <- function(view, newedge) {   
     net = view$net
     net = addEdgesToNetwork(net, newedge)
-    net = updateDerivedNetworkInfo(net) # add presentation stuff
     view$net = net
     rv$thenetwerkinfo = net  # Should not be here
     view = addEdgesToViewByEid(view, newedge$eid)
@@ -737,16 +727,10 @@ server <- function(input, output, session) {
       cat("Warning: replace edge needs to check relations\n")
     return(addNewEdgeToView(view, newedge))   
   }
-  #Make a new node give the id
+
+    #Make a new node give the id
   genNewNodeForIdWithDefaults <- function(view, nid) {
-    return(createNewMinimalNode(nid))
-  }
-  
-  # create a new edge and handle id translation
-  genNewEdgeWithDefaults <- function(view, from,to) {
-    fname = if (existsNodeInView(view, from)) from else subset(drawmodelog$idmap, id==from)$label
-    tname = if (existsNodeInView(view, to)) to else subset(drawmodelog$idmap, id==to)$label
-    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+    return(createNewUndefinedNode(nid))
   }
 
 # Simple edit node --------------------------------------------------------
@@ -837,7 +821,7 @@ server <- function(input, output, session) {
     
   #Starting point menu for showing nodes from different domains.
   output$slicesmenu <- renderUI({
-    slices= rv$thenetworkinfo$domains
+    slices= getDomains(rv$thenetworkinfo)
 #    selectInput("startingpoint", label=NULL, domains)
     fixedRow(
       column(8,
@@ -910,7 +894,7 @@ server <- function(input, output, session) {
 # Visual menu settings for node manipulation ------------------------------
   
   getLinkColor <- function(l) {
-    rv$thenetworkinfo$linktypecolors[rv$thenetworkinfo$linktypes == l]
+    return(getEdgeColorForLinktype(rv$thenetworkinfo, l))
   }
   
               
@@ -950,7 +934,7 @@ server <- function(input, output, session) {
           smallHTMLUIButton("*", "viewmenuclick", "all", "black"),
           "--",
           smallHTMLUIButton("All", "showall", "", "grey"),
-          smallHTMLUIButton(">View", "switchtoview", "", "grey")
+          smallHTMLUIButton(">View", "freezetoview", "", "grey")
         )
       ),
       tags$br(),
@@ -1077,14 +1061,12 @@ server <- function(input, output, session) {
      #browser()
      net = view$net
      net = addNodesToNetwork(net, nodes)
-     net = updateDerivedNetworkInfo(net) # add presentation stuff
      view$net = net
      rv$thenetwerkinfo = net  # Should not be here
      view = addNodesToViewById(view, nodes$nid)
      return(view)
    }
 
-  
   
 # Event Experiments -------------------------------------------------------
 
@@ -1159,11 +1141,9 @@ server <- function(input, output, session) {
   }
   
   saveDrawModeChangelog <- function() {
-#    browser()
     net = rv$activeview$net
     net = addNodesToNetwork(net, drawmodelog$nodes)
     net = addEdgesToNetwork(net, drawmodelog$edges)
-    net = updateDerivedNetworkInfo(net)
     rv$activeview$net = net
     rv$thenetworkinfo = net
     
@@ -1172,6 +1152,15 @@ server <- function(input, output, session) {
     view = addNodesToViewById(view, drawmodelog$nodes$nid)
     view = addEdgesToViewByEid(view, drawmodelog$edges$eid)
     rv$activeview = view
+  }
+ 
+  
+  # create a new edge and handle id translation
+  genNewEdgeWithDefaults <- function(view, from,to) {
+    cat('kijk uit hier dit is in draw mode???\n')
+    fname = if (existsNodeInView(view, from)) from else subset(drawmodelog$idmap, id==from)$label
+    tname = if (existsNodeInView(view, to)) to else subset(drawmodelog$idmap, id==to)$label
+    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
   }
   
    # If the user edits the graph, this shows up in
@@ -1184,6 +1173,10 @@ server <- function(input, output, session) {
       cmd = input$graph_panel_graphChange$cmd
       #cat("cmd = ", cmd, "\n")
       if (cmd == "addNode") {
+        cat('Hier slim zijn - aangemaakte node verwijderen via proxy, nieuwe node toevoegen aan active view en aanroep van addGraphpanelNode (of wachten op redraw)')
+        #
+        # delete node via proxy, addNewNodeToView en addNodeto graph
+        #
         nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
         nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
         newnode = genNewNodeForIdWithDefaults(rv$activeview, nlabel)
@@ -1202,84 +1195,178 @@ server <- function(input, output, session) {
 
 
 # Rendering the view -----------------------------------------------------
-
+# Functions that return visual input settings. Typically set in the renderedUI, so may initially be invalid
+#
+  vis_DoImages <- function() { # Default true
+    if (!is.null(input$images))
+      if (input$images == FALSE) return(FALSE)
+    return(TRUE)
+  }
+  vis_DoLinklabels <- function() { #Default true
+    if (!is.null(input$linklabels)) 
+      if (input$linklabels == FALSE)  return(FALSE)
+    return(TRUE)
+  }
+  vis_DoManipulation <- function() {
+    if (!is.null(input$manipulationmode))
+        if( input$manipulationmode == FALSE) return(FALSE)
+    return(TRUE)
+  }
+  vis_DoIgraphlayout <- function() {
+    if (!is.null(input$igraphlayout))
+      if (input$igraphlayout == TRUE)   
+        return(TRUE)
+    return(FALSE)
+  }
+  vis_DoNavigation <- function() {
+    if (!is.null(input$navigation))
+        if (input$navigation == FALSE)      
+          return(FALSE)
+    return(TRUE)
+  }
+  vis_DoUndirected <- function() {
+    if (!is.null(input$undirected))
+      if (input$undirected == FALSE)      
+        return(FALSE)
+    return(TRUE)
+  }
+   
   
   # The observer watching the current view
   observeEvent( {
     rv$activeview
     rv$forcerepaint},  {
-      
+
+      cat('Start drawing...')
       if (rv$forcerepaint) { #called when the redraw action has been activated
-        #cat('Force repaint\n')
+        cat('Force repaint\n')
         rv$forcerepaint = FALSE
       }
       
       flushDrawModeChangelog()
       
       # Prepare the graph for visualisation
-      # Since options for images and linklabesl are set in a uiOutput, the may nog bet initialized yet.
-      doimg = TRUE
-      dolinklabels = TRUE
-      if(!is.null(input$images)) doimg = input$images
-      if(!is.null(input$linklabels)) dolinklabels = input$linklabels
-      rv$activeview= addVisualSettingsForView(rv$activeview, doimg, dolinklabels)
-      
+      # Since options for images and linklabesl are set in a uiOutput, they may not be initialized yet.
+      # doimg = TRUE
+      # dolinklabels = TRUE
+      # if(!is.null(input$images)) doimg = input$images
+      # if(!is.null(input$linklabels)) dolinklabels = input$linklabels
+      # rv$activeview= addVisualSettingsForView(rv$activeview, doimg, dolinklabels) @@ Dit hier weg
+      # 
       # #activate this to show the node-action menu when hovering over the node
       # V(viewg)$title = HTML(
       #   singleNodeSelectMenu()
       # )
       
-      graph_panel_data$nodes = rv$activeview$nodes
-      graph_panel_data$edges = rv$activeview$edges
+      #proxy moet op andere manier worden geinitialiseerd
+      thegraphpanelproxy = setupVisNetworkVisualisationOptions()
+  #browser()    
+      #Put the visualisation data in graph_panel_data
+      makeVisualisationDataFromView(rv$activeview)
+      
+      if (!is.null(thegraphpanelproxy)) { # kan oop via updateNodes en edges
+        visSetData(thegraphpanelproxy, graph_panel_data$nodes, graph_panel_data$edges)
+        cat('tekenen op het canvas moet via een aparte - event-driven- functie die reageert op graph_panel_data')
+      }
+      
+        cat('Done\n')
     })
   
+  #--> hier graph_panel data vullen, opschonen - splitsen in nodes en edges
+  makeVisualisationDataFromView <- function(view) {
+    
+    cat('vervang dit door schoonmaken van graphpaneldata en vervolgens aanroepen van addGraphPanelNode ')
+    nodes = view$nodes
+    edges = view$edges
+    
+    newnodes = tibble()
+    newedges = tibble()
+    for (i in 1:nrow(nodes)) {
+      if (nrow(newnodes) == 0) {
+        newnodes = addVisualSettingsToNode(rv$activeview, nodes[i,], vis_DoImages())
+      }
+      else newnodes = bind_rows(newnodes, addVisualSettingsToNode(rv$activeview, nodes[i,], vis_DoImages()))
+    }
+    if (nrow(edges)>0) {
+      for (i in 1:nrow(edges)) {
+        if (nrow(newedges) == 0)
+          newedges = addVisualSettingsToEdge(rv$activeview, edges[i,], vis_DoLinklabels())
+        else
+          newedges = bind_rows(newedges, addVisualSettingsToEdge(rv$activeview, edges[i,], vis_DoLinklabels()))
+      }
+    }
+    newnodes$id = newnodes$nid
+    newedges$id = newedges$eid
+    newedges$orglabel = newedges$label
+    newedges$label = newedges$vislabel
+    graph_panel_data$nodes = newnodes
+    graph_panel_data$edges = newedges
+  }
   
- 
+  addGraphPanelNode <- function(node) {
+    row =  addVisualSettingsToNode(rv$activeview, node, vis_DoImages())
+    row$id = row$nid
+    graph_panel_data$nodes = add_row(graph_panel_data$nodes,row)
+  }
+  
+  addGraphPanelEdge <- function(edge) {
+    row = addVisualSettingsToEdge(rv$activeview, edge, vis_DoLinklabels())
+    row$id = row$eid
+    eds$orglabel = eds$label #hack attempt to support switch show label
+    eds$label = eds$vislabel
+    graph_panel_data$edges = add_row(graph_panel_data$nodes, addVisualSettingsToNode(rv$activeview, node))
+  }
+  
+  # Setup the controls for the graphpanel
+  # Moet alleen worden aangeroepen als een van die visualisatie switches wordt gereset
+  #
+  setupVisNetworkVisualisationOptions <- function() {
+    cat("Setup visnetwork options ...\n")
+    proxy = visNetworkProxy("graph_panel")
+    if (is.null(proxy))
+      return(NULL)
+    if (is.null(rv$thevisgraph)) {
+      cat('Not ready yet\n')
+      return(NULL)
+    }
+    cat('Start proxy-update!\n')
+    # Allow interaction - note: nodes can be in multiple groups
+    # Allow manipulation - should be switch?
+    # proxy = visOptions(proxy, nodesIdSelection = TRUE, collapse=FALSE, manipulation = vis_DoManipulation(),
+    #                  selectedBy=list(variable = "groups", multiple = TRUE))
+    # 
+    if (vis_DoIgraphlayout()) {
+        proxy = visIgraphLayout(proxy, type="full")
+    }
+    # if (vis_DoNavigation())
+    #   proxy = visInteraction(proxy, navigationButtons = TRUE)
+    
+    if (!vis_DoUndirected()) {
+        proxy = visEdges(vnt, arrows="to")
+    }
+    return(proxy)
+  }
+  
+  
+  
   # Render the graph.
   output$graph_panel <- renderVisNetwork({
-
-      # set "id" to node id/edge id
-      nds = graph_panel_data$nodes
-      nds$id = nds$nid
-      eds = graph_panel_data$edges
-      eds$id = eds$eid
-      vnt = visNetwork(nodes=nds, edges=eds)
-  
-      # Allow interaction - note: nodes can be in multiple groups
-      # Allow maniuplation - should be switch?
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=TRUE, manipulation = input$manipulationmode,
-                       selectedBy=list(variable = "groups", multiple = TRUE))
-  
-      if (!is.null(input$igraphlayout)) {
-          if (input$igraphlayout == TRUE)
-             vnt = visIgraphLayout(vnt, type="full")
-      }
-      if (!is.null(input$navigation))
-        vnt = visInteraction(vnt, navigationButtons = input$navigation)
-  
-      if (!is.null(input$undirected)) {
-          if (!input$undirected)
-            vnt = visEdges(vnt, arrows="to")
-      }
     
+      cat("Create visNetwork!\n")
+
+    
+      vnt = visNetwork(nodes=rv$initialgraphdata$nodes, edges=rv$initialgraphdata$edges)
+      
+      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=FALSE, manipulation = TRUE,
+                         selectedBy=list(variable = "groups", multiple = TRUE))
+      
+      vnt = visInteraction(vnt, navigationButtons = TRUE)
+        
       vnt = visEvents(vnt,
                       select = "function(data) {
                           Shiny.onInputChange('select_current_nodes', data.nodes);
                           Shiny.onInputChange('select_current_edges', data.edges);
                   ;}")
-      
-      
-      #      vnt = visEvents(vnt,
-      #         doubleClick="function (event) {  Shiny.setInputValue(\"doubleClick\", event); }",
-      #         oncontext="function (event) {  Shiny.setInputValue(\"oncontext\", event); }",
-      #          # beforeDrawing="function (ctx) {  Shiny.setInputValue(\"beforedrawing\", ctx); }",
-      #      )
-  
-      #Older experiments
-      # groups = unique(V(visual3)$group)
-      #      vnt = visClusteringByGroup(vnt, groups)
-      #visPhysics(vnt, stabilization = FALSE)
-  
       rv$thevisgraph = vnt
       vnt
   })

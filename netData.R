@@ -113,20 +113,20 @@ combineNetworks <- function(net1, net2) {
   return(net1)
 }
 
-# Add derived information to the basic network data
-#
-addDerivedNetworkData <-  function(net) {
-  ds = unique(net$nodes$domain)
-  ds = ds[ds != ""]
-  lt = unique(net$edges$linktype)
-  lt = lt[lt != ""]
-  nt = unique(net$nodes$nodetype)
-  nt = nt[nt != ""]
-  
-  net$domains = ds
-  net$linktypes = lt
-  net$nodetypes = nt
-  return(net)
+
+# Network characteristics -------------------------------------------------
+
+
+getDomains <- function(net) {
+  return(unique(net$nodes$domain))
+}
+
+getNodeTypes <- function(net) {
+  return(unique(net$nodes$nodetype))
+}
+
+getLinkTypes <- function(net) {
+  return(unique(net$edges$linktype))
 }
 
 
@@ -161,5 +161,5 @@ createCloneOfNode <- function(view, node) {
 }
 
 createNewUndefinedNode <- function(nid) {
-  return(tibble(nid=nid, label=nid, icon="", url="", groups="", image="", domain="Undefined", nodetype="undefined"))
+  return(tibble(nid=nid, label=nid, icon="", url="", groups="", domain="Undefined", nodetype="undefined"))
 }
