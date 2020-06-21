@@ -9,10 +9,8 @@ library(DT)
 source("netData.R")
 source("netOps.R")
 source("netVisuals.R")
-source("frozenview.R")
 source("uploadView.R")
 source("helppage.R")
-source("MyeditableDT.R")
 
 
 smallHTMLUIButton <- function(label, eventid, eventdata, color) {
@@ -64,8 +62,8 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   actionButton(inputId = "interrupt", "Interrupt"),
-                   tags$hr(),
+                   # actionButton(inputId = "interrupt", "Interrupt"),
+                   # tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -358,9 +356,9 @@ server <- function(input, output, session) {
     })
 
     # Only for debugging
-    observeEvent(input$interrupt, {
-      browser()
-    })
+    # observeEvent(input$interrupt, {
+    #   browser()
+    # })
 
         # Force redraw of the graph
     #
@@ -479,14 +477,16 @@ server <- function(input, output, session) {
 # Data view output --------------------------------------------------------
  
     output$dataviewnodes <-  DT::renderDataTable(
-      select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url),
+      #select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url),
+      rv$activeview$net$nodes,
               style="Bootstrap", rownames=F, 
               server=T, selection="single", options=list(pageLength=20)
     )
     
     output$dataviewedges <- DT::renderDataTable(
 #      browser()
-      select(rv$activeview$edges,from, to, label, linktype, eid),
+      # select(rv$activeview$edges,from, to, label, linktype, eid),
+      rv$activeview$net$edges,
         style="Bootstrap", rownames=F, 
         server=T, selection="single", options=list(pageLength=20)
     )
