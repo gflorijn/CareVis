@@ -94,15 +94,16 @@ addVisualSettingsToNode <- function(view, node, doimage) {
   return(node)
 }
 
-getVisualSettingsForEdge <- function(view, edge, dolabel) {
+getVisualSettingsForEdge <- function(view, edge, dolabel, doarrows) {
   return(tibble(
     color=getEdgeColorFor(view, edge),
+    arrows=if_else(doarrows, "to", NULL),
     vislabel=if_else((!is.null(dolabel) & dolabel==TRUE), edge$label, "")  # will be mapped to visnetwork label...
   ))
 }
 
-addVisualSettingsToEdge <- function(view, edge, dolabel) {
-  gv = getVisualSettingsForEdge(view,edge, dolabel)
+addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows) {
+  gv = getVisualSettingsForEdge(view,edge, dolabel, doarrows)
   edge = bind_cols(edge, gv)
   return(edge)
 }

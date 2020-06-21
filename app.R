@@ -37,7 +37,8 @@ tagList(
   extendShinyjs(text = jscode, functions = c("closeWindow")),
   useShinyjs(),
 
-  navbarPage(smallHTMLUIButton("NetVis", "showabout", "", "darkblue"),
+  navbarPage(
+    smallHTMLUIButton("NetVis", "showabout", "", "darkblue"),
              
   #shinythemes::themeSelector(),
   theme=shinytheme("spacelab"),
@@ -70,7 +71,7 @@ tagList(
                ),
                mainPanel(
                  width = 11,
-                 fluidRow(
+                 fixedRow(
                    column(11, uiOutput("statusbar"))
                  ),
                  fixedRow(
@@ -79,55 +80,12 @@ tagList(
                    column(3, uiOutput("singlenodeselectmenu")),
                    column(3, uiOutput("viewnodeselectmenu"))
                  ),
-                 # fixedRow(
-                 #  column(2, offset=2, uiOutput("drawmodemenu")),
-                 #  column(6, uiOutput("edittablemenu")),
-                 #  column(2, uiOutput("visualoptionsmenu"))
-                 # ),
-                 # tags$hr(),
-                 visNetworkOutput("graph_panel", height = "750px", width = "100%"),
-                 absolutePanel(
-                   id = "editcontrols",
-                   class = "panel panel-default",
-                   top = 145, left = 320,  width = 1200, fixed = TRUE,
-                   draggable = TRUE,
-                   height = "auto",
-                   tagList(
-                     fixedRow(width=1100,
-                              column(3, uiOutput("drawmodemenu")),
-                              column(7, uiOutput("edittablemenu")),
-                              column(2, uiOutput("visualoptionsmenu"))
-                     )
-                   )
-                 )
+                 visNetworkOutput("graph_panel", height = "750px", width = "100%")
+              )
             )
-           
-  ))),
+  )),
   
-  # tabPanel("Edit nodes",
-  #          sidebarLayout(
-  #            sidebarPanel(width = 2,
-  #                   actionButton("starttableedit", "Update view"), tags$hr(),
-  #                   actionButton("committablechanges", "Save changes"), tags$hr(),
-  #                   actionButton("canceltablechanges", "Cancel")
-  #            ),
-  #            mainPanel(width = 10,
-  #                      tagList(tags$h2("Node editor"),
-  #                  tags$br(),
-  #                  uiOutput("editnodespane")
-  #                  )
-  #           )
-  #           )),
-  # tabPanel("Upload",
-  #          sidebarLayout(
-  #            sidebarPanel(width = 2,
-  #                         tagList(
-  #                           actionButton("adduploadeddata", "Add data to network")
-  #                         )),
-  #            mainPanel(width = 10,
-  #                      uploadViewUI("upload"),)
-  #          )),
-  tabPanel("Data view - Nodes",
+   tabPanel("Data view - Nodes",
            tagList(tags$h2("Nodes"),
                    tags$br(),
                    DT::dataTableOutput("dataviewnodes"))),
@@ -143,9 +101,13 @@ tagList(
              tags$hr(),
              actionButton("showdemos", "Some examples"),
            ))
-  
 )
 )
+
+
+# Server part -------------------------------------------------------------
+
+
 
 server <- function(input, output, session) {
   
@@ -155,7 +117,6 @@ server <- function(input, output, session) {
    
     rv <- reactiveValues(
       thenetworkinfo = NULL,
-      theigraph=NULL, 
       thevisgraph = NULL, 
       # thegraphproxy = NULL,
       thenodeselected = NULL, 
@@ -163,26 +124,27 @@ server <- function(input, output, session) {
       themessage = NULL,
       theviewcounter = 0,
       forcerepaint = FALSE,
-      thecurrentviewname = NULL,
       thedatauploader = NULL,
-      initialgraphdata = list(
-        nodes = tibble(id="start", label="start", shape="dot", groups=""),
-        edges = tibble(from="start", to="start")
-      ),
-      
-
-      visualcontrols = list(
-        undirected=TRUE,
-        images=TRUE,
-        linklabels=TRUE,
-        igraphlayout=FALSE
-      ),
-      
       activeview = NULL
       
     )
 
-
+    
+    # 
+    # `graph_panel_data holds the data to interact with the drawing in the graph_panel
+    #  Proxy is set when the graph_panel has been initialized
+    #
+    graph_panel_data = reactiveValues(
+      nodes = NULL,
+      edges = NULL,
+      proxy = NULL
+    )
+    
+    setGraphPanelData <- function(nds, eds) {
+      graph_panel_data$nodes = nds
+      graph_panel_data$edges = eds
+    }
+    
 # Initialisation ----------------------------------------------------------
 
         
@@ -190,52 +152,17 @@ server <- function(input, output, session) {
                      "Interactie", "Systemen","Platformen",  "Standaarden",
                      "Leveranciers", "PGO")
     
-    loadNetworkInfo <- function(netinfo, additionaldata) {
-      if (is.null(additionaldata)) {
-        n = readNetworkData(slicestoload)
-      }
-      else { # in case of extending with uploaded data
-        n = combineNetworks(netinfo, additionaldata)
-      }
-      
-#      browser()
-      return(n)
-    }
     
-    
-    # 
-    # `graph_panel_data` is a list of two data frames: one of nodes, one of edges.
-    # Deze moeten we initialiseren bij het restart verhaal.
-    graph_panel_data = reactiveValues(
-      nodes = NULL,
-      edges = NULL
-    )
-    # we initialiseren ze van daaruit met  lege dataframe:
-    setGraphPanelData <- function(nds, eds) {
-      graph_panel_data$nodes = nds
-      graph_panel_data$edges = eds
-    }
-    
-    
-    restartAll <- function(additionaldata) {
-      ni = loadNetworkInfo(rv$thenetworkinfo, additionaldata)
-      rv$thevisgraph = NULL
-      rv$thenetworkinfo = ni
+    initializeApplication <- function(networkdata) {
+      rv$thenetworkinfo = networkdata
       rv$thenodeselected = ""
       rv$themessage = ""
-      rv$thecurrentviewname = "aView"
-
-            # the is the reactive variable from the module that will produce the data to load
-      
-      
-      # a list of nodes and links
+      # the is the reactive variable from the module that will produce the data to load
       rv$thedatauploader = callModule(uploadView, "upload", "upload", rv$thenetworkinfo)
-
+      
       nodes = c("Patient")
-        
-      rv$activeview = newViewOnNetwork(ni, "aView")    
+      rv$activeview = newViewOnNetwork(rv$thenetworkinfo, "aView")    
       rv$activeview = addNodesToViewById(rv$activeview, nodes)
-
       setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
@@ -249,10 +176,9 @@ server <- function(input, output, session) {
       newview = addNodesToViewById(newview, viewdata$nodes$nid)
       newview = addEdgesToViewByEid(newview, viewdata$edges$eid)
       newview$info = viewdata$info
-      # update de contents van newview op basis van die data
+
       rv$activeview = newview
-      updateTextInput(session, "activemenuname", value=rv$activeview$info$name)
-      loadGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
+      rv$forcerepaint = TRUE
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
       
@@ -260,11 +186,165 @@ server <- function(input, output, session) {
     }
     
     #
-    # Initialise the data determining the view.
+    # Initialise the application
     isolate ({
-      restartAll(NULL)
+      n = readNetworkData(slicestoload)
+      initializeApplication(n)
     })
     
+
+
+# Graph-panel setup  --------------------------------------------------
+    
+    
+    # Controls that govern the presentation of the graph
+    #
+    visualcontrols = reactiveValues(
+      arrows = FALSE,
+      images = TRUE,
+      linklabels = TRUE,
+      igraphlayout = FALSE
+    )
+    
+    # Used for proper initializatoin of the visnetwork rendering. Doesn't have to be reactive...
+    #
+    initialvisnetworkdata = reactiveValues(
+      nodes = tibble(
+        id = "start",
+        label = "start",
+        shape = "dot",
+        groups = ""
+      ),
+      edges = tibble(from = "start", to = "start")
+    )
+    
+    # Create the visnetwork visualiser
+    output$graph_panel <- renderVisNetwork({
+      
+      nds = tribble(~id, ~label, ~nodetype, ~domain, ~groups, ~icon, ~url)
+      eds = tribble(~id, ~from, ~to, ~label, ~linktype)
+      vnt = visNetwork(nodes = nds, edges = eds)
+      
+      # vnt = visNetwork(nodes = initialvisnetworkdata$nodes, edges = initialvisnetworkdata$edges)
+
+      vnt = visOptions(vnt,
+        nodesIdSelection = TRUE,
+        collapse = FALSE,
+        manipulation = TRUE,
+        selectedBy = list(variable = "groups", multiple = TRUE)
+      )
+      vnt = visInteraction(vnt, 
+        navigationButtons = TRUE)
+      vnt = visEvents(vnt,
+        select = "function(data) {
+                          Shiny.onInputChange('select_current_nodes', data.nodes);
+                          Shiny.onInputChange('select_current_edges', data.edges);
+                  ;}"
+      )
+      rv$thevisgraph = vnt
+      vnt
+    })
+    
+    
+    # the graph panel has been initialized, we can set the proxy and setup info to retrieve
+    #
+    observeEvent(input$graph_panel_initialized, {
+      graph_panel_data$proxy = visNetworkProxy("graph_panel")
+      
+    })
+    
+    # Setup the visNetwork settings based on visualcontrols
+    observeEvent({
+      graph_panel_data$proxy
+      visualcontrols
+      visualcontrols$igraphlayout
+    }, {
+      if (is.null(graph_panel_data$proxy)) {
+        return(NULL)
+      }
+      if (visualcontrols$igraphlayout) {
+        graph_panel_data$proxy = visIgraphLayout(graph_panel_data$proxy, type = "full")
+      }
+    })
+
+    # Do the actual drawing, based on changes to the data
+    observeEvent({
+      graph_panel_data
+      graph_panel_data$proxy
+      graph_panel_data$nodes
+      graph_panel_data$edges
+    }, {
+      if (is.null(graph_panel_data$proxy)) {
+        # cat('Graph panel drawing, proxy not ready yet\n')
+        return(NULL)
+      }
+
+      # visUpdateNodes(graph_panel_data$proxy, graph_panel_data$nodes)
+      # visUpdateEdges(graph_panel_data$proxy, graph_panel_data$edges)
+
+      visSetData(graph_panel_data$proxy, graph_panel_data$nodes, graph_panel_data$edges)
+      
+    })
+
+
+# Drawing the view data to the visnetwork data  ---------------------------
+
+    
+    # Whenever the active view changes, this will push new graph_panel nodes/edges to the visNetwork
+    # the graph_panel nodes have the additional visual attributes needed for visNetwork
+    # In addition, there's some magic here to map labels and ids.
+    #         View      Graph _panel/vis network
+    # nodes   nid       id
+    # edges   eid       id
+    #       ( vislabel  label ) -- done on the fly
+    # 
+    observeEvent( {
+      visualcontrols
+      visualcontrols$arrows
+      visualcontrols$images
+      visualcontrols$linklabels
+      rv$activeview
+      rv$forcerepaint},  {
+        
+        # cat('Draw active view...\n')
+        if (rv$forcerepaint) { #called when the redraw action has been activated
+          # cat('Force repaint\n')
+          rv$forcerepaint = FALSE
+        }
+        xn = map_dfr(rv$activeview$nodes$nid, makeGraphPanelNodeForNid)
+        xe = map_dfr(rv$activeview$edges$eid, makeGraphPanelEdgeForEid)
+        graph_panel_data$nodes = xn
+        graph_panel_data$edges = xe
+      })
+    
+    
+    makeGraphPanelNodeForNid <- function(nid) {
+      # browser()
+      row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images)
+      row$id = row$nid
+      return(row)
+    }
+    
+    makeGraphPanelEdgeForEid <- function(eid) {
+      row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows)
+      row$id = row$eid
+      row$orglabel = row$label #hack attempt to support switch show label
+      row$label = row$vislabel
+      return(row)
+    }
+    
+    addGraphPanelNodeForNid <- function(nid) {
+      graph_panel_data$nodes = bind_rows(graph_panel_data$nodes,makeGraphPanelNodeForNid(nid))
+    }
+    
+    addGraphPanelEdgeForEid <- function(eid) {
+      graph_panel_data$edges = bind_rows(graph_panel_data$edges, makeGraphPanelEdgeForEid(eid))
+    }
+    
+    
+    
+# Main menu options -------------------------------------------------------
+
     
     # Quit button
     observeEvent(input$quit, {
@@ -272,30 +352,31 @@ server <- function(input, output, session) {
       stopApp()
     })
     
-    #restart - load everything from the start
-    # Todo - hoeft niet de hele graaf opnieuw te lezen
+    #restart - reinitialize the browser without loading the files
     observeEvent(input$restart, {
-      restartAll(NULL)
+      initializeApplication(rv$thenetworkinfo)
     })
 
-    # Force redraw of the graph
-    #
-    observeEvent(input$showgraph, {
-      rv$forcerepaint = TRUE
-    })
-    
     # Only for debugging
     observeEvent(input$interrupt, {
       browser()
     })
 
+        # Force redraw of the graph
+    #
+    observeEvent(input$showgraph, {
+      rv$forcerepaint = TRUE
+    })
+    
+    
     # handle tabpanel selection event
     #
     observeEvent(input$theAppPage, {
  #     rv$thecurrentviewname = input$theAppPage
     })
 
-
+    # handle actions related to "about" and "demos"
+    
     observeEvent(input$showabout, {
       showModal(modalDialog(
         easyClose = TRUE,
@@ -304,12 +385,7 @@ server <- function(input, output, session) {
         tags$p("Gert Florijn, 2020")
       ))
     })
-
-
-
-# Demo files --------------------------------------------------------------
-
-        
+    
     observeEvent(input$showdemos, {
       showModal(modalDialog(
         easyClose = TRUE,
@@ -326,19 +402,19 @@ server <- function(input, output, session) {
     })
     
     output$demotutorialjson <- downloadHandler(
-        filename <- function() {
-          "demo-tutorial-v1.json"
-        },
-        content <- function(file) {
-          file.copy("Demos/tutorial-v1.json", file)
-        }
-      )
+      filename <- function() {
+        "demo-tutorial-v1.json"
+      },
+      content <- function(file) {
+        file.copy("Demos/tutorial-v1.json", file)
+      }
+    )
     
     observeEvent(input$demotutorialload, {
       thedata = fromJSON("Demos/tutorial-v1.json")
-      restartAll(thedata)
+      restartBrowserOnViewData(thedata)
     })
-
+    
     # output$demoPGOjson <- downloadHandler(
     #   # filename <- function() {
     #   #   "demo-PGO.json"
@@ -351,13 +427,6 @@ server <- function(input, output, session) {
 
 # Node selection and menu handling ----------------------------------------
 
-
-    # the graph panel has been initialized - can set up inputs to get from them
-    # 
-    observeEvent(input$graph_panel_initialized, {
-      cat('can pick proxy here\n')
-    })
-    # 
     
     # Node selection - see visEvents
     observeEvent(input$select_current_nodes,  {
@@ -404,51 +473,7 @@ server <- function(input, output, session) {
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
     
-    #react to click on linkmenu for selected node - the event has the link type to follow
-    observeEvent(input$nodemenuclick, {
-      if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
-          return
-        }
-      linktypes = c(input$nodemenuclick)
-      if (linktypes == "all")
-        linktypes = getLinkTypes(rv$activeview$net)
-      rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
-} )
-    
-    #click on linkmenu for all nodes in view
-    observeEvent(input$viewmenuclick, {
-      linktypes = c(input$viewmenuclick)
-      if (linktypes == "internal") {
-        rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
-      }
-      else {
-        if (linktypes == "all") #todo: simplify this
-          linktypes=rv$activeview$net$linktypes
-        rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
-      }
-    } )
-    
-    # hide event
-    observeEvent(input$hidefromview, {
-      rv$activeview = removeNodesFromViewById(rv$activeview, c(rv$thenodeselected))
-    })
-  
-    # Focus view on a node
-    observeEvent(input$switchfocus, {
-      rv$activeview = restartViewOnNodeIds(rv$activeview, c(rv$thenodeselected))
-    }) 
-    
-     # View the whole underlying network
-    observeEvent(input$showall, {
-      rv$activeview = switchViewToNetwork(rv$activeview)
-    }) 
-    
-    # Should launch a browser for nodes with an URL.
-    observeEvent(input$launchbrowser, {
-      rv$themessage("not available yet")
-      #browseURL(rv$theurl)
-    })
-    
+
 #
 
 # Data view output --------------------------------------------------------
@@ -467,46 +492,6 @@ server <- function(input, output, session) {
     )
     
 
-# Editbox for node(s) or edges -----------------------------------------------------
-    
-
-   #  output$editnodespane = renderUI({
-   #    tagList(
-   #      MyeditableDTUI("EditViewData"),
-   #      verbatimTextOutput(("editoutput"))
-   #    )
-   #  })
-   #  
-   #  output$editoutput = renderPrint({
-   #    if (!is.null(editablenodetable$editwatcher))
-   #      str(editablenodetable$editwatcher())
-   #  })
-   # 
-   #  editablenodetable = reactiveValues(
-   #    srcnodes = NULL, # the source table currently being edited
-   #    editwatcher = NULL # the current edit state
-   # )
-   #  
-   #  editsrcdata = reactive({
-   #    editablenodetable$srcnodes 
-   #  })
-   #  
-   #  observeEvent(input$starttableedit, {
-   #    editablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-   #    if (is.null(editablenodetable$editwatcher)) { #first time!
-   #      editablenodetable$editwatcher = callModule(MyeditableDT, "EditViewData", 
-   #                                                 dataholder=reactive(editablenodetable))
-   #    }
-   #  })
-   #  
-   #  observeEvent(input$committablechanges, {
-   #    rv$activeview = updateCurrentViewAfterEdit(rv$activeview, editablenodetable$editwatcher())
-   #  })
-   #  observeEvent(input$canceltablechanges, {
-   #    editablenodetable$srcnodes = tibble()
-   #  })
-   #  
-   #  
 # Handle uploading data ----------------------------------------------------
 
     observeEvent(input$uploadview, {
@@ -541,71 +526,24 @@ server <- function(input, output, session) {
       } else {
         rv$themessage = "No issues - updating network."
       }
-      # restartAll(thedata)
       restartBrowserOnViewData(thedata$view)
       
     })
-      
 
 
-# Spawn current view into separate viewpane -------------------------------
-
-        
-    # Spawn a frozen viewpane from the main view
-    observeEvent(input$freezetoview, {
-      rv$theviewcounter = rv$theviewcounter + 1
-      viewid = paste0("view", rv$theviewcounter)
-      tabplabel = paste0("View ", rv$theviewcounter)
-
-      tabp = tabPanel(tabplabel, value=viewid, {
-                      tagList( frozenViewUI(viewid)
-                      )}
-      )
-      
-      gr <- callModule(frozenView, viewid, viewid, rv$activeview)
-
-      # Voeg de tab toeg
-      appendTab("theAppPage", tabp, select=TRUE)  
-      
-    })
-    
+# Settings and handling for status bar menu -------------------------------
 
 
-# Export the graph --------------------------------------------------------
-    
-  #
-  # Export the graph
-  #
-  output$export <- downloadHandler(
-    filename = function() {
-      f = paste('network-', Sys.Date(), '.html', sep='')
-      rv$themessage = paste0("Export to ", f, ". Warning: icons are not exported.")
-      f
-    },
-    content = function(con) {
-      visSave(rv$thevisgraph, file=con, selfcontained=TRUE)  
-    }
-  )
-  
-
-
-# Output rendering and reaction -------------------------------------------
-
-   # Onder node select menu
-  output$selectionfield <- renderUI({
-    m = paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
-    HTML(m)
-  })
-  
   output$statusbar <- renderUI({
     tagList(
       fixedRow(
         column(2,htmlOutput("activeviewtext")),
         column(3,htmlOutput("activeviewmenu")),
-        column(5,htmlOutput("generalmessagetext"))
-      )
+        column(5,htmlOutput("generalmessagetext")),
+        column(2,uiOutput("visualoptionsmenu"))
+      ),
+        
     )
-    
   })
   
   output$activeviewtext <- renderUI({
@@ -614,17 +552,10 @@ server <- function(input, output, session) {
   })  
   
   output$activeviewmenu <- renderUI({
-    # HTML(
-    #   c(
-        # smallHTMLUIButton("Save View (as)", "saveview", "", "grey"),
-        # smallHTMLUIButton("Open View", "uploadview", "", "grey")
-    #   )
-    # )
     tagList(
       fixedRow(
         div(
           actionLink("saveview","Save view (as)"),
-  #        downloadLink("downloadviewasjson","Save (as)"),
           HTML("---"),
           actionLink("uploadview","Open view"),
           HTML("---"),
@@ -665,10 +596,10 @@ server <- function(input, output, session) {
     },
     content <- function(file) {
       d = rv$activeview
-      if (nrow(d$nodes) > 0)
-        d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
-      if (nrow(d$edges) > 0)
-        d$edges = select(d$edges,from, to, label, linktype, eid)
+      # if (nrow(d$nodes) > 0)
+      #   d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
+      # if (nrow(d$edges) > 0)
+      #   d$edges = select(d$edges,from, to, label, linktype, eid)
       d$net = NULL
       writeLines(
         toJSON(
@@ -688,9 +619,11 @@ server <- function(input, output, session) {
     }
     n = getNodeById(view, name)
     newnode = createCloneOfNode(view, n)
-    #    newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
-    return(addNewNodeToView(view, name))
+    # Could add reference to the "original"
+    # newedge = tibble(from=newnode$nid, to=name,  label="", linktype="refer", eid=getEidForEdge(newnode$nid,name,"") )
+    return(addNewNodeToView(view, newnode))
   }
+  
   
   addNewNodeToView <- function(view, newnode) {   
     net = view$net
@@ -728,14 +661,9 @@ server <- function(input, output, session) {
     return(addNewEdgeToView(view, newedge))   
   }
 
-    #Make a new node give the id
-  genNewNodeForIdWithDefaults <- function(view, nid) {
-    return(createNewUndefinedNode(nid))
-  }
+# Support for simple edit-modals for nodes and edges ----------------------
 
-# Simple edit node --------------------------------------------------------
-
-  nep_editor = reactiveValues(
+  nep_editor_state = reactiveValues(
     original = NULL
   )
   
@@ -760,14 +688,14 @@ server <- function(input, output, session) {
     removeModal()
     newedge = tibble(from=input$nep_from, to=input$nep_to, label=input$nep_label, linktype=input$nep_linktype, 
                      eid=getEidForEdge(input$nep_from, input$nep_to, input$nep_label))
-    rv$activeview = replaceEdgeInView(rv$activeview, nep_editor$original, newedge)
+    rv$activeview = replaceEdgeInView(rv$activeview, nep_editor_state$original, newedge)
   })  
   
   observeEvent(input$nep_edit_node_done, {
     removeModal()
     newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
                  icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
-    rv$activeview = replaceNodeInView(rv$activeview, nep_editor$original, newnode)
+    rv$activeview = replaceNodeInView(rv$activeview, nep_editor_state$original, newnode)
   })  
 
   observeEvent(input$nep_new_node_done, {
@@ -778,7 +706,7 @@ server <- function(input, output, session) {
   })    
   
   edgeChangeModal <- function(edge, actionlabel) {
-    nep_editor$original = edge
+    nep_editor_state$original = edge
     showModal(modalDialog(
       title = "Edge editor",
       easyClose = TRUE,
@@ -797,7 +725,7 @@ server <- function(input, output, session) {
   }
   
   nodeChangeModal <- function(node, actionlabel) {
-    nep_editor$original = node
+    nep_editor_state$original = node
     showModal(modalDialog(
       title = "Node editor",
       easyClose = TRUE,
@@ -891,7 +819,9 @@ server <- function(input, output, session) {
     }
   }) 
   
-# Visual menu settings for node manipulation ------------------------------
+  
+# Settings and action handling for selected node menu ---------------------
+
   
   getLinkColor <- function(l) {
     return(getEdgeColorForLinktype(rv$thenetworkinfo, l))
@@ -920,7 +850,55 @@ server <- function(input, output, session) {
       tags$small(htmlOutput("selectionfield"))
     )
   })
+  
+  # Onder node select menu
+  output$selectionfield <- renderUI({
+    m = paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
+    HTML(m)
+  })
+  
+  #react to click on linkmenu for selected node - the event has the link type to follow
+  observeEvent(input$nodemenuclick, {
+    if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
+      return
+    }
+    linktypes = c(input$nodemenuclick)
+    if (linktypes == "all")
+      linktypes = getLinkTypes(rv$activeview$net)
+    rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
+  } )
+  
+  # hide event
+  observeEvent(input$hidefromview, {
+    rv$activeview = removeNodesFromViewById(rv$activeview, c(rv$thenodeselected))
+  })
+  
+  # Focus view on a node
+  observeEvent(input$switchfocus, {
+    rv$activeview = restartViewOnNodeIds(rv$activeview, c(rv$thenodeselected))
+  }) 
+  
+  # View the whole underlying network
+  observeEvent(input$showall, {
+    rv$activeview = switchViewToNetwork(rv$activeview)
+  }) 
+  
+  # Should launch a browser for nodes with an URL.
+  observeEvent(input$launchbrowser, {
+    rv$themessage("not available yet")
+    #browseURL(rv$theurl)
+  })
+  
+  
+  observeEvent(input$editclonenode, {
+    if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
+      return()
+    rv$activeview = addCloneOfNodeToView(rv$activeview, rv$thenodeselected)
+  })
+  
+# Settings and action handling for view node menu -------------------------
 
+  
   output$viewnodeselectmenu <- renderUI({
     tagList(
       HTML(
@@ -933,8 +911,7 @@ server <- function(input, output, session) {
           smallHTMLUIButton("#", "viewmenuclick", "internal", "black"),
           smallHTMLUIButton("*", "viewmenuclick", "all", "black"),
           "--",
-          smallHTMLUIButton("All", "showall", "", "grey"),
-          smallHTMLUIButton(">View", "freezetoview", "", "grey")
+          smallHTMLUIButton("All", "showall", "", "grey")
         )
       ),
       tags$br(),
@@ -942,228 +919,25 @@ server <- function(input, output, session) {
     )
   })
 
-  output$drawmodemenu <- renderUI({
-    tagList(fluidRow(
-      column(10, offset = 1, 
-             tagList(
-               tags$small(checkboxInput3("manipulationmode", "Draw mode", FALSE))
-             )
-      ),
-      column(10, offset = 1,
-             conditionalPanel(
-               "input.manipulationmode",
-               HTML(
-                 c(
-                   smallHTMLUIButton("Save changes", "drawmodesavechanges", "", "grey"),
-                   smallHTMLUIButton("Cancel", "drawmodecancel", "", "grey")
-                 )
-               )
-             )
-      )
-    ))
-  })
-  
-  output$visualoptionsmenu <-renderUI({
-    tagList(fixedRow(
-      column(10,
-             tagList(
-               tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
-             )
-      ),
-      column(10, 
-             conditionalPanel(
-               "input.visualoptions",
-               verticalLayout(
-                 tags$small(checkboxInput3("navigation", "Navigation", TRUE)),
-                 tags$small(checkboxInput3("undirected", "Undirected", TRUE)),
-                 tags$small(checkboxInput3("images", "Icons", TRUE)),
-                 tags$small(checkboxInput3("linklabels", "Link names", TRUE)),
-                 tags$small(checkboxInput3("igraphlayout", "iGraph Layout", FALSE))
-               )
-            )
-      )
-    ))
-    
-  })
-  
-
-# Table edit mode  in browser ---------------------------------------------
-
-  output$edittablemenu <- renderUI({
-    tagList(fixedRow(
-      column(10,
-             tagList(
-               tags$small(checkboxInput3("edittablemode", "Edit mode", FALSE))
-             )
-      ),
-      column(10, 
-             conditionalPanel(
-               "input.edittablemode",
-               verticalLayout(
-                 column(12,
-                        # fixedRow(
-                        #   HTML(
-                        #     c(
-                        #       smallHTMLUIButton("Save", "edittablepanelsave", "", "grey"),
-                        #       smallHTMLUIButton("Cancel", "edittablepanelcancel", "", "grey")
-                        #     )
-                        #   ))
-#                          actionButton("edittablepanelstartsession", "Start"),
-                          actionButton("edittablepanelsave", "Save changes"),
-                          tags$hr()
-#                          actionButton("edittablepanelcancel", "Cancel")
-                  ),
-                 column(12, MyeditableDTUI("edittablepanel"))
-                 # textOutput("edittabletest")
-               )
-             )
-      )
-    ))
-    
-  })
-  
- myeditablenodetable = reactiveValues(srcnodes=NULL, editwatcher=NULL)
- 
- observeEvent(input$edittablemode, {
-   if (input$edittablemode) {
-     myeditablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-     if (is.null(myeditablenodetable$editwatcher)) { #first time!
-       myeditablenodetable$editwatcher = callModule(MyeditableDT, "edittablepanel", dataholder=reactive(myeditablenodetable))
-     }
-   }
- })
- 
-  # output$edittabletest = renderPrint({
-  #   if (!is.null(editablenodetable$editwatcher))
-  #     str(editablenodetable$editwatcher())
-  # })
- 
-  # observeEvent(input$edittablepanelstartsession, {
-  #   myeditablenodetable$srcnodes = select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url)
-  #   if (is.null(editablenodetable$editwatcher)) { #first time!
-  #     myeditablenodetable$editwatcher = callModule(MyeditableDT, "edittablepanel", dataholder=reactive(myeditablenodetable))
-  #   }
-  # })
-  # 
-  observeEvent(input$edittablepanelsave, {
-    # browser()
-    rv$activeview = updateCurrentViewAfterEdit(rv$activeview, myeditablenodetable$editwatcher())
-  })
-
-    observeEvent(input$edittablepanelcancel, {
-    myeditablenodetable$srcnodes = tibble()
-  })
-  
-   updateCurrentViewAfterEdit <- function(view, nodes) {
-     # Save the changes to the network - should watch out for changes to id's.
-     # Should keep the original nodes, removebyId, and then add the changes
-     # in addition: these steps occur on multiple places (clone, etc) , should be handled generically.
-     #browser()
-     net = view$net
-     net = addNodesToNetwork(net, nodes)
-     view$net = net
-     rv$thenetwerkinfo = net  # Should not be here
-     view = addNodesToViewById(view, nodes$nid)
-     return(view)
-   }
 
   
-# Event Experiments -------------------------------------------------------
+  #click on linkmenu for all nodes in view
+  observeEvent(input$viewmenuclick, {
+    #cat('input menu click: ', input$viewmenuclick, '\n')
+    linktypes = c(input$viewmenuclick)
+    if (linktypes == "internal") {
+      rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
+    }
+    else {
+      if (linktypes == "all") #todo: simplify this
+        linktypes=getLinkTypes(rv$thenetworkinfo)
+      rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
+    }
+  } )
+  
+# Settings and action handling for draw mode ---------------------
 
-
-  # observeEvent(input$beforedrawing, {
-  # })
-  # 
-  # observeEvent(input$afterdrawing, {
-  # })
-  
-
-# Node Editor -------------------------------------------------------------
-
-
-  
-
-# Edit Mode actions -------------------------------------------------------
-
-  observeEvent(input$editclonenode, {
-    if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
-      return()
-    rv$activeview = addCloneOfNodeToView(rv$activeview, rv$thenodeselected)
-  })
-  
-  observeEvent(input$drawmodesavechanges, {
-    saveDrawModeChangelog()
-    flushDrawModeChangelog()
-  })
-  
-  observeEvent(input$drawmodecancel, {
-    flushDrawModeChangelog()
-    rv$forcerepaint = TRUE
-  })
-
-  
-
-# Output rendering for the graph panel ------------------------------------
-
-  
- 
-  
-  #Capture the changes during an edit session
-  #
-  drawmodelog <- reactiveValues(
-      nodes = tibble(),
-      edges = tibble(),
-      idmap = tibble() # map visNetwork ids to our ids
-  )
-  
-  flushDrawModeChangelog <- function() {
-    drawmodelog$nodes = tibble()
-    drawmodelog$edges = tibble()
-    drawmodelog$idmap = tibble()
-  }
- 
-  # mapping from visnetwork id to our label id.
-  drawModeLogIdMap <- function(id, label) { 
-    drawmodelog$idmap = bind_rows(drawmodelog$idmap, tibble(id = id, label = label))
-  }
-    
-  drawModeLogAddNodes <- function(nodes) {
-    onodes = drawmodelog$nodes
-    onodes = bind_rows(onodes, nodes)
-    drawmodelog$nodes = onodes
-  }
-  
-  drawModeLogAddEdges <- function(edges) {
-    #browser()
-    oedges = drawmodelog$edges
-    oedges = bind_rows(oedges, edges)
-    drawmodelog$edges = oedges
-  }
-  
-  saveDrawModeChangelog <- function() {
-    net = rv$activeview$net
-    net = addNodesToNetwork(net, drawmodelog$nodes)
-    net = addEdgesToNetwork(net, drawmodelog$edges)
-    rv$activeview$net = net
-    rv$thenetworkinfo = net
-    
-    view = rv$activeview
-    
-    view = addNodesToViewById(view, drawmodelog$nodes$nid)
-    view = addEdgesToViewByEid(view, drawmodelog$edges$eid)
-    rv$activeview = view
-  }
- 
-  
-  # create a new edge and handle id translation
-  genNewEdgeWithDefaults <- function(view, from,to) {
-    cat('kijk uit hier dit is in draw mode???\n')
-    fname = if (existsNodeInView(view, from)) from else subset(drawmodelog$idmap, id==from)$label
-    tname = if (existsNodeInView(view, to)) to else subset(drawmodelog$idmap, id==to)$label
-    return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
-  }
-  
-   # If the user edits the graph, this shows up in
+  # If the user edits the graph (in manipulation mode), this shows up in
   # `input$[name_of_the_graph_output]_graphChange`.  This is a list whose
   # members depend on whether the user added a node or an edge.  The "cmd"
   # element tells us what the user did.
@@ -1173,204 +947,56 @@ server <- function(input, output, session) {
       cmd = input$graph_panel_graphChange$cmd
       #cat("cmd = ", cmd, "\n")
       if (cmd == "addNode") {
-        cat('Hier slim zijn - aangemaakte node verwijderen via proxy, nieuwe node toevoegen aan active view en aanroep van addGraphpanelNode (of wachten op redraw)')
-        #
-        # delete node via proxy, addNewNodeToView en addNodeto graph
-        #
         nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
         nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
         newnode = genNewNodeForIdWithDefaults(rv$activeview, nlabel)
-        drawModeLogIdMap(nid, nlabel)
-        drawModeLogAddNodes(newnode)
+        rv$activeview = addNodesToView(rv$activeview, newnode)
       }
       else if (cmd == "addEdge") { 
-        
-        
         nfrom = input$graph_panel_graphChange$from
         nto = input$graph_panel_graphChange$to
         newedge = genNewEdgeWithDefaults(rv$activeview, nfrom, nto)
-        drawModeLogAddEdges(newedge)
+        rv$activeview = addEdgesToView(rv$activeview, newedge)
       }
     })
 
+# Settings and action handling for visual options  ---------------------
 
-# Rendering the view -----------------------------------------------------
-# Functions that return visual input settings. Typically set in the renderedUI, so may initially be invalid
-#
-  vis_DoImages <- function() { # Default true
-    if (!is.null(input$images))
-      if (input$images == FALSE) return(FALSE)
-    return(TRUE)
-  }
-  vis_DoLinklabels <- function() { #Default true
-    if (!is.null(input$linklabels)) 
-      if (input$linklabels == FALSE)  return(FALSE)
-    return(TRUE)
-  }
-  vis_DoManipulation <- function() {
-    if (!is.null(input$manipulationmode))
-        if( input$manipulationmode == FALSE) return(FALSE)
-    return(TRUE)
-  }
-  vis_DoIgraphlayout <- function() {
-    if (!is.null(input$igraphlayout))
-      if (input$igraphlayout == TRUE)   
-        return(TRUE)
-    return(FALSE)
-  }
-  vis_DoNavigation <- function() {
-    if (!is.null(input$navigation))
-        if (input$navigation == FALSE)      
-          return(FALSE)
-    return(TRUE)
-  }
-  vis_DoUndirected <- function() {
-    if (!is.null(input$undirected))
-      if (input$undirected == FALSE)      
-        return(FALSE)
-    return(TRUE)
-  }
-   
-  
-  # The observer watching the current view
-  observeEvent( {
-    rv$activeview
-    rv$forcerepaint},  {
-
-      cat('Start drawing...')
-      if (rv$forcerepaint) { #called when the redraw action has been activated
-        cat('Force repaint\n')
-        rv$forcerepaint = FALSE
-      }
-      
-      flushDrawModeChangelog()
-      
-      # Prepare the graph for visualisation
-      # Since options for images and linklabesl are set in a uiOutput, they may not be initialized yet.
-      # doimg = TRUE
-      # dolinklabels = TRUE
-      # if(!is.null(input$images)) doimg = input$images
-      # if(!is.null(input$linklabels)) dolinklabels = input$linklabels
-      # rv$activeview= addVisualSettingsForView(rv$activeview, doimg, dolinklabels) @@ Dit hier weg
-      # 
-      # #activate this to show the node-action menu when hovering over the node
-      # V(viewg)$title = HTML(
-      #   singleNodeSelectMenu()
-      # )
-      
-      #proxy moet op andere manier worden geinitialiseerd
-      thegraphpanelproxy = setupVisNetworkVisualisationOptions()
-  #browser()    
-      #Put the visualisation data in graph_panel_data
-      makeVisualisationDataFromView(rv$activeview)
-      
-      if (!is.null(thegraphpanelproxy)) { # kan oop via updateNodes en edges
-        visSetData(thegraphpanelproxy, graph_panel_data$nodes, graph_panel_data$edges)
-        cat('tekenen op het canvas moet via een aparte - event-driven- functie die reageert op graph_panel_data')
-      }
-      
-        cat('Done\n')
-    })
-  
-  #--> hier graph_panel data vullen, opschonen - splitsen in nodes en edges
-  makeVisualisationDataFromView <- function(view) {
+    output$visualoptionsmenu <-renderUI({
+    tagList(fixedRow(
+      column(10,
+             tagList(
+               tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
+             )
+      ),
+      column(10, offset = 1,
+             conditionalPanel(
+               "input.visualoptions",
+               verticalLayout(
+                 tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE)),
+                 tags$small(checkboxInput3("vo_images", "Icons", TRUE)),
+                 tags$small(checkboxInput3("vo_linklabels", "Link names", TRUE)),
+                 tags$small(checkboxInput3("vo_igraphlayout", "iGraph Layout", FALSE))
+               )
+             )
+      )
+    ))
     
-    cat('vervang dit door schoonmaken van graphpaneldata en vervolgens aanroepen van addGraphPanelNode ')
-    nodes = view$nodes
-    edges = view$edges
-    
-    newnodes = tibble()
-    newedges = tibble()
-    for (i in 1:nrow(nodes)) {
-      if (nrow(newnodes) == 0) {
-        newnodes = addVisualSettingsToNode(rv$activeview, nodes[i,], vis_DoImages())
-      }
-      else newnodes = bind_rows(newnodes, addVisualSettingsToNode(rv$activeview, nodes[i,], vis_DoImages()))
-    }
-    if (nrow(edges)>0) {
-      for (i in 1:nrow(edges)) {
-        if (nrow(newedges) == 0)
-          newedges = addVisualSettingsToEdge(rv$activeview, edges[i,], vis_DoLinklabels())
-        else
-          newedges = bind_rows(newedges, addVisualSettingsToEdge(rv$activeview, edges[i,], vis_DoLinklabels()))
-      }
-    }
-    newnodes$id = newnodes$nid
-    newedges$id = newedges$eid
-    newedges$orglabel = newedges$label
-    newedges$label = newedges$vislabel
-    graph_panel_data$nodes = newnodes
-    graph_panel_data$edges = newedges
-  }
-  
-  addGraphPanelNode <- function(node) {
-    row =  addVisualSettingsToNode(rv$activeview, node, vis_DoImages())
-    row$id = row$nid
-    graph_panel_data$nodes = add_row(graph_panel_data$nodes,row)
-  }
-  
-  addGraphPanelEdge <- function(edge) {
-    row = addVisualSettingsToEdge(rv$activeview, edge, vis_DoLinklabels())
-    row$id = row$eid
-    eds$orglabel = eds$label #hack attempt to support switch show label
-    eds$label = eds$vislabel
-    graph_panel_data$edges = add_row(graph_panel_data$nodes, addVisualSettingsToNode(rv$activeview, node))
-  }
-  
-  # Setup the controls for the graphpanel
-  # Moet alleen worden aangeroepen als een van die visualisatie switches wordt gereset
-  #
-  setupVisNetworkVisualisationOptions <- function() {
-    cat("Setup visnetwork options ...\n")
-    proxy = visNetworkProxy("graph_panel")
-    if (is.null(proxy))
-      return(NULL)
-    if (is.null(rv$thevisgraph)) {
-      cat('Not ready yet\n')
-      return(NULL)
-    }
-    cat('Start proxy-update!\n')
-    # Allow interaction - note: nodes can be in multiple groups
-    # Allow manipulation - should be switch?
-    # proxy = visOptions(proxy, nodesIdSelection = TRUE, collapse=FALSE, manipulation = vis_DoManipulation(),
-    #                  selectedBy=list(variable = "groups", multiple = TRUE))
-    # 
-    if (vis_DoIgraphlayout()) {
-        proxy = visIgraphLayout(proxy, type="full")
-    }
-    # if (vis_DoNavigation())
-    #   proxy = visInteraction(proxy, navigationButtons = TRUE)
-    
-    if (!vis_DoUndirected()) {
-        proxy = visEdges(vnt, arrows="to")
-    }
-    return(proxy)
-  }
-  
-  
-  
-  # Render the graph.
-  output$graph_panel <- renderVisNetwork({
-    
-      cat("Create visNetwork!\n")
-
-    
-      vnt = visNetwork(nodes=rv$initialgraphdata$nodes, edges=rv$initialgraphdata$edges)
-      
-      vnt = visOptions(vnt, nodesIdSelection = TRUE, collapse=FALSE, manipulation = TRUE,
-                         selectedBy=list(variable = "groups", multiple = TRUE))
-      
-      vnt = visInteraction(vnt, navigationButtons = TRUE)
-        
-      vnt = visEvents(vnt,
-                      select = "function(data) {
-                          Shiny.onInputChange('select_current_nodes', data.nodes);
-                          Shiny.onInputChange('select_current_edges', data.edges);
-                  ;}")
-      rv$thevisgraph = vnt
-      vnt
   })
-}
+  
+   observeEvent({
+    input$vo_arrows
+    input$vo_images
+    input$vo_linklabels
+    input$vo_igraphlayout
+  }, {
+    visualcontrols$images = input$vo_images
+    visualcontrols$arrows = input$vo_arrows
+    visualcontrols$linklabels = input$vo_linklabels
+    visualcontrols$igraphlayout = input$vo_igraphlayout
+  })
 
+  
+}
 
 shinyApp(ui = ui, server = server)

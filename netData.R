@@ -163,3 +163,17 @@ createCloneOfNode <- function(view, node) {
 createNewUndefinedNode <- function(nid) {
   return(tibble(nid=nid, label=nid, icon="", url="", groups="", domain="Undefined", nodetype="undefined"))
 }
+
+# create a new edge and handle id translation
+genNewEdgeWithDefaults <- function(view, from,to) {
+  fname = from
+  tname = to
+  return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+}
+
+#Make a new node give the id
+genNewNodeForIdWithDefaults <- function(view, nid) {
+  return(createNewUndefinedNode(nid))
+}
+
+
