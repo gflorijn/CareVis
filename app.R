@@ -62,8 +62,8 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   # actionButton(inputId = "interrupt", "Interrupt"),
-                   # tags$hr(),
+                   actionButton(inputId = "interrupt", "Interrupt"),
+                   tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -326,7 +326,8 @@ server <- function(input, output, session) {
     makeGraphPanelEdgeForEid <- function(eid) {
       row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows)
       row$id = row$eid
-      row$orglabel = row$label #hack attempt to support switch show label
+      # not needed, we're working on copy
+      # row$orglabel = row$label #hack attempt to support switch show label
       row$label = row$vislabel
       return(row)
     }
@@ -356,9 +357,9 @@ server <- function(input, output, session) {
     })
 
     # Only for debugging
-    # observeEvent(input$interrupt, {
-    #   browser()
-    # })
+    observeEvent(input$interrupt, {
+      browser()
+    })
 
         # Force redraw of the graph
     #
@@ -470,9 +471,6 @@ server <- function(input, output, session) {
       }
       toggleState("launchbrowser", haveurl) #does not work on deployed apps
     })
-    
-
-#
 
 # Data view output --------------------------------------------------------
  
@@ -513,6 +511,8 @@ server <- function(input, output, session) {
       removeModal()
       thedata = rv$thedatauploader()
       
+      # browser()
+
       rv$themessage = thedata$errors
       if (is.null(thedata$view))
           return()

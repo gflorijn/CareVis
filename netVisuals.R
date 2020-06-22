@@ -31,25 +31,6 @@ getNodeShapeFor <- function(view, node) {
   return("dot")
 }
 
-# # Add visualisation settings to network structure (list)
-# extendNetworkInfoForVisualisation <-  function(nstruct) {
-#   ns = nstruct
-#   
-#   # See display.brewer.all() for examples
-#   #
-#   dcolors = brewer.pal(length(ns$nodetypes),"Set3")
-#   ltcolors = brewer.pal(length(ns$linktypes), "Accent")
-#   ltcolors[4] = ltcolors[8]
-#   #ip <- "http://localhost:8001/www/"
-#   ip <- ""
-#   
-#   ns[["nodetypecolors"]] = dcolors
-#   ns[["linktypecolors"]] = ltcolors
-#   ns[["imagepath"]] = ip
-#   
-#   ns
-# }
-
 getImageForNode <- function(view, node) {
   return(str_c(getImagePath(view), "Images/", if_else( (node$icon!=""), node$icon, node$label), ".png"))
 }
@@ -58,32 +39,48 @@ getBrokenImageForNode <- function(view, node) {
   return(str_c(getImagePath(view), "Images/NotFound", ".png"))
 }
 
+getActualShapeForNode <- function(view, node, doimage) {
+  if ("v_shape" %in% colnames(node)) {
+    if (!is.na(node$v_shape) & !is.null(node$v_shape) & node$v_shape!="") {
+        return(node$v_shape)
+    }
+  }
+  return(if_else((!is.null(doimage) & doimage==TRUE), "image", getNodeShapeFor(view, node)))
+}
 
-# # define basic properties for visualisation of network
-# #
-# setupVisualDefinitionsForNetwork <- function(net) {
-#   
-#   nd = net$nodes
-#   ne = net$edges
-#   
-#   nd$color = mapvalues(nd$nodetype, from=net$nodetypes, to=net$nodetypecolors, warn_missing = TRUE)
-#   ne$color = mapvalues(ne$linktype, from=net$linktypes, to=net$linktypecolors, warn_missing = TRUE)
-#   
-#   nd$image = str_c(net$imagepath, "Images/", if_else( (nd$icon!=""), nd$icon, nd$label), ".png")
-#   nd$brokenImage = str_c(net$imagepath, "Images/NotFound", ".png")
+getActualColorForNode <- function(view, node) {
+  if ("v_color" %in% colnames(node)) {
+    if (!is.na(node$v_color) & !is.null(node$v_color) & node$v_color!="") {
+      return(node$v_color)
+    }
+  }
+  return(getNodeColorFor(view, node))
+}
+
+getActualImageForNode <- function(view, node) {
+  if ("v_image" %in% colnames(node)) {
+    if (!is.na(node$v_image) & !is.null(node$v_image) & node$v_image!="") {
+      return(node$v_image)
+    }
+  }
+  return(getImageForNode(view, node))
+}
+
+# Allow visual control over image, color and shape setting by node-properties:
+# v_image, v_color and v_shape
 # 
-#   # nd$groupnames = vapply(nd$groups, toString, character(1L))
-#   net$nodes = nd
-#   net$edges = ne
-#   return(net)
-# }
-  
-
+# Todo: check whether there is a smart "merge" operation to handle this...
+#
 getVisualSettingsForNode <- function(view, node, doimage) {
+
+  fshape = getActualShapeForNode(view, node, doimage)
+  fcolor = getActualColorForNode(view, node)
+  fimage = getActualImageForNode(view, node)
+  
   return(tibble(
-      shape=if_else((!is.null(doimage) & doimage==TRUE), "image", "dot"),
-      color=getNodeColorFor(view, node),
-      image=getImageForNode(view, node),
+      shape=fshape,
+      color=fcolor,
+      image=fimage,
       brokenImage=getBrokenImageForNode(view, node)
   ))
 }
@@ -108,23 +105,3 @@ addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows) {
   return(edge)
 }
 
-
-# addVisualSettingsForView <- function(view, doimages, dolinklabels) {
-#     # cat('Add visuals\n')
-#     
-#     if (doimages) {
-#       view$nodes$shape = "image"
-#     }
-#     else {
-#       view$nodes$shape = "dot"
-#     }
-# 
-# 
-#     #view$nodes$widthConstraint = TRUE  #Applies to long labels inside shapes - not useful for images
-# 
-#     if (!dolinklabels) { # hiermee verdwijnen de labels, TODO
-#       view$edges$label = ""
-#     }
-# 
-#     return(view)
-# }
