@@ -21,13 +21,18 @@ uploadView <- function(input, output, session, viewid, netinfo) {
       return(loadresult)
     
     #   browser()
-    loadresult$view = tryCatch({
+    data = tryCatch({
       readViewFromJSON(jfile$datapath)
     }, warning = function(w) {
       loadresult$error = w
     }, error = function(e) {
       loadresult$error = e
     })
+    if (!is.null(data$message) && data$message != "")
+      loadresult$error = data$message
+    else 
+      loadresult$view = data
+    
     return(loadresult)
   })
   
