@@ -78,7 +78,18 @@ tagList(
                    column(3, uiOutput("singlenodeselectmenu")),
                    column(3, uiOutput("viewnodeselectmenu"))
                  ),
-                 visNetworkOutput("graph_panel", height = "750px", width = "100%")
+                 visNetworkOutput("graph_panel", height = "750px", width = "100%"),
+                 absolutePanel(id = "visualeditcontrols",
+                   class = "panel panel-default",
+                   top = 145, left = 420,  width = 800, fixed = TRUE,
+                   draggable = TRUE,
+                   height = "auto",
+                   tagList(
+                     fixedRow( 
+                             column(11, offset=1, uiOutput("visualeditmenu"))
+                     )
+                   )
+                 )
               )
             )
   )),
@@ -294,7 +305,6 @@ server <- function(input, output, session) {
     #         View      Graph _panel/vis network
     # nodes   nid       id
     # edges   eid       id
-    #       ( vislabel  label ) -- done on the fly
     # 
     observeEvent( {
       visualcontrols
@@ -328,7 +338,7 @@ server <- function(input, output, session) {
       row$id = row$eid
       # not needed, we're working on copy
       # row$orglabel = row$label #hack attempt to support switch show label
-      row$label = row$vislabel
+      # row$label = row$vislabel
       return(row)
     }
     
@@ -667,43 +677,67 @@ server <- function(input, output, session) {
     original = NULL
   )
   
+  # Launch editor on existing node
   observeEvent(input$exist_node_editor, {
    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
      nodeChangeModal(getNodeById(rv$activeview, rv$thenodeselected), "nep_edit_node_done")
    }
-   else {
-     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "")
-       edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
-   }
- })
-
-  observeEvent(input$exist_edge_editor, { 
- })
-  
-  observeEvent(input$new_node_editor, {
-      nodeChangeModal(createNewUndefinedNode("new"), "nep_new_node_done")
   })
   
+  # Launch editor on existing edge
+  observeEvent(input$exist_edge_editor, {
+    if (!is.null(rv$theedgeselected) & rv$theedgeselected != "") {
+       edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
+    }
+   })
+
+
+  # Launch editor on new node. The value of the event is the shape of the node.
+  observeEvent(input$new_node_editor, {
+    pshape = input$new_node_editor
+    node = createNewUndefinedNode("new")
+    if (!is.null(pshape) && pshape != "")
+      node$shape = pshape
+    nodeChangeModal(node, "nep_new_node_done")
+  })
+  
+  # Launch editor on new edge
   observeEvent(input$nep_edit_edge_done, {
     removeModal()
-    newedge = tibble(from=input$nep_from, to=input$nep_to, label=input$nep_label, linktype=input$nep_linktype, 
-                     eid=getEidForEdge(input$nep_from, input$nep_to, input$nep_label))
+    newedge = nep_editor_state$original
+    newedge$from=input$nep_from
+    newedge$to=input$nep_to
+    newedge$label=input$nep_label
+    newedge$linktype=input$nep_linktype
+    newedge$eid=getEidForEdge(input$nep_from, input$nep_to, input$nep_label)
     rv$activeview = replaceEdgeInView(rv$activeview, nep_editor_state$original, newedge)
   })  
   
+  
   observeEvent(input$nep_edit_node_done, {
     removeModal()
-    newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
-                 icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
+    newnode = saveEditChangesToNode(nep_editor_state$original)
     rv$activeview = replaceNodeInView(rv$activeview, nep_editor_state$original, newnode)
   })  
 
   observeEvent(input$nep_new_node_done, {
     removeModal()
-    newnode = tibble(nid=input$nep_nid, label=input$nep_label, nodetype=input$nep_nodetype, 
-                 icon=input$nep_icon, domain=input$nep_domain, groups=input$nep_groups, url=input$nep_url)
+    newnode = saveEditChangesToNode(nep_editor_state$original)
     rv$activeview = addNewNodeToView(rv$activeview, newnode)
-  })    
+  })
+  
+  saveEditChangesToNode <- function(n) {
+    newnode = n
+    newnode = nep_editor_state$original
+    newnode$nid=input$nep_nid
+    newnode$label=input$nep_label
+    newnode$nodetype=input$nep_nodetype 
+    newnode$icon=input$nep_icon
+    newnode$domain=input$nep_domain
+    newnode$groups=input$nep_groups
+    newnode$url=input$nep_url
+    return(newnode)
+  }
   
   edgeChangeModal <- function(edge, actionlabel) {
     nep_editor_state$original = edge
@@ -840,11 +874,7 @@ server <- function(input, output, session) {
             smallHTMLUIButton("*", "nodemenuclick", "all", "black"),
             "--",
             smallHTMLUIButton("H", "hidefromview", "", "grey"),
-            smallHTMLUIButton("F", "switchfocus", "", "grey"),
-            "--",
-            smallHTMLUIButton("C", "editclonenode", "", "grey"),
-            smallHTMLUIButton("E", "exist_node_editor", "", "grey"),
-            smallHTMLUIButton("N", "new_node_editor", "", "grey")
+            smallHTMLUIButton("F", "switchfocus", "", "grey")
         )
       ),
       tags$small(htmlOutput("selectionfield"))
@@ -996,7 +1026,154 @@ server <- function(input, output, session) {
     visualcontrols$igraphlayout = input$vo_igraphlayout
   })
 
-  
+
+# Visual properties editing -----------------------------------------------
+
+output$visualeditmenu <- renderUI ({
+  tagList(
+    HTML(
+      c (
+        smallHTMLUIButton("S+", "ve_grow_size", "", "green"),
+        smallHTMLUIButton("S-", "ve_shrink_size", "", "green"),
+        # smallHTMLUIButton("V+", "ve_grow_shape", "", "green"),
+        # smallHTMLUIButton("V-", "ve_shrink_shape", "", "green"),
+        smallHTMLUIButton("F+", "ve_grow_font", "", "green"),
+        smallHTMLUIButton("F-", "ve_shrink_font", "", "green"),
+        smallHTMLUIButton("<>", "ve_widen_edge", "", "green"),
+        smallHTMLUIButton("><", "ve_narrow_edge", "", "green"),
+        "--",
+        smallHTMLUIButton("Cn", "editclonenode", "", "grey"),
+        smallHTMLUIButton("En", "exist_node_editor", "", "grey"),
+        smallHTMLUIButton("El", "exist_edge_editor", "", "grey"),
+        "--",
+        smallHTMLUIButton("+n", "new_node_editor", "", "light_blue"),
+        smallHTMLUIButton("+b", "new_node_editor", "box", "light_blue"),
+        smallHTMLUIButton("+d", "new_node_editor", "dot", "light_blue"),
+        smallHTMLUIButton("+t", "new_node_editor", "text", "light_blue")
+      )
+    ),
+    tags$br(),
+    tags$small("Selected node/edge")
+  )
+})
+   
+   observeEvent(input$ve_grow_size, {
+     id = rv$thenodeselected
+     if (is.null(id) | id == "") 
+       return
+     node = getNodeById(rv$activeview, id)
+     if (!("size" %in% colnames(node)))
+       node = add_column(node, size=25)
+     newnode = node
+     if(is.na(node$size)) {
+       newnode$size = 25
+     }
+     newnode$size = newnode$size+1
+     rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   })
+ 
+   observeEvent(input$ve_shrink_size, {
+     id = rv$thenodeselected
+     if (is.null(id) | id == "") 
+       return
+     node = getNodeById(rv$activeview, id)
+     if (!("size" %in% colnames(node)))
+       node = add_column(node, size=25)
+     newnode = node
+     if(is.na(node$size)) {
+       newnode$size = 25
+     }
+     newnode$size = newnode$value-1
+     rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   })
+   
+   # observeEvent(input$ve_grow_shape, {
+   #     
+   #   id = rv$thenodeselected
+   #   if (is.null(id) | id == "") 
+   #     return
+   #   node = getNodeById(rv$activeview, id)
+   #   if (!("value" %in% colnames(node)))
+   #     node = add_column(node, value=20)
+   #   newnode = node
+   #   if(is.na(node$value)) {
+   #     newnode$value = 20
+   #   }
+   #   newnode$value = newnode$value+1
+   #   rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   # })
+   # 
+   # observeEvent(input$ve_shrink_shape, {
+   #   id = rv$thenodeselected
+   #   if (is.null(id) | id == "") 
+   #     return
+   #   node = getNodeById(rv$activeview, id)
+   #   if (!("value" %in% colnames(node)))
+   #     node = add_column(node, value=20)
+   #   newnode = node
+   #   if(is.na(node$value)) {
+   #     newnode$value = 20
+   #   }
+   #   newnode$value = newnode$value-1
+   #   rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   # })
+   
+   observeEvent(input$ve_grow_font, {
+     id = rv$thenodeselected
+     if (is.null(id) | id == "") 
+       return
+     node = getNodeById(rv$activeview, id)
+     if (!("font.size" %in% colnames(node)))
+       node = add_column(node, font.size=14)
+     newnode = node
+     if(is.na(node$font.size)) {
+       newnode$font.size = 14
+     }
+     newnode$font.size = newnode$font.size+1
+     rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   })
+   observeEvent(input$ve_shrink_font, {
+     id = rv$thenodeselected
+     if (is.null(id) | id == "") 
+       return
+     node = getNodeById(rv$activeview, id)
+     if (!("font.size" %in% colnames(node)))
+       node = add_column(node, font.size=14)
+     newnode = node
+     if(is.na(node$font.size)) {
+       newnode$font.size = 14
+     }
+     newnode$font.size = newnode$font.size-1
+     rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+   })
+   observeEvent(input$ve_widen_edge, {
+     id = rv$theedgeselected
+     if (is.null(id) | id == "") 
+       return
+     edge = getEdgeByEid(rv$activeview, id)
+     if (!("width" %in% colnames(edge)))
+       edge = add_column(edge, width=1)
+     newedge = edge
+     if(is.na(edge$width)) {
+       newedge$width = 1
+     }
+     newedge$width = newedge$width+1
+     rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
+   })
+   observeEvent(input$ve_narrow_edge, {
+     id = rv$theedgeselected
+     if (is.null(id) | id == "") 
+       return
+     if (!("width" %in% colnames(edge)))
+       edge = add_column(edge, width=1)
+     edge = getEdgeByEid(rv$activeview, id)
+     newedge = edge
+     if(is.na(edge$width)) {
+       newedge$width = 2
+     }
+     newedge$width = newedge$width-1
+     rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
+   })
 }
 
 shinyApp(ui = ui, server = server)
