@@ -16,12 +16,14 @@ source("helppage.R")
 smallHTMLUIButton <- function(label, eventid, eventdata, color) {
   buttext = 
     HTML(
-      paste0("<button id='",eventdata,"' style='border: none;display: inline-block; color: white; background-color:", color, "' type='button'
+      paste0("<button id='",eventdata,"' style='border: none;display: inline-block; color: white; background-color:", 
+              color, "' type='button'
                 onclick ='Shiny.setInputValue(\"", eventid, "\",\"", eventdata, "\", {priority: \"event\"}
                 );'>", label, "</button>")
     )
     buttext
 }
+
 
 
 # Nodig om het browser window te sluiten
@@ -126,9 +128,10 @@ server <- function(input, output, session) {
    
     rv <- reactiveValues(
       thenetworkinfo = NULL,
-      thevisgraph = NULL, 
       # thegraphproxy = NULL,
       thenodeselected = NULL, 
+      theedgeselected = NULL,
+      thevisnet = NULL,
       theurl = "",
       themessage = NULL,
       theviewcounter = 0,
@@ -250,7 +253,8 @@ server <- function(input, output, session) {
                           Shiny.onInputChange('select_current_edges', data.edges);
                   ;}"
       )
-      rv$thevisgraph = vnt
+      rv$thevisnet = vnt
+      
       vnt
     })
     
@@ -272,7 +276,7 @@ server <- function(input, output, session) {
         return(NULL)
       }
       if (visualcontrols$igraphlayout) {
-        graph_panel_data$proxy = visIgraphLayout(graph_panel_data$proxy, type = "full")
+        graph_panel_data$proxy = visPhysics(graph_panel_data$proxy, stabilization=FALSE)
       }
     })
 
@@ -565,11 +569,16 @@ server <- function(input, output, session) {
     tagList(
       fixedRow(
         div(
-          actionLink("saveview","Save view (as)"),
-          HTML("---"),
-          actionLink("uploadview","Open view"),
-          HTML("---"),
-          actionLink("restart","New view")
+            actionBttn("saveview", label="Save view (as)", size="xs", icon=icon("save",lib="font-awesome"), color="default"),
+            HTML("---"),
+            actionBttn("uploadview", label="Open view", size="xs", icon=icon("folder-open-o",lib="font-awesome"), color="default"),
+            HTML("---"),
+            actionBttn("restart", label="New view", size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default")
+            
+          # actionLink("saveview","Save view (as)"),
+          # actionLink("uploadview","Open view"),
+          # HTML("---"),
+          # actionLink("restart","New view")
         )
       ),
       fixedRow(
@@ -686,20 +695,24 @@ server <- function(input, output, session) {
   
   # Launch editor on existing edge
   observeEvent(input$exist_edge_editor, {
+    browser()
     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "") {
        edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
     }
    })
 
 
-  # Launch editor on new node. The value of the event is the shape of the node.
-  observeEvent(input$new_node_editor, {
-    pshape = input$new_node_editor
+  newNodeEditor <- function(shape) {
     node = createNewUndefinedNode("new")
-    if (!is.null(pshape) && pshape != "")
-      node$shape = pshape
+    if (!is.null(shape) && shape != "")
+      node$shape = shape
     nodeChangeModal(node, "nep_new_node_done")
-  })
+  }
+  # Launch editor on new node. The value of the event is the shape of the node.
+  observeEvent(input$new_node_editor, { newNodeEditor("") })
+  observeEvent(input$new_node_editor_box, { newNodeEditor("box") })
+  observeEvent(input$new_node_editor_dot, { newNodeEditor("dot") })
+  observeEvent(input$new_node_editor_text, { newNodeEditor("text") })
   
   # Launch editor on new edge
   observeEvent(input$nep_edit_edge_done, {
@@ -1031,27 +1044,44 @@ server <- function(input, output, session) {
 
 output$visualeditmenu <- renderUI ({
   tagList(
-    HTML(
-      c (
-        smallHTMLUIButton("S+", "ve_grow_size", "", "green"),
-        smallHTMLUIButton("S-", "ve_shrink_size", "", "green"),
-        # smallHTMLUIButton("V+", "ve_grow_shape", "", "green"),
-        # smallHTMLUIButton("V-", "ve_shrink_shape", "", "green"),
-        smallHTMLUIButton("F+", "ve_grow_font", "", "green"),
-        smallHTMLUIButton("F-", "ve_shrink_font", "", "green"),
-        smallHTMLUIButton("<>", "ve_widen_edge", "", "green"),
-        smallHTMLUIButton("><", "ve_narrow_edge", "", "green"),
-        "--",
-        smallHTMLUIButton("Cn", "editclonenode", "", "grey"),
-        smallHTMLUIButton("En", "exist_node_editor", "", "grey"),
-        smallHTMLUIButton("El", "exist_edge_editor", "", "grey"),
-        "--",
-        smallHTMLUIButton("+n", "new_node_editor", "", "light_blue"),
-        smallHTMLUIButton("+b", "new_node_editor", "box", "light_blue"),
-        smallHTMLUIButton("+d", "new_node_editor", "dot", "light_blue"),
-        smallHTMLUIButton("+t", "new_node_editor", "text", "light_blue")
-      )
-    ),
+    actionBttn("ve_grow_size", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="primary"),
+    actionBttn("ve_shrink_size", label="node", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="primary"),
+    HTML("-"),
+    actionBttn("ve_grow_font", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="primary"),
+    actionBttn("ve_shrink_font", label="text", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="primary"),
+    HTML("-"),
+    actionBttn("ve_widen_edge", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="succes"),
+    actionBttn("ve_narrow_edge", label="edge", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="succes"),
+    HTML("---"),
+    actionBttn("editclonenode", label="clone", size="xs", icon=icon("clone",lib="font-awesome"), color="primary"),
+    actionBttn("exist_node_editor", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="primary"),
+    actionBttn("exist_edge_editor", label="edit", size="xs", icon=icon("link",lib="font-awesome"), color="succes"),
+    HTML("---"),
+    actionBttn("new_node_editor", label="new", size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default"),
+    actionBttn("new_node_editor_box", label=NULL, size="xs", icon=icon("square-o",lib="font-awesome"), color="default"),
+    actionBttn("new_node_editor_dot", label=NULL, size="xs", icon=icon("circle-o",lib="font-awesome"), color="default"),
+    actionBttn("new_node_editor_text", label=NULL, size="xs", icon=icon("text-width",lib="font-awesome"), color="default"),
+    # HTML(
+    #   c (
+    #     smallHTMLUIButton("S+", "ve_grow_size", "", "green"),
+    #     smallHTMLUIButton("S-", "ve_shrink_size", "", "green"),
+    #     # smallHTMLUIButton("V+", "ve_grow_shape", "", "green"),
+    #     # smallHTMLUIButton("V-", "ve_shrink_shape", "", "green"),
+    #     smallHTMLUIButton("F+", "ve_grow_font", "", "green"),
+    #     smallHTMLUIButton("F-", "ve_shrink_font", "", "green"),
+    #     smallHTMLUIButton("<>", "ve_widen_edge", "", "green"),
+    #     smallHTMLUIButton("><", "ve_narrow_edge", "", "green"),
+    #     "--",
+    #     smallHTMLUIButton("Cn", "editclonenode", "", "grey"),
+    #     smallHTMLUIButton("En", "exist_node_editor", "", "grey"),
+    #     smallHTMLUIButton("El", "exist_edge_editor", "", "grey"),
+    #     "--",
+    #     smallHTMLUIButton("+n", "new_node_editor", "", "light_blue"),
+    #     smallHTMLUIButton("+b", "new_node_editor", "box", "light_blue"),
+    #     smallHTMLUIButton("+d", "new_node_editor", "dot", "light_blue"),
+    #     smallHTMLUIButton("+t", "new_node_editor", "text", "light_blue")
+    #   )
+    # ),
     tags$br(),
     tags$small("Selected node/edge")
   )
@@ -1083,7 +1113,7 @@ output$visualeditmenu <- renderUI ({
      if(is.na(node$size)) {
        newnode$size = 25
      }
-     newnode$size = newnode$value-1
+     newnode$size = newnode$size-1
      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
    })
    
