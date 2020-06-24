@@ -83,13 +83,11 @@ tagList(
                  visNetworkOutput("graph_panel", height = "750px", width = "100%"),
                  absolutePanel(id = "visualeditcontrols",
                    class = "panel panel-default",
-                   top = 145, left = 420,  width = 800, fixed = TRUE,
+                   top = 155, left = 380,  width = 1150, fixed = TRUE,
                    draggable = TRUE,
                    height = "auto",
-                   tagList(
-                     fixedRow( 
-                             column(11, offset=1, uiOutput("visualeditmenu"))
-                     )
+                   fixedRow(
+                      column(12, uiOutput("visualeditmenu"))
                    )
                  )
               )
@@ -216,31 +214,19 @@ server <- function(input, output, session) {
     visualcontrols = reactiveValues(
       arrows = FALSE,
       images = TRUE,
-      linklabels = TRUE,
-      freezelayout = FALSE
+      linklabels = TRUE
     )
     
-    # Used for proper initializatoin of the visnetwork rendering. Doesn't have to be reactive...
-    #
-    initialvisnetworkdata = reactiveValues(
-      nodes = tibble(
-        id = "start",
-        label = "start",
-        shape = "dot",
-        groups = ""
-      ),
-      edges = tibble(from = "start", to = "start")
-    )
-    
+
     # Create the visnetwork visualiser
+    #
     output$graph_panel <- renderVisNetwork({
       
       nds = tribble(~id, ~label, ~nodetype, ~domain, ~groups, ~icon, ~url)
       eds = tribble(~id, ~from, ~to, ~label, ~linktype)
+
       vnt = visNetwork(nodes = nds, edges = eds)
       
-      # vnt = visNetwork(nodes = initialvisnetworkdata$nodes, edges = initialvisnetworkdata$edges)
-
       vnt = visOptions(vnt,
         nodesIdSelection = TRUE,
         collapse = FALSE,
@@ -268,41 +254,20 @@ server <- function(input, output, session) {
       
     })
     
-    # Setup the visNetwork settings based on visualcontrols
+    # Setup the visNetwork settings based on visualcontrols 
+    # Currently unused
+    #
     observeEvent({
       graph_panel_data$proxy
       visualcontrols
-      visualcontrols$freezelayout
     }, {
       if (is.null(graph_panel_data$proxy)) {
         return(NULL)
       }
-      # if (visualcontrols$freezelayout) {
-       graph_panel_data$proxy = visPhysics(graph_panel_data$proxy, enabled=(!visualcontrols$freezelayout))
-      #}
     })
 
-    # # Do the actual drawing, based on changes to the data
-    # observeEvent({
-    #   graph_panel_data
-    #   graph_panel_data$proxy
-    #   graph_panel_data$nodes
-    #   graph_panel_data$edges
-    # }, {
-    #   if (is.null(graph_panel_data$proxy)) {
-    #     # cat('Graph panel drawing, proxy not ready yet\n')
-    #     return(NULL)
-    #   }
-    # 
-    #   # visUpdateNodes(graph_panel_data$proxy, graph_panel_data$nodes)
-    #   # visUpdateEdges(graph_panel_data$proxy, graph_panel_data$edges)
-    # 
-    # #  visSetData(graph_panel_data$proxy, graph_panel_data$nodes, graph_panel_data$edges)
-    #   
-    # })
-    # 
 
-# Drawing the view data to the visnetwork data  ---------------------------
+# Drawing the view data to the visnetwork view  ---------------------------
 
     
     # Whenever the active view changes, this will push new graph_panel nodes/edges to the visNetwork
@@ -387,13 +352,13 @@ server <- function(input, output, session) {
  
     makeGraphPanelNodeForNid <- function(nid) {
       # browser()
-      row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images, visualcontrols$freezelayout)
+      row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images)
       row$id = row$nid
       return(row)
     }
     
     makeGraphPanelEdgeForEid <- function(eid) {
-      row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows, visualcontrols$freezelayout)
+      row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows,)
       row$id = row$eid
       # not needed, we're working on copy
       # row$orglabel = row$label #hack attempt to support switch show label
@@ -606,10 +571,9 @@ server <- function(input, output, session) {
   output$statusbar <- renderUI({
     tagList(
       fixedRow(
-        column(2,htmlOutput("activeviewtext")),
+        column(3,htmlOutput("activeviewtext")),
         column(3,htmlOutput("activeviewmenu")),
-        column(5,htmlOutput("generalmessagetext")),
-        column(2,uiOutput("visualoptionsmenu"))
+        column(5,htmlOutput("generalmessagetext"))
       ),
         
     )
@@ -1059,38 +1023,32 @@ server <- function(input, output, session) {
 
 # Settings and action handling for visual options  ---------------------
 
-    output$visualoptionsmenu <-renderUI({
-    tagList(fixedRow(
-      column(10,
-             tagList(
-               tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
-             )
-      ),
-      column(10, offset = 1,
-             conditionalPanel(
-               "input.visualoptions",
-               verticalLayout(
-                 tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE)),
-                 tags$small(checkboxInput3("vo_images", "Icons", TRUE)),
-                 tags$small(checkboxInput3("vo_linklabels", "Link names", TRUE)),
-                 tags$small(checkboxInput3("vo_freezelayout", "Freeze Layout", FALSE))
-               )
-             )
-      )
-    ))
-    
-  })
+    # output$visualoptionsmenu <-renderUI({
+    # fixedRow(
+    #   column(10,
+    #          tagList(
+    #            tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
+    #          )
+    #   ),
+    #   column(10, offset = 1,
+    #          conditionalPanel(
+    #            "input.visualoptions",
+    #            verticalLayout(
+    #            )
+    #          )
+    #   )
+    # )
+  #   
+  # })
   
    observeEvent({
     input$vo_arrows
     input$vo_images
     input$vo_linklabels
-    input$vo_freezelayout
   }, {
     visualcontrols$images = input$vo_images
     visualcontrols$arrows = input$vo_arrows
     visualcontrols$linklabels = input$vo_linklabels
-    visualcontrols$freezelayout = input$vo_freezelayout
   })
 
 
@@ -1098,6 +1056,9 @@ server <- function(input, output, session) {
 
 output$visualeditmenu <- renderUI ({
   tagList(
+    HTML("&nbsp;"), 
+    HTML("Edit"),
+    HTML("&nbsp;"), HTML("&nbsp;"),
     actionBttn("ve_grow_size", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="primary"),
     actionBttn("ve_shrink_size", label="node", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="primary"),
     HTML("-"),
@@ -1115,6 +1076,13 @@ output$visualeditmenu <- renderUI ({
     actionBttn("new_node_editor_box", label=NULL, size="xs", icon=icon("square-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_dot", label=NULL, size="xs", icon=icon("circle-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_text", label=NULL, size="xs", icon=icon("text-width",lib="font-awesome"), color="default"),
+    HTML("&nbsp;"), HTML("&nbsp;"), HTML("&nbsp;"),
+    HTML("Visual "),
+    HTML("&nbsp;"), HTML("&nbsp;"),
+    tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE)),
+    tags$small(checkboxInput3("vo_images", "Icons", TRUE)),
+    tags$small(checkboxInput3("vo_linklabels", "Link names", TRUE))
+    
     # HTML(
     #   c (
     #     smallHTMLUIButton("S+", "ve_grow_size", "", "green"),
@@ -1136,8 +1104,6 @@ output$visualeditmenu <- renderUI ({
     #     smallHTMLUIButton("+t", "new_node_editor", "text", "light_blue")
     #   )
     # ),
-    tags$br(),
-    tags$small("Selected node/edge")
   )
 })
    
