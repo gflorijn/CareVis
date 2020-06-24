@@ -37,8 +37,8 @@ addNodesFromDomainToView <- function(view, d) {
 
 # Restart the view
 restartViewOnNodeIds <- function(view, nodeids) {
-  view$nodes = tibble()
-  view$edges = tibble()
+  view$nodes = defaultNodeTibble()
+  view$edges = defaultEdgeTibble()
   view = addNodesToViewById(view, nodeids)
   return(view)
 }

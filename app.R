@@ -145,11 +145,13 @@ server <- function(input, output, session) {
     # 
     # `graph_panel_data holds the data to interact with the drawing in the graph_panel
     #  Proxy is set when the graph_panel has been initialized
+    #  Initialized is set when the visnetwork has been initially filled with data
     #
     graph_panel_data = reactiveValues(
       nodes = NULL,
       edges = NULL,
-      proxy = NULL
+      proxy = NULL,
+      initialized = FALSE
     )
     
     setGraphPanelData <- function(nds, eds) {
@@ -175,7 +177,7 @@ server <- function(input, output, session) {
       nodes = c("Patient")
       rv$activeview = newViewOnNetwork(rv$thenetworkinfo, "aView")    
       rv$activeview = addNodesToViewById(rv$activeview, nodes)
-      setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
+      # setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
       return
@@ -215,7 +217,7 @@ server <- function(input, output, session) {
       arrows = FALSE,
       images = TRUE,
       linklabels = TRUE,
-      igraphlayout = FALSE
+      freezelayout = FALSE
     )
     
     # Used for proper initializatoin of the visnetwork rendering. Doesn't have to be reactive...
@@ -270,42 +272,41 @@ server <- function(input, output, session) {
     observeEvent({
       graph_panel_data$proxy
       visualcontrols
-      visualcontrols$igraphlayout
+      visualcontrols$freezelayout
     }, {
       if (is.null(graph_panel_data$proxy)) {
         return(NULL)
       }
-      if (visualcontrols$igraphlayout) {
-        graph_panel_data$proxy = visPhysics(graph_panel_data$proxy, stabilization=FALSE)
-      }
+      # if (visualcontrols$freezelayout) {
+       graph_panel_data$proxy = visPhysics(graph_panel_data$proxy, enabled=(!visualcontrols$freezelayout))
+      #}
     })
 
-    # Do the actual drawing, based on changes to the data
-    observeEvent({
-      graph_panel_data
-      graph_panel_data$proxy
-      graph_panel_data$nodes
-      graph_panel_data$edges
-    }, {
-      if (is.null(graph_panel_data$proxy)) {
-        # cat('Graph panel drawing, proxy not ready yet\n')
-        return(NULL)
-      }
-
-      # visUpdateNodes(graph_panel_data$proxy, graph_panel_data$nodes)
-      # visUpdateEdges(graph_panel_data$proxy, graph_panel_data$edges)
-
-      visSetData(graph_panel_data$proxy, graph_panel_data$nodes, graph_panel_data$edges)
-      
-    })
-
+    # # Do the actual drawing, based on changes to the data
+    # observeEvent({
+    #   graph_panel_data
+    #   graph_panel_data$proxy
+    #   graph_panel_data$nodes
+    #   graph_panel_data$edges
+    # }, {
+    #   if (is.null(graph_panel_data$proxy)) {
+    #     # cat('Graph panel drawing, proxy not ready yet\n')
+    #     return(NULL)
+    #   }
+    # 
+    #   # visUpdateNodes(graph_panel_data$proxy, graph_panel_data$nodes)
+    #   # visUpdateEdges(graph_panel_data$proxy, graph_panel_data$edges)
+    # 
+    # #  visSetData(graph_panel_data$proxy, graph_panel_data$nodes, graph_panel_data$edges)
+    #   
+    # })
+    # 
 
 # Drawing the view data to the visnetwork data  ---------------------------
 
     
     # Whenever the active view changes, this will push new graph_panel nodes/edges to the visNetwork
     # the graph_panel nodes have the additional visual attributes needed for visNetwork
-    # In addition, there's some magic here to map labels and ids.
     #         View      Graph _panel/vis network
     # nodes   nid       id
     # edges   eid       id
@@ -315,30 +316,84 @@ server <- function(input, output, session) {
       visualcontrols$arrows
       visualcontrols$images
       visualcontrols$linklabels
+      graph_panel_data$proxy
       rv$activeview
       rv$forcerepaint},  {
         
-        # cat('Draw active view...\n')
+      #cat('Draw active view...\n')
         if (rv$forcerepaint) { #called when the redraw action has been activated
-          # cat('Force repaint\n')
+          #cat('Force repaint\n')
           rv$forcerepaint = FALSE
         }
+        
+        if (is.null(graph_panel_data$proxy)) {
+          #cat('Graph panel drawing, proxy not ready yet\n')
+          return(NULL)
+        }
+        
         xn = map_dfr(rv$activeview$nodes$nid, makeGraphPanelNodeForNid)
         xe = map_dfr(rv$activeview$edges$eid, makeGraphPanelEdgeForEid)
+        
+        if (!graph_panel_data$initialized) {
+          #cat('initial draw\n')
+          graph_panel_data$initialized = TRUE
+          # visSetData(graph_panel_data$proxy, xn, xe)
+          visUpdateNodes(graph_panel_data$proxy, xn)
+          visUpdateEdges(graph_panel_data$proxy, xe)
+          setGraphPanelData(xn, xe)
+          return
+        }
+        
+        if(isTRUE(all.equal(graph_panel_data$nodes, xn)) & isTRUE(all.equal(graph_panel_data$edges, xe))) {
+          #cat("The two data frames are the same! don't do anything.\n")
+          return
+        }
+        
+        if (nrow(xn) == 0) {
+            xn = defaultNodeTibble()
+            visRemoveNodes(graph_panel_data$proxy, graph_panel_data$nodes$nid)
+        } 
+        else {
+          oldns = graph_panel_data$nodes$nid
+          newns = xn$nid
+          rms = oldns[!(oldns %in% newns)]
+          visRemoveNodes(graph_panel_data$proxy, rms)
+          nws =  newns[!(newns %in% oldns)]
+          visUpdateNodes(graph_panel_data$proxy, subset(xn, nid %in% nws))
+          pchgs = newns[!(newns %in% nws)]
+          olds = subset(graph_panel_data$nodes, nid %in% pchgs)
+          news = subset(xn, nid %in% pchgs)
+          if (!isTRUE(all.equal(olds, news))) {
+            visUpdateNodes(graph_panel_data$proxy, news)
+          }
+        }
+           
+        if (nrow(xe) == 0) {
+          visRemoveEdges(graph_panel_data$proxy, graph_panel_data$nodes)
+          xe = defaultEdgeTibble()
+        }
+        else {
+          visRemoveEdges(graph_panel_data$proxy, graph_panel_data$edges)
+          visUpdateEdges(graph_panel_data$proxy, xe)
+        }
+        visStabilize(graph_panel_data$proxy, NULL)
+
+        # browser()
+        
         graph_panel_data$nodes = xn
         graph_panel_data$edges = xe
+        
       })
-    
-    
+ 
     makeGraphPanelNodeForNid <- function(nid) {
       # browser()
-      row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images)
+      row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images, visualcontrols$freezelayout)
       row$id = row$nid
       return(row)
     }
     
     makeGraphPanelEdgeForEid <- function(eid) {
-      row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows)
+      row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows, visualcontrols$freezelayout)
       row$id = row$eid
       # not needed, we're working on copy
       # row$orglabel = row$label #hack attempt to support switch show label
@@ -695,7 +750,6 @@ server <- function(input, output, session) {
   
   # Launch editor on existing edge
   observeEvent(input$exist_edge_editor, {
-    browser()
     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "") {
        edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
     }
@@ -1019,7 +1073,7 @@ server <- function(input, output, session) {
                  tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE)),
                  tags$small(checkboxInput3("vo_images", "Icons", TRUE)),
                  tags$small(checkboxInput3("vo_linklabels", "Link names", TRUE)),
-                 tags$small(checkboxInput3("vo_igraphlayout", "iGraph Layout", FALSE))
+                 tags$small(checkboxInput3("vo_freezelayout", "Freeze Layout", FALSE))
                )
              )
       )
@@ -1031,12 +1085,12 @@ server <- function(input, output, session) {
     input$vo_arrows
     input$vo_images
     input$vo_linklabels
-    input$vo_igraphlayout
+    input$vo_freezelayout
   }, {
     visualcontrols$images = input$vo_images
     visualcontrols$arrows = input$vo_arrows
     visualcontrols$linklabels = input$vo_linklabels
-    visualcontrols$igraphlayout = input$vo_igraphlayout
+    visualcontrols$freezelayout = input$vo_freezelayout
   })
 
 

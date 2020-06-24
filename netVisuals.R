@@ -100,13 +100,16 @@ addActualBrokenImageForNode <- function(view, node) {
 # set in the input. 
 #
 
-addVisualSettingsToNode <- function(view, node, doimage) {
+addVisualSettingsToNode <- function(view, node, doimage, dofreeze) {
 #   browser()
   newnode = node
   newnode = addActualShapeForNode(view, newnode, doimage)
   newnode = addActualImageForNode(view, newnode)
   newnode = addActualColorForNode(view, newnode)
   newnode = addActualBrokenImageForNode(view, newnode)
+  # if (dofreeze) {
+  #   newnode$physics = FALSE
+  # }
   return(newnode)
 }
 
@@ -123,11 +126,13 @@ addActualColorForEdge <- function(view, edge) {
 }
 
 
-addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows) {
+addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows, dofreeze) {
   newedge = addActualColorForEdge(view, edge)
   newedge = add_column(newedge, arrows=if_else(doarrows, "to", NULL))
   if (!dolabel)
     newedge$label = ""
+  # if (dofreeze)
+  #   newedge$smooth = FALSE
   return(newedge)
 }
 
