@@ -265,7 +265,10 @@ server <- function(input, output, session) {
     #
     observeEvent(input$graph_panel_initialized, {
       graph_panel_data$proxy = visNetworkProxy("graph_panel")
-      
+      visGetNodes(graph_panel_data$proxy)
+      visGetEdges(graph_panel_data$proxy)
+      visGetPositions(graph_panel_data$proxy)
+      visGetViewPosition(graph_panel_data$proxy)
     })
     
     # Setup the visNetwork settings based on visualcontrols 
@@ -278,6 +281,8 @@ server <- function(input, output, session) {
       if (is.null(graph_panel_data$proxy)) {
         return(NULL)
       }
+      
+      #nothing to do...
     })
 
 
@@ -366,6 +371,7 @@ server <- function(input, output, session) {
             visUpdateEdges(graph_panel_data$proxy, xe)
           }
           else {
+#            browser()
             if (!isTRUE(all.equal(graph_panel_data$edges, xe))) {
               # res = compareDF::compare_df(xe, graph_panel_data$edges, group_col="eid", stop_on_error=FALSE)
               # browser()
@@ -374,7 +380,7 @@ server <- function(input, output, session) {
               rme = oldes[!(oldes %in% newes)]
               visRemoveEdges(graph_panel_data$proxy, rme)
               nwe = newes[!(newes %in% oldes)]
-              visUpdateEdges(graph_panel_data$proxy, nwe)
+              visUpdateEdges(graph_panel_data$proxy, subset(xe, eid %in% nwe))
               pchgs = newes[!(newes %in% nwe)]
               olds = subset(graph_panel_data$edges, eid %in% pchgs)
               news = subset(xe, eid %in% pchgs)
@@ -385,6 +391,7 @@ server <- function(input, output, session) {
           }
         }
       visStabilize(graph_panel_data$proxy, NULL)
+      visFit(graph_panel_data$proxy)
 
         # browser()
         
@@ -751,6 +758,7 @@ server <- function(input, output, session) {
   # Launch editor on existing edge
   observeEvent(input$exist_edge_editor, {
     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "") {
+      # browser()
        edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
     }
    })
@@ -1064,6 +1072,7 @@ server <- function(input, output, session) {
         visRemoveNodes(graph_panel_data$proxy, nid)
         newnode = genNewNodeForIdWithDefaults(rv$activeview, nlabel)
         rv$activeview = addNewNodeToView(rv$activeview, newnode)
+        return
       }
       else if (cmd == "addEdge") { 
         nfrom = input$graph_panel_graphChange$from
@@ -1071,6 +1080,7 @@ server <- function(input, output, session) {
         visRemoveEdges(graph_panel_data$proxy, input$graph_panel_graphChange$id)
         newedge = genNewEdgeWithDefaults(rv$activeview, nfrom, nto)
         rv$activeview = addNewEdgeToView(rv$activeview, newedge)
+        return
       }
     })
 
