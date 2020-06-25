@@ -16,7 +16,7 @@ getNodeColorFor <- function(view, node) {
 }
 
 getEdgeColorForLinktype <- function(net, linktype) {
-  map = tibble(type=getLinkTypes(net), color=brewer.pal(length(getLinkTypes(net)),"Accent"))
+  map = tibble(type=getLinkTypes(net), color=brewer.pal(length(getLinkTypes(net)),"Set1"))
   return(map$color[map$type==linktype])
 }
 getEdgeColorFor <- function(view, edge) {
@@ -39,69 +39,100 @@ getBrokenImageForNode <- function(view, node) {
   return(str_c(getImagePath(view), "Images/NotFound", ".png"))
 }
 
-getActualShapeForNode <- function(view, node, doimage) {
-  if ("v_shape" %in% colnames(node)) {
-    if (!is.na(node$v_shape) & !is.null(node$v_shape) & node$v_shape!="") {
-        return(node$v_shape)
+addActualShapeForNode <- function(view, node, doimage) {
+  if ("shape" %in% colnames(node)) {
+    if (!is.na(node$shape) & !is.null(node$shape) & node$shape!="") {
+        return(node)
+    }
+    else {
+      node$shape=if_else((!is.null(doimage) & doimage==TRUE), "image", getNodeShapeFor(view, node))
+      return(node)
     }
   }
-  return(if_else((!is.null(doimage) & doimage==TRUE), "image", getNodeShapeFor(view, node)))
+  newnode = add_column(node, shape=if_else((!is.null(doimage) & doimage==TRUE), "image", getNodeShapeFor(view, node)))
+  return(newnode)
 }
 
-getActualColorForNode <- function(view, node) {
-  if ("v_color" %in% colnames(node)) {
-    if (!is.na(node$v_color) & !is.null(node$v_color) & node$v_color!="") {
-      return(node$v_color)
+addActualColorForNode <- function(view, node) {
+  if ("color" %in% colnames(node)) {
+    if (!is.na(node$color) & !is.null(node$color) & node$color!="") {
+      return(node)
+    }
+    else {
+      node$color=getNodeColorFor(view, node)
+      return(node)
     }
   }
-  return(getNodeColorFor(view, node))
+  newnode = add_column(node, color=getNodeColorFor(view, node))
+  return(newnode)
 }
 
-getActualImageForNode <- function(view, node) {
-  if ("v_image" %in% colnames(node)) {
-    if (!is.na(node$v_image) & !is.null(node$v_image) & node$v_image!="") {
-      return(node$v_image)
+addActualImageForNode <- function(view, node) {
+  if ("image" %in% colnames(node)) {
+    if (!is.na(node$image) & !is.null(node$image) ) {
+      return(node)
+    }
+    else {
+      node$image=getImageForNode(view, node)
+      return(node)
     }
   }
-  return(getImageForNode(view, node))
+  newnode = add_column(node, image=getImageForNode(view, node))
+  return(newnode)
 }
 
-# Allow visual control over image, color and shape setting by node-properties:
-# v_image, v_color and v_shape
-# 
-# Todo: check whether there is a smart "merge" operation to handle this...
+addActualBrokenImageForNode <- function(view, node) {
+  if ("brokenImage" %in% colnames(node)) {
+    if (!is.na(node$brokenImage) & !is.null(node$brokenImage)) {
+      return(node)
+    }
+    else {
+      node$brokenImage=getBrokenImageForNode(view, node)
+      return(node)
+    }
+  }
+  newnode = add_column(node, brokenImage=getBrokenImageForNode(view, node))
+  return(newnode)
+}
+
+
+# Make sure that basic control over visual controls shape, image and color can be
+# set in the input. 
 #
-getVisualSettingsForNode <- function(view, node, doimage) {
 
-  fshape = getActualShapeForNode(view, node, doimage)
-  fcolor = getActualColorForNode(view, node)
-  fimage = getActualImageForNode(view, node)
-  
-  return(tibble(
-      shape=fshape,
-      color=fcolor,
-      image=fimage,
-      brokenImage=getBrokenImageForNode(view, node)
-  ))
+addVisualSettingsToNode <- function(view, node, doimage, dofreeze) {
+#   browser()
+  newnode = node
+  newnode = addActualShapeForNode(view, newnode, doimage)
+  newnode = addActualImageForNode(view, newnode)
+  newnode = addActualColorForNode(view, newnode)
+  newnode = addActualBrokenImageForNode(view, newnode)
+  # if (dofreeze) {
+  #   newnode$physics = FALSE
+  # }
+  return(newnode)
 }
 
-addVisualSettingsToNode <- function(view, node, doimage) {
-  gv = getVisualSettingsForNode(view,node, doimage)
-  node = bind_cols(node, gv)
-  return(node)
+addActualColorForEdge <- function(view, edge) {
+  if ("color" %in% colnames(edge)) {
+    if (!is.na(edge$color) & !is.null(edge$color) & edge$color!="") {
+      return(edge)
+    }
+    edge$color=getEdgeColorFor(view, edge)
+    return(edge)
+  }
+  newedge = add_column(edge, color=getEdgeColorFor(view, edge))
+  return(newedge)
 }
 
-getVisualSettingsForEdge <- function(view, edge, dolabel, doarrows) {
-  return(tibble(
-    color=getEdgeColorFor(view, edge),
-    arrows=if_else(doarrows, "to", NULL),
-    vislabel=if_else((!is.null(dolabel) & dolabel==TRUE), edge$label, "")  # will be mapped to visnetwork label...
-  ))
-}
 
-addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows) {
-  gv = getVisualSettingsForEdge(view,edge, dolabel, doarrows)
-  edge = bind_cols(edge, gv)
-  return(edge)
+addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows, dofreeze) {
+  newedge = addActualColorForEdge(view, edge)
+  newedge = add_column(newedge, arrows=if_else(doarrows, "to", NULL))
+  if (!dolabel)
+    newedge$label = ""
+  # if (dofreeze)
+  #   newedge$smooth = FALSE
+  return(newedge)
 }
 

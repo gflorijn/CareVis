@@ -11,7 +11,7 @@
     },
     {
       "nid": "Huisarts",
-      "domain": "Zorgaanbieders",
+      "domain": "Zorgverleners",
       "nodetype": "actor",
       "icon": "Huisarts",
       "url": "",
@@ -25,6 +25,15 @@
       "domain": "Zorgverleners",
       "groups": "",
       "icon": "Verpleegkundige",
+      "url": ""
+    },
+    {
+      "nid": "Paramedici",
+      "label": "Paramedici",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "icon": "Paramedici",
       "url": ""
     },
     {
@@ -75,7 +84,7 @@
     },
     {
       "nid": "Fysiotherapeut",
-      "domain": "Zorgaanbieders",
+      "domain": "Zorgverlener",
       "nodetype": "actor",
       "icon": "Paramedici",
       "url": "",
@@ -127,26 +136,5 @@
       "groups": "",
       "label": "Huisartsenpost"
     }
-  ],
-  "edges": [
-  {
-    "from": "Verpleegkundige",
-    "to": "Ziekenhuis",
-    "label": "",
-    "linktype": "refer"
-  },
-  {
-    "from": "Specialist",
-    "to": "Ziekenhuis",
-    "label": "",
-    "linktype": "refer"
-  },
-  {
-     "from": "Wijkverpleger",
-     "to": "VVT",
-     "label": "",
-     "linktype": "refer"
-   }
-
-]
+  ]
 }

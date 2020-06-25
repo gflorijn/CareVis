@@ -37,8 +37,8 @@ addNodesFromDomainToView <- function(view, d) {
 
 # Restart the view
 restartViewOnNodeIds <- function(view, nodeids) {
-  view$nodes = tibble()
-  view$edges = tibble()
+  view$nodes = defaultNodeTibble()
+  view$edges = defaultEdgeTibble()
   view = addNodesToViewById(view, nodeids)
   return(view)
 }
@@ -125,7 +125,7 @@ addEdgesToView <- function( view, newedges) {
 
 removeEdgesFromViewById <-  function(view, eids) {
   newedges = subset(view$edges, !(view$edges$eid %in% eids))
-  view$edges = newnedges
+  view$edges = newedges
   return(view)
 }
 
