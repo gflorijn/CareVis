@@ -83,7 +83,7 @@ tagList(
                  visNetworkOutput("graph_panel", height = "750px", width = "100%"),
                  absolutePanel(id = "visualeditcontrols",
                    class = "panel panel-default",
-                   top = 155, left = 380,  width = 1150, fixed = TRUE,
+                   top = 155, left = 370,  width = 1200, fixed = TRUE,
                    draggable = TRUE,
                    height = "auto",
                    fixedRow(
@@ -126,7 +126,6 @@ server <- function(input, output, session) {
    
     rv <- reactiveValues(
       thenetworkinfo = NULL,
-      # thegraphproxy = NULL,
       thenodeselected = NULL, 
       theedgeselected = NULL,
       thevisnet = NULL,
@@ -136,25 +135,24 @@ server <- function(input, output, session) {
       forcerepaint = FALSE,
       thedatauploader = NULL,
       activeview = NULL
-      
     )
 
     
-    # 
-    # `graph_panel_data holds the data to interact with the drawing in the graph_panel
-    #  Proxy is set when the graph_panel has been initialized
-    #  Initialized is set when the visnetwork has been initially filled with data
-    #
-    graph_panel_data = reactiveValues(
-      nodes = NULL,
-      edges = NULL,
-      proxy = NULL,
-      initialized = FALSE
+
+# Undo handling -----------------------------------------------------------
+    
+    undolog = reactiveValues(
+      previouspoint = NULL
     )
     
-    setGraphPanelData <- function(nds, eds) {
-      graph_panel_data$nodes = nds
-      graph_panel_data$edges = eds
+    setUndoPoint <- function() {
+      undolog$previouspoint = rv$activeview
+    }
+    
+    doUndo <- function() {
+      x = rv$activeview
+      rv$activeview = undolog$previouspoint
+      undolog$previouspoint = x
     }
     
 # Initialisation ----------------------------------------------------------
@@ -175,14 +173,18 @@ server <- function(input, output, session) {
       nodes = c("Patient")
       rv$activeview = newViewOnNetwork(rv$thenetworkinfo, "aView")    
       rv$activeview = addNodesToViewById(rv$activeview, nodes)
-      # setGraphPanelData(rv$activeview$nodes, rv$activeview$edges)
+      
+      setUndoPoint()
       
       updateTabsetPanel(session, "theAppPage", selected = "Browser")
       return
     }
-    
+     
     restartBrowserOnViewData <- function(viewdata) {
       # laad de data uit newview in het netwerk
+      
+      setUndoPoint()
+      
       rv$thenetworkinfo = combineNetworks(rv$thenetworkinfo, viewdata)
       newview = newViewOnNetwork(rv$thenetworkinfo, viewdata$info$name)
       newview = addNodesToViewById(newview, viewdata$nodes$nid)
@@ -207,6 +209,18 @@ server <- function(input, output, session) {
 
 
 # Graph-panel setup  --------------------------------------------------
+    
+    # 
+    # `graph_panel_data holds the data to interact with the drawing in the graph_panel
+    #  Proxy is set when the graph_panel has been initialized
+    #  Initialized is set when the visnetwork/graph-panel-data has been initially filled with data
+    #
+    graph_panel_data = reactiveValues(
+      nodes = NULL,
+      edges = NULL,
+      proxy = NULL,
+      initialized = FALSE
+    )
     
     
     # Controls that govern the presentation of the graph
@@ -305,7 +319,8 @@ server <- function(input, output, session) {
           # visSetData(graph_panel_data$proxy, xn, xe)
           visUpdateNodes(graph_panel_data$proxy, xn)
           visUpdateEdges(graph_panel_data$proxy, xe)
-          setGraphPanelData(xn, xe)
+          graph_panel_data$nodes = xn
+          graph_panel_data$edges = xe
           return
         }
         
@@ -319,29 +334,57 @@ server <- function(input, output, session) {
             visRemoveNodes(graph_panel_data$proxy, graph_panel_data$nodes$nid)
         } 
         else {
-          oldns = graph_panel_data$nodes$nid
-          newns = xn$nid
-          rms = oldns[!(oldns %in% newns)]
-          visRemoveNodes(graph_panel_data$proxy, rms)
-          nws =  newns[!(newns %in% oldns)]
-          visUpdateNodes(graph_panel_data$proxy, subset(xn, nid %in% nws))
-          pchgs = newns[!(newns %in% nws)]
-          olds = subset(graph_panel_data$nodes, nid %in% pchgs)
-          news = subset(xn, nid %in% pchgs)
-          if (!isTRUE(all.equal(olds, news))) {
-            visUpdateNodes(graph_panel_data$proxy, news)
+          if (nrow(graph_panel_data$nodes) == 0) {
+            visUpdateNodes(graph_panel_data$proxy, xn)
+          }
+          else {
+            if (!isTRUE(all.equal(graph_panel_data$nodes, xn))) {
+              # res = compareDF::compare_df(xn, graph_panel_data$nodes, group_col="nid", stop_on_error=FALSE)
+              # browser()
+              oldns = graph_panel_data$nodes$nid
+              newns = xn$nid
+              rms = oldns[!(oldns %in% newns)]
+              visRemoveNodes(graph_panel_data$proxy, rms)
+              nws =  newns[!(newns %in% oldns)]
+              visUpdateNodes(graph_panel_data$proxy, subset(xn, nid %in% nws))
+              pchgs = newns[!(newns %in% nws)]
+              olds = subset(graph_panel_data$nodes, nid %in% pchgs)
+              news = subset(xn, nid %in% pchgs)
+              if (!isTRUE(all.equal(olds, news))) {
+                visUpdateNodes(graph_panel_data$proxy, news)
+              }
+            }
           }
         }
-           
+             
         if (nrow(xe) == 0) {
-          visRemoveEdges(graph_panel_data$proxy, graph_panel_data$nodes)
+          visRemoveEdges(graph_panel_data$proxy, graph_panel_data$edges)
           xe = defaultEdgeTibble()
         }
         else {
-          visRemoveEdges(graph_panel_data$proxy, graph_panel_data$edges)
-          visUpdateEdges(graph_panel_data$proxy, xe)
+          if (nrow(graph_panel_data$edges) == 0) {
+            visUpdateEdges(graph_panel_data$proxy, xe)
+          }
+          else {
+            if (!isTRUE(all.equal(graph_panel_data$edges, xe))) {
+              # res = compareDF::compare_df(xe, graph_panel_data$edges, group_col="eid", stop_on_error=FALSE)
+              # browser()
+              oldes = graph_panel_data$edges$eid
+              newes = xe$eid
+              rme = oldes[!(oldes %in% newes)]
+              visRemoveEdges(graph_panel_data$proxy, rme)
+              nwe = newes[!(newes %in% oldes)]
+              visUpdateEdges(graph_panel_data$proxy, nwe)
+              pchgs = newes[!(newes %in% nwe)]
+              olds = subset(graph_panel_data$edges, eid %in% pchgs)
+              news = subset(xe, eid %in% pchgs)
+              if (!isTRUE(all.equal(olds, news))) {
+                visUpdateEdges(graph_panel_data$proxy, news)
+              }
+            }
+          }
         }
-        visStabilize(graph_panel_data$proxy, NULL)
+      visStabilize(graph_panel_data$proxy, NULL)
 
         # browser()
         
@@ -503,8 +546,7 @@ server <- function(input, output, session) {
         haveurl = TRUE
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
       }
-      toggleState("launchbrowser", haveurl) #does not work on deployed apps
-    })
+     })
 
 # Data view output --------------------------------------------------------
  
@@ -589,26 +631,20 @@ server <- function(input, output, session) {
       fixedRow(
         div(
             actionBttn("saveview", label="Save view (as)", size="xs", icon=icon("save",lib="font-awesome"), color="default"),
-            HTML("---"),
+            HTML("&nbsp;"), HTML("&nbsp;"),
             actionBttn("uploadview", label="Open view", size="xs", icon=icon("folder-open-o",lib="font-awesome"), color="default"),
-            HTML("---"),
+            HTML("&nbsp;"),HTML("&nbsp;"),
             actionBttn("restart", label="New view", size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default")
-            
-          # actionLink("saveview","Save view (as)"),
-          # actionLink("uploadview","Open view"),
-          # HTML("---"),
-          # actionLink("restart","New view")
-        )
+       )
       ),
       fixedRow(
         HTML("&nbsp;")
       )
     )
-    
   })
 
   output$generalmessagetext <- renderUI({
-    m = paste0("Messages: <b>", rv$themessage, "</b>")
+    m = paste0("Messages: ", rv$themessage, "")
     HTML(m)
   })
 
@@ -726,6 +762,7 @@ server <- function(input, output, session) {
       node$shape = shape
     nodeChangeModal(node, "nep_new_node_done")
   }
+  
   # Launch editor on new node. The value of the event is the shape of the node.
   observeEvent(input$new_node_editor, { newNodeEditor("") })
   observeEvent(input$new_node_editor_box, { newNodeEditor("box") })
@@ -817,15 +854,11 @@ server <- function(input, output, session) {
     slices= getDomains(rv$thenetworkinfo)
 #    selectInput("startingpoint", label=NULL, domains)
     fixedRow(
-      column(8,
+      column(8, 
         tags$small(selectizeInput("startingpoint", label=NULL, c("Select slice"="", slices)))),
       column(4,
-        HTML(
-          c (
-            smallHTMLUIButton("+", "addslicetoview", "", "grey"),
-            smallHTMLUIButton(">", "focusviewonslice", "", "grey")
-          ))
-      )
+       actionBttn("addslicetoview", label="+", size="xs", color="default"), 
+       actionBttn("focusviewonslice", label="F", size="xs", color="default")) 
     )
   })
 
@@ -835,6 +868,7 @@ server <- function(input, output, session) {
   observeEvent(input$focusviewonslice, {
     nd = input$startingpoint
     if (!is.null(nd) & nd!= "") {
+      setUndoPoint()
       rv$activeview = restartViewOnNodesFromDomain(rv$activeview, nd) 
     }
   }) 
@@ -842,6 +876,7 @@ server <- function(input, output, session) {
   observeEvent(input$addslicetoview, {
     nd = input$startingpoint
     if (!is.null(nd) & nd!= "") {
+      setUndoPoint()
       rv$activeview = addNodesFromDomainToView(rv$activeview, nd) 
     }
   }) 
@@ -857,11 +892,8 @@ server <- function(input, output, session) {
          column(8,
             tags$small(selectizeInput("addsearchnodes", NULL, c("Search node"="", names), multiple = TRUE))),
          column(4,
-            HTML(
-              c(
-                smallHTMLUIButton("+", "addnodefromsearch", "", "grey"),
-                smallHTMLUIButton(">", "focusnodefromsearch", "", "grey")
-              )))
+                actionBttn("addnodefromsearch", label="+", size="xs", color="default"), 
+                actionBttn("focusnodefromsearch", label="F", size="xs", color="default")) 
     )
   })
   
@@ -872,6 +904,7 @@ server <- function(input, output, session) {
   observeEvent(input$addnodefromsearch, {
     nodes = input$addsearchnodes
     if (!is.null(nodes) & length(nodes) > 0) {
+      setUndoPoint()
       rv$activeview = addNodesToViewById(rv$activeview, nodes)
         #      rv$forcerepaint = TRUE 
     }
@@ -879,6 +912,7 @@ server <- function(input, output, session) {
   observeEvent(input$focusnodefromsearch, {
     nodes = input$addsearchnodes
     if (!is.null(nodes) & length(nodes) > 0) {
+      setUndoPoint()
       rv$activeview = restartViewOnNodeIds(rv$activeview, nodes)
       #      rv$forcerepaint = TRUE 
     }
@@ -902,12 +936,11 @@ server <- function(input, output, session) {
             smallHTMLUIButton("s", "nodemenuclick", "system", getLinkColor("system")),
             smallHTMLUIButton("o", "nodemenuclick", "object", getLinkColor("object")),
             smallHTMLUIButton("r", "nodemenuclick", "refer", getLinkColor("refer")),
-            smallHTMLUIButton("*", "nodemenuclick", "all", "black"),
-            "--",
-            smallHTMLUIButton("H", "hidefromview", "", "grey"),
-            smallHTMLUIButton("F", "switchfocus", "", "grey")
+            smallHTMLUIButton("*", "nodemenuclick", "all", "black")
         )
       ),
+      actionBttn("switchfocus", label="F", size="xs", color="default"),
+      tags$br(),
       tags$small(htmlOutput("selectionfield"))
     )
   })
@@ -926,21 +959,38 @@ server <- function(input, output, session) {
     linktypes = c(input$nodemenuclick)
     if (linktypes == "all")
       linktypes = getLinkTypes(rv$activeview$net)
+    setUndoPoint()
     rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
   } )
   
   # hide event
-  observeEvent(input$hidefromview, {
+  observeEvent(input$removenode, {
+    if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
+      return
+    }
+    setUndoPoint()
     rv$activeview = removeNodesFromViewById(rv$activeview, c(rv$thenodeselected))
+  })
+
+  # hide event
+  observeEvent(input$removeedge, {
+    if (is.null(rv$theedgeselected) | rv$theedgeselected == "") {
+      return
+    }
+#    browser()
+    setUndoPoint()
+    rv$activeview = removeEdgesFromViewById(rv$activeview, c(rv$theedgeselected))
   })
   
   # Focus view on a node
   observeEvent(input$switchfocus, {
+    setUndoPoint()
     rv$activeview = restartViewOnNodeIds(rv$activeview, c(rv$thenodeselected))
   }) 
   
   # View the whole underlying network
   observeEvent(input$showall, {
+    setUndoPoint()
     rv$activeview = switchViewToNetwork(rv$activeview)
   }) 
   
@@ -970,11 +1020,10 @@ server <- function(input, output, session) {
           smallHTMLUIButton("o", "viewmenuclick", "object", getLinkColor("object")),
           smallHTMLUIButton("r", "viewmenuclick", "refer", getLinkColor("refer")),
           smallHTMLUIButton("#", "viewmenuclick", "internal", "black"),
-          smallHTMLUIButton("*", "viewmenuclick", "all", "black"),
-          "--",
-          smallHTMLUIButton("All", "showall", "", "grey")
+          smallHTMLUIButton("*", "viewmenuclick", "all", "black")
         )
       ),
+      actionBttn("showall", label="All", size="xs", color="default"), 
       tags$br(),
       tags$small("Nodes in view")
     )
@@ -987,11 +1036,13 @@ server <- function(input, output, session) {
     #cat('input menu click: ', input$viewmenuclick, '\n')
     linktypes = c(input$viewmenuclick)
     if (linktypes == "internal") {
+      setUndoPoint()
       rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
     }
     else {
       if (linktypes == "all") #todo: simplify this
         linktypes=getLinkTypes(rv$thenetworkinfo)
+      setUndoPoint()
       rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
     }
   } )
@@ -1010,37 +1061,21 @@ server <- function(input, output, session) {
       if (cmd == "addNode") {
         nid = input$graph_panel_graphChange$id # this is the visnetwork internal id
         nlabel = input$graph_panel_graphChange$label # this is the name we will use as id
+        visRemoveNodes(graph_panel_data$proxy, nid)
         newnode = genNewNodeForIdWithDefaults(rv$activeview, nlabel)
-        rv$activeview = addNodesToView(rv$activeview, newnode)
+        rv$activeview = addNewNodeToView(rv$activeview, newnode)
       }
       else if (cmd == "addEdge") { 
         nfrom = input$graph_panel_graphChange$from
         nto = input$graph_panel_graphChange$to
+        visRemoveEdges(graph_panel_data$proxy, input$graph_panel_graphChange$id)
         newedge = genNewEdgeWithDefaults(rv$activeview, nfrom, nto)
-        rv$activeview = addEdgesToView(rv$activeview, newedge)
+        rv$activeview = addNewEdgeToView(rv$activeview, newedge)
       }
     })
 
 # Settings and action handling for visual options  ---------------------
 
-    # output$visualoptionsmenu <-renderUI({
-    # fixedRow(
-    #   column(10,
-    #          tagList(
-    #            tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
-    #          )
-    #   ),
-    #   column(10, offset = 1,
-    #          conditionalPanel(
-    #            "input.visualoptions",
-    #            verticalLayout(
-    #            )
-    #          )
-    #   )
-    # )
-  #   
-  # })
-  
    observeEvent({
     input$vo_arrows
     input$vo_images
@@ -1058,54 +1093,42 @@ output$visualeditmenu <- renderUI ({
   tagList(
     HTML("&nbsp;"), 
     HTML("Edit"),
-    HTML("&nbsp;"), HTML("&nbsp;"),
-    actionBttn("ve_grow_size", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="primary"),
-    actionBttn("ve_shrink_size", label="node", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="primary"),
+    HTML("&nbsp;"), 
+    actionBttn("undo", label=NULL, size="xs", icon=icon("undo",lib="font-awesome"), color="danger"),
     HTML("-"),
-    actionBttn("ve_grow_font", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="primary"),
-    actionBttn("ve_shrink_font", label="text", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="primary"),
+    actionBttn("removenode", label=NULL, size="xs", icon=icon("cut",lib="font-awesome"), color="danger"),
+    actionBttn("removeedge", label=NULL, size="xs", icon=icon("chain-broken",lib="font-awesome"), color="danger"),
     HTML("-"),
-    actionBttn("ve_widen_edge", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="succes"),
-    actionBttn("ve_narrow_edge", label="edge", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="succes"),
-    HTML("---"),
-    actionBttn("editclonenode", label="clone", size="xs", icon=icon("clone",lib="font-awesome"), color="primary"),
     actionBttn("exist_node_editor", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="primary"),
-    actionBttn("exist_edge_editor", label="edit", size="xs", icon=icon("link",lib="font-awesome"), color="succes"),
-    HTML("---"),
-    actionBttn("new_node_editor", label="new", size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default"),
+    actionBttn("exist_edge_editor", label=NULL, size="xs", icon=icon("link",lib="font-awesome"), color="primary"),
+    HTML("-"),
+    actionBttn("editclonenode", label=NULL, size="xs", icon=icon("clone",lib="font-awesome"), color="default"),
+    actionBttn("new_node_editor", label=NULL, size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_box", label=NULL, size="xs", icon=icon("square-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_dot", label=NULL, size="xs", icon=icon("circle-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_text", label=NULL, size="xs", icon=icon("text-width",lib="font-awesome"), color="default"),
-    HTML("&nbsp;"), HTML("&nbsp;"), HTML("&nbsp;"),
+    HTML("---"),
+    actionBttn("ve_grow_size", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="success"),
+    actionBttn("ve_shrink_size", label="node", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
+    HTML("-"),
+    actionBttn("ve_grow_font", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="success"),
+    actionBttn("ve_shrink_font", label="text", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
+    HTML("-"),
+    actionBttn("ve_widen_edge", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="success"),
+    actionBttn("ve_narrow_edge", label="edge", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
+    HTML("&nbsp;"), 
     HTML("Visual "),
-    HTML("&nbsp;"), HTML("&nbsp;"),
-    tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE)),
-    tags$small(checkboxInput3("vo_images", "Icons", TRUE)),
-    tags$small(checkboxInput3("vo_linklabels", "Link names", TRUE))
-    
-    # HTML(
-    #   c (
-    #     smallHTMLUIButton("S+", "ve_grow_size", "", "green"),
-    #     smallHTMLUIButton("S-", "ve_shrink_size", "", "green"),
-    #     # smallHTMLUIButton("V+", "ve_grow_shape", "", "green"),
-    #     # smallHTMLUIButton("V-", "ve_shrink_shape", "", "green"),
-    #     smallHTMLUIButton("F+", "ve_grow_font", "", "green"),
-    #     smallHTMLUIButton("F-", "ve_shrink_font", "", "green"),
-    #     smallHTMLUIButton("<>", "ve_widen_edge", "", "green"),
-    #     smallHTMLUIButton("><", "ve_narrow_edge", "", "green"),
-    #     "--",
-    #     smallHTMLUIButton("Cn", "editclonenode", "", "grey"),
-    #     smallHTMLUIButton("En", "exist_node_editor", "", "grey"),
-    #     smallHTMLUIButton("El", "exist_edge_editor", "", "grey"),
-    #     "--",
-    #     smallHTMLUIButton("+n", "new_node_editor", "", "light_blue"),
-    #     smallHTMLUIButton("+b", "new_node_editor", "box", "light_blue"),
-    #     smallHTMLUIButton("+d", "new_node_editor", "dot", "light_blue"),
-    #     smallHTMLUIButton("+t", "new_node_editor", "text", "light_blue")
-    #   )
-    # ),
+    HTML("&nbsp;"), 
+    tags$small(checkboxInput3("vo_images", "Icons", TRUE, width=80)),
+    tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE, width=80)),
+    tags$small(checkboxInput3("vo_linklabels", "Link labels", TRUE, width=80))
   )
 })
+  
+  # 
+   observeEvent(input$undo, {
+     doUndo()
+   })
    
    observeEvent(input$ve_grow_size, {
      id = rv$thenodeselected
@@ -1137,36 +1160,6 @@ output$visualeditmenu <- renderUI ({
      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
    })
    
-   # observeEvent(input$ve_grow_shape, {
-   #     
-   #   id = rv$thenodeselected
-   #   if (is.null(id) | id == "") 
-   #     return
-   #   node = getNodeById(rv$activeview, id)
-   #   if (!("value" %in% colnames(node)))
-   #     node = add_column(node, value=20)
-   #   newnode = node
-   #   if(is.na(node$value)) {
-   #     newnode$value = 20
-   #   }
-   #   newnode$value = newnode$value+1
-   #   rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
-   # })
-   # 
-   # observeEvent(input$ve_shrink_shape, {
-   #   id = rv$thenodeselected
-   #   if (is.null(id) | id == "") 
-   #     return
-   #   node = getNodeById(rv$activeview, id)
-   #   if (!("value" %in% colnames(node)))
-   #     node = add_column(node, value=20)
-   #   newnode = node
-   #   if(is.na(node$value)) {
-   #     newnode$value = 20
-   #   }
-   #   newnode$value = newnode$value-1
-   #   rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
-   # })
    
    observeEvent(input$ve_grow_font, {
      id = rv$thenodeselected
@@ -1182,6 +1175,7 @@ output$visualeditmenu <- renderUI ({
      newnode$font.size = newnode$font.size+1
      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
    })
+
    observeEvent(input$ve_shrink_font, {
      id = rv$thenodeselected
      if (is.null(id) | id == "") 
@@ -1196,7 +1190,8 @@ output$visualeditmenu <- renderUI ({
      newnode$font.size = newnode$font.size-1
      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
    })
-   observeEvent(input$ve_widen_edge, {
+ 
+    observeEvent(input$ve_widen_edge, {
      id = rv$theedgeselected
      if (is.null(id) | id == "") 
        return
@@ -1210,6 +1205,7 @@ output$visualeditmenu <- renderUI ({
      newedge$width = newedge$width+1
      rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
    })
+
    observeEvent(input$ve_narrow_edge, {
      id = rv$theedgeselected
      if (is.null(id) | id == "") 
