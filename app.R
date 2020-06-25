@@ -1220,6 +1220,7 @@ output$visualeditmenu <- renderUI ({
      id = rv$theedgeselected
      if (is.null(id) | id == "") 
        return
+     edge = getEdgeByEid(rv$activeview, id)
      if (!("width" %in% colnames(edge)))
        edge = add_column(edge, width=1)
      edge = getEdgeByEid(rv$activeview, id)
