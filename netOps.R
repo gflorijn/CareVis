@@ -125,7 +125,7 @@ addEdgesToView <- function( view, newedges) {
 
 removeEdgesFromViewById <-  function(view, eids) {
   newedges = subset(view$edges, !(view$edges$eid %in% eids))
-  view$edges = newnedges
+  view$edges = newedges
   return(view)
 }
 
