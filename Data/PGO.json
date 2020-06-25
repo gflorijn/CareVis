@@ -20,7 +20,7 @@
     },
     {
       "nid": "PGO Server",
-      "nid": "PGO Server",
+      "label": "PGO Server",
       "domain": "PGO",
       "nodetype": "system",
       "icon": "ResourceServer",
@@ -129,19 +129,19 @@
       "from": "PGO",
       "to": "PGO UI",
       "label": "",
-      "linktype": "part"
+      "linktype": "system"
     },
     {
       "from": "PGO",
       "to": "PGO Server",
       "label": "",
-      "linktype": "part"
+      "linktype": "system"
     },
     {
       "from": "PGO",
       "to": "PGO Autorisaties",
       "label": "",
-      "linktype": "part"
+      "linktype": "object"
     },
     {
       "from": "PGO",
@@ -159,13 +159,13 @@
       "from": "ZA Interface",
       "to": "ZA Resources",
       "label": "",
-      "linktype": "part"
+      "linktype": "object"
     },
     {
       "from": "ZA Interface",
       "to": "ZA Autorisaties",
       "label": "",
-      "linktype": "part"
+      "linktype": "object"
     },
     {
       "from": "ZA Systeem",

@@ -16,7 +16,7 @@ getNodeColorFor <- function(view, node) {
 }
 
 getEdgeColorForLinktype <- function(net, linktype) {
-  map = tibble(type=getLinkTypes(net), color=brewer.pal(length(getLinkTypes(net)),"Accent"))
+  map = tibble(type=getLinkTypes(net), color=brewer.pal(length(getLinkTypes(net)),"Set1"))
   return(map$color[map$type==linktype])
 }
 getEdgeColorFor <- function(view, edge) {

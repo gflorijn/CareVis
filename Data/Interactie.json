@@ -207,13 +207,13 @@
       "from": "i-Onderzoek",
       "to": "i-Order",
       "label": "1",
-      "linktype": "part"
+      "linktype": "refer"
     },
     {
       "from": "i-Onderzoek",
       "to": "i-Uitslagen",
       "label": "2",
-      "linktype": "part"
+      "linktype": "refer"
     },
     {
       "from": "i-Uitslagen",
@@ -411,19 +411,19 @@
       "from": "i-Administratie",
       "to": "i-Aanvraagzorg",
       "label": "",
-      "linktype": "part"
+      "linktype": "refer"
     },
     {
       "from": "i-Administratie",
       "to": "i-COV",
       "label": "",
-      "linktype": "part"
+      "linktype": "refer"
     },
     {
       "from": "i-Administratie",
       "to": "i-Declareren",
       "label": "",
-      "linktype": "part"
+      "linktype": "refer"
     },
     {
       "from": "Patient",
