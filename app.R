@@ -3,6 +3,8 @@ library(shinythemes)
 library(shinyjs)
 library(shinyWidgets)
 library(editData)
+library(colourpicker)
+library(listviewer)
 
 library(DT)
 
@@ -38,7 +40,7 @@ tagList(
   useShinyjs(),
 
   navbarPage(
-    smallHTMLUIButton("NetVis", "showabout", "", "darkblue"),
+    "NetVis",
              
   #shinythemes::themeSelector(),
   theme=shinytheme("spacelab"),
@@ -54,8 +56,8 @@ tagList(
                sidebarPanel(
                  width = 1,
                  verticalLayout(
-                   # actionButton("showabout", "About", width="90%"),
-                   # tags$hr(),
+                   actionButton("showabout", "About", width="90%"),
+                   tags$hr(),
                    # actionButton("uploadview", "Open"),
                    # tags$hr(),
                    # downloadButton("downloadviewasjson", "Save"),
@@ -77,19 +79,28 @@ tagList(
                  fixedRow(
                    column(3, uiOutput("slicesmenu")),
                    column(3, uiOutput("searchnodemenu")),
-                   column(3, uiOutput("singlenodeselectmenu")),
-                   column(3, uiOutput("viewnodeselectmenu"))
+                   column(2, uiOutput("singlenodeselectmenu")),
+                   column(2, uiOutput("viewnodeselectmenu")),
+                   column(2, uiOutput("visualoptionsmenu"))
                  ),
+                 tags$br(),
+                 # fixedRow(
+                 #   column(11, offset=1, uiOutput("visualeditmenu"))
+                 # ),
                  visNetworkOutput("graph_panel", height = "750px", width = "100%"),
-                 absolutePanel(id = "visualeditcontrols",
+                 absolutePanel(
+                   id = "editcontrols",
                    class = "panel panel-default",
-                   top = 155, left = 370,  width = 1200, fixed = TRUE,
+                   top = 170, left = 320,  width = 1100, fixed = TRUE,
                    draggable = TRUE,
                    height = "auto",
-                   fixedRow(
-                      column(12, uiOutput("visualeditmenu"))
+                   tagList(
+                     fixedRow(
+                       uiOutput("visualeditmenu")
+                     )
                    )
                  )
+                 
               )
             )
   )),
@@ -391,7 +402,7 @@ server <- function(input, output, session) {
           }
         }
       visStabilize(graph_panel_data$proxy, NULL)
-      visFit(graph_panel_data$proxy)
+      # visFit(graph_panel_data$proxy)
 
         # browser()
         
@@ -781,10 +792,15 @@ server <- function(input, output, session) {
   observeEvent(input$nep_edit_edge_done, {
     removeModal()
     newedge = nep_editor_state$original
+    cols = colnames(newedge)
     newedge$from=input$nep_from
     newedge$to=input$nep_to
     newedge$label=input$nep_label
     newedge$linktype=input$nep_linktype
+    if ("width" %in% cols)    newedge$width = as.integer(input$nep_width)
+    if ("color" %in% cols)    newedge$color = input$nep_color
+    if ("length" %in% cols)    newedge$length = as.integer(input$nep_length)
+
     newedge$eid=getEidForEdge(input$nep_from, input$nep_to, input$nep_label)
     rv$activeview = replaceEdgeInView(rv$activeview, nep_editor_state$original, newedge)
   })  
@@ -803,6 +819,7 @@ server <- function(input, output, session) {
   })
   
   saveEditChangesToNode <- function(n) {
+    cols = colnames(n)
     newnode = n
     newnode = nep_editor_state$original
     newnode$nid=input$nep_nid
@@ -812,21 +829,31 @@ server <- function(input, output, session) {
     newnode$domain=input$nep_domain
     newnode$groups=input$nep_groups
     newnode$url=input$nep_url
+    if ("shape" %in% cols)    newnode$shape = input$nep_shape
+    if ("title" %in% cols)    newnode$title = input$nep_title
+    if ("color" %in% cols)    newnode$color = input$nep_color
+    if ("size" %in% cols)     newnode$size  = as.integer(input$nep_size)
     return(newnode)
   }
   
   edgeChangeModal <- function(edge, actionlabel) {
     nep_editor_state$original = edge
+    cols = colnames(edge)
     showModal(modalDialog(
       title = "Edge editor",
       easyClose = TRUE,
       size="m",
       footer = fixedRow(actionButton(actionlabel, "Done"), modalButton("Cancel")),
-      
       fixedRow(column(3, HTML("from:")), column(7, textInput("nep_from", value = edge$from , label=NULL))),
       fixedRow(column(3, HTML("to:")), column(7, textInput("nep_to", value = edge$to , label=NULL))),
       fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = edge$label , label=NULL))),
       fixedRow(column(3, HTML("linktype:")), column(7, textInput("nep_linktype", value = edge$linktype , label=NULL))),
+      if ("color" %in% cols)
+          fixedRow(column(3, HTML("color:")), column(7, textInput("nep_color", value = edge$color , label=NULL))),
+      if ("width" %in% cols)
+        fixedRow(column(3, HTML("width:")), column(7, textInput("nep_width", value = edge$width , label=NULL))),
+      if ("length" %in% cols)
+        fixedRow(column(3, HTML("length:")), column(7, textInput("nep_length", value = edge$length , label=NULL))),
       # fixedRow(column(3, HTML("domain:")), column(7, textInput("nep_domain", value = node$domain , label=NULL))),
       # fixedRow(column(3, HTML("groups:")), column(7, textInput("nep_groups", value = node$groups , label=NULL))),
       # fixedRow(column(3, HTML("url:")), column(7, textInput("nep_url", value = node$url , label=NULL))),
@@ -836,12 +863,13 @@ server <- function(input, output, session) {
   
   nodeChangeModal <- function(node, actionlabel) {
     nep_editor_state$original = node
+    cols = colnames(node)
     showModal(modalDialog(
       title = "Node editor",
       easyClose = TRUE,
       size="m",
       footer = fixedRow(actionButton(actionlabel, "Done"), modalButton("Cancel")),
-
+      
       fixedRow(column(3, HTML("nid:")), column(7, textInput("nep_nid", value = node$nid , label=NULL))),
       fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = node$label , label=NULL))),
       fixedRow(column(3, HTML("nodetype:")), column(7, textInput("nep_nodetype", value = node$nodetype , label=NULL))),
@@ -849,11 +877,19 @@ server <- function(input, output, session) {
       fixedRow(column(3, HTML("domain:")), column(7, textInput("nep_domain", value = node$domain , label=NULL))),
       fixedRow(column(3, HTML("groups:")), column(7, textInput("nep_groups", value = node$groups , label=NULL))),
       fixedRow(column(3, HTML("url:")), column(7, textInput("nep_url", value = node$url , label=NULL))),
-     )
+      if ("title" %in% cols)
+        fixedRow(column(3, HTML("title:")), column(7, textInput("nep_title", value = node$title , label=NULL))),
+      if ("shape" %in% cols)
+        fixedRow(column(3, HTML("shape:")), column(7, textInput("nep_shape", value = node$shape , label=NULL))),
+      if ("color" %in% cols)
+        fixedRow(column(3, HTML("color:")), column(7, textInput("nep_color", value = node$color , label=NULL))),
+      if ("size" %in% cols)
+        fixedRow(column(3, HTML("size:")), column(7, textInput("nep_size", value = node$size , label=NULL))),
+    )
     )
   }
   
-
+  
 # Starting points selector + handling -------------------------------------
 
     
@@ -1055,6 +1091,29 @@ server <- function(input, output, session) {
     }
   } )
   
+  
+  output$visualoptionsmenu <-renderUI({
+    tagList(fixedRow(
+      column(10,
+             tagList(
+               tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
+             )
+      ),
+      column(10, offset=1,
+             conditionalPanel(
+               "input.visualoptions",
+               verticalLayout(
+                 tags$small(checkboxInput3("vo_images", "Icons", TRUE, width=80)),
+                 tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE, width=80)),
+                 tags$small(checkboxInput3("vo_linklabels", "Link labels", TRUE, width=80))
+              )
+             )
+      )
+    ))
+    
+  })
+  
+  
 # Settings and action handling for draw mode ---------------------
 
   # If the user edits the graph (in manipulation mode), this shows up in
@@ -1102,22 +1161,21 @@ server <- function(input, output, session) {
 output$visualeditmenu <- renderUI ({
   tagList(
     HTML("&nbsp;"), 
-    HTML("Edit"),
     HTML("&nbsp;"), 
     actionBttn("undo", label=NULL, size="xs", icon=icon("undo",lib="font-awesome"), color="danger"),
     HTML("-"),
     actionBttn("removenode", label=NULL, size="xs", icon=icon("cut",lib="font-awesome"), color="danger"),
     actionBttn("removeedge", label=NULL, size="xs", icon=icon("chain-broken",lib="font-awesome"), color="danger"),
-    HTML("-"),
+    HTML("--"),
     actionBttn("exist_node_editor", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="primary"),
     actionBttn("exist_edge_editor", label=NULL, size="xs", icon=icon("link",lib="font-awesome"), color="primary"),
-    HTML("-"),
+    HTML("--"),
     actionBttn("editclonenode", label=NULL, size="xs", icon=icon("clone",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor", label=NULL, size="xs", icon=icon("plus-square-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_box", label=NULL, size="xs", icon=icon("square-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_dot", label=NULL, size="xs", icon=icon("circle-o",lib="font-awesome"), color="default"),
     actionBttn("new_node_editor_text", label=NULL, size="xs", icon=icon("text-width",lib="font-awesome"), color="default"),
-    HTML("---"),
+    HTML("--"),
     actionBttn("ve_grow_size", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="success"),
     actionBttn("ve_shrink_size", label="node", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
     HTML("-"),
@@ -1126,14 +1184,14 @@ output$visualeditmenu <- renderUI ({
     HTML("-"),
     actionBttn("ve_widen_edge", label=NULL, size="xs", icon=icon("chevron-up",lib="font-awesome"), color="success"),
     actionBttn("ve_narrow_edge", label="edge", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
-    HTML("&nbsp;"), 
-    HTML("Visual "),
-    HTML("&nbsp;"), 
-    tags$small(checkboxInput3("vo_images", "Icons", TRUE, width=80)),
-    tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE, width=80)),
-    tags$small(checkboxInput3("vo_linklabels", "Link labels", TRUE, width=80))
+    HTML("-"), 
+    actionBttn("ve_dashes", label="", size="xs", icon=icon("minus",lib="font-awesome"), color="success"),
+    HTML("--"), 
+    actionBttn("ve_color_node", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="warning"),
+    actionBttn("ve_color_edge", label="color", size="xs", icon=icon("link",lib="font-awesome"), color="warning"),
   )
 })
+  
   
   # 
    observeEvent(input$undo, {
@@ -1231,6 +1289,66 @@ output$visualeditmenu <- renderUI ({
      newedge$width = newedge$width-1
      rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
    })
+
+   observeEvent(input$ve_dashes, {
+     if (is.null(rv$theedgeselected) | rv$theedgeselected == "") 
+       return(NULL)
+     edge = getEdgeByEid(rv$activeview, rv$theedgeselected)
+     if (!("dashes" %in% colnames(edge)))
+       edge = add_column(edge, dashes=FALSE)
+     newedge = edge
+     if(is.na(newedge$dashes)) {
+       newedge$dashes = FALSE
+     }
+     newedge$dashes = !newedge$dashes
+     rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
+   })
+   
+   # Color selector ----------------------------------------------------------
+
+   
+   col_selector_state = reactiveValues(
+     original = NULL
+   )
+   
+   observeEvent(input$ve_color_node, {
+     if (!is.null(rv$thenodeselected) & rv$thenodeselected != "")
+       doColorSelect(getNodeById(rv$activeview, rv$thenodeselected), "ve_nodecolor_selected")
+   })
+   
+   observeEvent(input$ve_color_edge, {
+     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "")
+       doColorSelect(getEdgeByEid(rv$activeview, rv$theedgeselected), "ve_edgecolor_selected")
+   })
+   
+   doColorSelect <- function(obj, actionlabel) {
+     col_selector_state$original = obj
+     showModal(modalDialog(
+       title = "Select colour",
+       easyClose = TRUE,
+       size="m",
+       footer = fixedRow(actionButton(actionlabel, "Done"), modalButton("Cancel")),
+       colourInput("colorselector", label="Select colour")
+     ))
+   }
+   
+   observeEvent(input$ve_nodecolor_selected, {
+     removeModal()
+     oldnode = col_selector_state$original
+     newnode = oldnode
+     newnode$color = input$colorselector
+     rv$activeview = replaceNodeInView(rv$activeview, oldnode, newnode)
+   })
+   
+   observeEvent(input$ve_edgecolor_selected, {
+     removeModal()
+     oldedge = col_selector_state$original
+     newedge = oldedge
+     newedge$color = input$colorselector
+     rv$activeview = replaceEdgeInView(rv$activeview, oldedge, newedge)
+   })
+   
 }
+
 
 shinyApp(ui = ui, server = server)

@@ -103,6 +103,10 @@ addActualBrokenImageForNode <- function(view, node) {
 addVisualSettingsToNode <- function(view, node, doimage, dofreeze) {
 #   browser()
   newnode = node
+  
+  # Experiment
+  newnode$label = str_wrap(newnode$label, width=20) #TODO: add explicit control in label
+
   newnode = addActualShapeForNode(view, newnode, doimage)
   newnode = addActualImageForNode(view, newnode)
   newnode = addActualColorForNode(view, newnode)
@@ -127,7 +131,9 @@ addActualColorForEdge <- function(view, edge) {
 
 
 addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows, dofreeze) {
-  newedge = addActualColorForEdge(view, edge)
+  newedge = edge
+  
+  newedge = addActualColorForEdge(view, newedge)
   newedge = add_column(newedge, arrows=if_else(doarrows, "to", NULL))
   if (!dolabel)
     newedge$label = ""
