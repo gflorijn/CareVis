@@ -95,7 +95,6 @@ getEidForEdge <- function(from, to, label) {
 # $nodes - the vertices
 # $edges - the edges
 readViewFromJSON <-  function(jsonfile) {
-  cat('check json input for nv_ids\n')
   view = fromJSON(jsonfile)
   view$nodes = as_tibble(view$nodes)
   if (!("nv_id" %in% colnames(view$nodes))) {

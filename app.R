@@ -246,7 +246,8 @@ server <- function(input, output, session) {
     visualcontrols = reactiveValues(
       arrows = FALSE,
       images = TRUE,
-      linklabels = TRUE
+      linklabels = TRUE,
+      highlightselection = FALSE  
     )
     
 
@@ -300,12 +301,14 @@ server <- function(input, output, session) {
     observeEvent({
       graph_panel_data$proxy
       visualcontrols
+      visualcontrols$highlightselection
     }, {
       if (is.null(graph_panel_data$proxy)) {
         return(NULL)
       }
       
-      #nothing to do...
+      visOptions(graph_panel_data$proxy, highlightNearest = visualcontrols$highlightselection)
+
     })
 
 
@@ -494,42 +497,37 @@ server <- function(input, output, session) {
     observeEvent(input$showdemos, {
       showModal(modalDialog(
         easyClose = TRUE,
-        title = "Some Demos",
-        tags$p("Tutorial - simple illustration of different kinds of nodes"),
-        downloadLink("demotutorialjson", "Download json file"),
-        tags$br(),
-        actionLink("demotutorialload", "Add to network"),
+        title = "Een paar demo files",
+        tags$p("Tutorial - simpel voorbeeld van een netwerk"),
+        actionLink("demotutorialload", "Toon in view"),
         tags$p(),
-        tags$p("PGO - Illustration of components involved in a PGO (already loaded)"),
-        # downloadLink("demoPGOjson", "Download json file"),
+        tags$p("PGO - Illustratie van elementen in een PGO"),
+        actionLink("demoPGOload", "Toon in view"),
+        tags$p(),
+        tags$p("i-Overdracht - illustratie van een interactie"),
+        actionLink("demoiOverdrachtload", "Toon in view"),
         tags$br(),
       ))
     })
     
-    output$demotutorialjson <- downloadHandler(
-      filename <- function() {
-        "demo-tutorial-v1.json"
-      },
-      content <- function(file) {
-        file.copy("Demos/tutorial-v1.json", file)
-      }
-    )
-    
     observeEvent(input$demotutorialload, {
-      thedata = fromJSON("Demos/tutorial-v1.json")
+      removeModal()
+      thedata = readViewFromJSON("Demos/tutorial-v1.json")
+      restartBrowserOnViewData(thedata)
+    })
+
+    observeEvent(input$demoPGOload, {
+      removeModal()
+      thedata = readViewFromJSON("Demos/PGO.json")
+      restartBrowserOnViewData(thedata)
+    })
+
+    observeEvent(input$demoiOverdrachtload, {
+      removeModal()
+      thedata = readViewFromJSON("Demos/iOverdracht.json")
       restartBrowserOnViewData(thedata)
     })
     
-    # output$demoPGOjson <- downloadHandler(
-    #   # filename <- function() {
-    #   #   "demo-PGO.json"
-    #   # },
-    #   # content <- function(file) {
-    #   #   file.copy("Data/PGO.json", file)
-    #   # }
-    # )
-    
-
 # Node/Edge selection and menu handling ----------------------------------------
 
     haveSelectedEdge <- function() {
@@ -1242,17 +1240,16 @@ output$visualeditmenu <- renderUI ({
     HTML("--"),
     actionBttn("ve_fix_node_position", label=NULL, size="xs", icon=icon("map-marker",lib="font-awesome"), color="warning"),
     actionBttn("ve_zoom_node", label=NULL, size="xs", icon=icon("search",lib="font-awesome"), color="warning"),
-    actionBttn("ve_highlight_node", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
+HTML("-"),    actionBttn("ve_highlight_modus", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
     # actionBttn("ve_highlight_edge", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
   )
 })
   
   # highlight a node
-  observeEvent(input$ve_highlight_node, {
-    if (haveSelectedNode()) {
-      cat('todo: highlight node\n')
-    }
+  observeEvent(input$ve_highlight_modus, {
+    visualcontrols$highlightselection = !visualcontrols$highlightselection
   })
+  
   
   
   # Zoom the focus on a node
