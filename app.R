@@ -310,7 +310,6 @@ server <- function(input, output, session) {
       visOptions(graph_panel_data$proxy, 
                  manipulation = TRUE,
                  highlightNearest = visualcontrols$highlightselection)
-xxx
     })
 
 
@@ -845,6 +844,7 @@ xxx
     newedge$to=input$nep_to
     newedge$label=input$nep_label
     newedge$linktype=input$nep_linktype
+    if ("title" %in% cols)    newedge$title = input$nep_title
     if ("width" %in% cols)    newedge$width = as.integer(input$nep_width)
     if ("color" %in% cols)    newedge$color = input$nep_color
     if ("length" %in% cols)    newedge$length = as.integer(input$nep_length)
@@ -896,6 +896,8 @@ xxx
       fixedRow(column(3, HTML("to:")), column(7, textInput("nep_to", value = edge$to , label=NULL))),
       fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = edge$label , label=NULL))),
       fixedRow(column(3, HTML("linktype:")), column(7, textInput("nep_linktype", value = edge$linktype , label=NULL))),
+      if ("title" %in% cols)
+        fixedRow(column(3, HTML("title:")), column(7, textInput("nep_title", value = edge$title , label=NULL))),
       if ("color" %in% cols)
           fixedRow(column(3, HTML("color:")), column(7, textInput("nep_color", value = edge$color , label=NULL))),
       if ("width" %in% cols)
