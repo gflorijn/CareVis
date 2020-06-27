@@ -1,0 +1,169 @@
+{
+  "nodes": [
+    {
+      "nv_id": "misuf-gituh-jifaj",
+      "nid": "Huisarts",
+      "label": "Huisarts",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Huisarts",
+      "url": ""
+    },
+    {
+      "nv_id": "vopur-rakib-fabav",
+      "nid": "VVT",
+      "label": "VVT",
+      "nodetype": "party",
+      "domain": "Zorgaanbieders",
+      "groups": "",
+      "nv_image": "VVT",
+      "url": ""
+    },
+    {
+      "nv_id": "komid-pijik-larik",
+      "nid": "Overdrachtdossier",
+      "label": "Overdrachtdossier",
+      "nodetype": "object",
+      "domain": "Gegevens",
+      "groups": "",
+      "nv_image": "Overdrachtdossier",
+      "url": ""
+    },
+    {
+      "nv_id": "tudin-pikoz-vivib",
+      "nid": "Point",
+      "label": "Point",
+      "nodetype": "system",
+      "domain": "Systemen",
+      "groups": "",
+      "nv_image": "Point",
+      "url": ""
+    },
+    {
+      "nv_id": "dazup-nalom-kuhaz",
+      "nid": "Ziekenhuis",
+      "label": "Ziekenhuis",
+      "nodetype": "party",
+      "domain": "Zorgaanbieders",
+      "groups": "",
+      "nv_image": "Ziekenhuis",
+      "url": ""
+    },
+    {
+      "nv_id": "duvob-lokil-suriv",
+      "nid": "i-Overdracht",
+      "label": "i-Overdracht",
+      "nodetype": "interaction",
+      "domain": "Interactie",
+      "groups": "",
+      "nv_image": "i-Overdracht",
+      "url": ""
+    },
+    {
+      "nv_id": "mapol-suhim-nutok",
+      "nid": "Verpleegkundige",
+      "label": "Verpleegkundige",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Verpleegkundige",
+      "url": ""
+    },
+    {
+      "nv_id": "zuruj-hanaz-higuj",
+      "nid": "Wijkverpleger",
+      "label": "Wijkverpleger",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Persoon2",
+      "url": ""
+    }
+  ],
+  "edges": [
+    {
+      "nv_id": "malol-tafim-gopov",
+      "eid": "Point--i-Overdracht",
+      "from": "Point",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "masuv-jisim-zohup",
+      "eid": "Huisarts--i-Overdracht",
+      "from": "Huisarts",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "voson-zikod-tiloj",
+      "eid": "VVT--i-Overdracht",
+      "from": "VVT",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "dizom-vilil-kajab",
+      "eid": "i-Overdracht--Overdrachtdossier",
+      "from": "i-Overdracht",
+      "to": "Overdrachtdossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "ginij-bimij-ruhip",
+      "eid": "Ziekenhuis--i-Verwijzen",
+      "from": "Ziekenhuis",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "horit-hotak-hilik",
+      "eid": "Ziekenhuis--i-Ziekenhuiszorg",
+      "from": "Ziekenhuis",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "pokum-bilof-niruj",
+      "eid": "Ziekenhuis--i-Overdracht",
+      "from": "Ziekenhuis",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "timij-tadub-potam",
+      "eid": "Ziekenhuis--i-eHealth",
+      "from": "Ziekenhuis",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "modab-sigun-pigib",
+      "eid": "Verpleegkundige--Ziekenhuis",
+      "from": "Verpleegkundige",
+      "to": "Ziekenhuis",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "jijiv-vokom-hasuj",
+      "eid": "Wijkverpleger--VVT",
+      "from": "Wijkverpleger",
+      "to": "VVT",
+      "label": "",
+      "linktype": "refer"
+    }
+  ],
+  "info": {
+    "name": ["iOverdracht"]
+  }
+}
