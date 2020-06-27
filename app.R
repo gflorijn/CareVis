@@ -79,8 +79,8 @@ tagList(
                  fixedRow(
                    column(3, uiOutput("slicesmenu")),
                    column(3, uiOutput("searchnodemenu")),
-                   column(2, uiOutput("singlenodeselectmenu")),
-                   column(2, uiOutput("viewnodeselectmenu")),
+                   column(3, uiOutput("singlenodeselectmenu")),
+                   # column(2, uiOutput("viewnodeselectmenu")),
                    column(2, uiOutput("visualoptionsmenu"))
                  ),
                  tags$br(),
@@ -820,7 +820,7 @@ server <- function(input, output, session) {
   
   # Launch editor on existing edge
   observeEvent(input$exist_edge_editor, {
-    if (haveSelectedEdge) {
+    if (haveSelectedEdge()) {
       # browser()
        edgeChangeModal(getEdgeByEid(rv$activeview, selectedEdgeId()), "nep_edit_edge_done")
     }
@@ -1032,10 +1032,13 @@ server <- function(input, output, session) {
             smallHTMLUIButton("s", "nodemenuclick", "system", getLinkColor("system")),
             smallHTMLUIButton("o", "nodemenuclick", "object", getLinkColor("object")),
             smallHTMLUIButton("r", "nodemenuclick", "refer", getLinkColor("refer")),
+            smallHTMLUIButton("#", "nodemenuclick", "internal", "black"),
             smallHTMLUIButton("*", "nodemenuclick", "all", "black")
         )
       ),
       actionBttn("switchfocus", label="F", size="xs", color="default"),
+      HTML("&nbsp;"), HTML("&nbsp;"),
+      actionBttn("showall", label="All", size="xs", color="default"), 
       tags$br(),
       tags$small(htmlOutput("selectionfield"))
     )
@@ -1047,17 +1050,29 @@ server <- function(input, output, session) {
     HTML(m)
   })
   
-  #react to click on linkmenu for selected node - the event has the link type to follow
+  #react to click on linkmenu for selected node, if no selected node apply to all in view- the event has the link type to follow
   observeEvent(input$nodemenuclick, {
-    if (!haveSelectedNode()) {
-      return(NULL)
-    }
     linktypes = c(input$nodemenuclick)
-    if (linktypes == "all")
-      linktypes = getLinkTypes(rv$activeview$net)
-    setUndoPoint()
-    rv$activeview = addFriendsOfNodeToView(rv$activeview, c(selectedNodeId()), linktypes)
+    if (haveSelectedNode()) {
+      if (linktypes == "all")
+        linktypes = getLinkTypes(rv$activeview$net)
+      setUndoPoint()
+      rv$activeview = addFriendsOfNodeToView(rv$activeview, c(selectedNodeId()), linktypes)
+    }
+    else { # apply to all nodes in view
+      if (linktypes == "internal") {
+        setUndoPoint()
+        rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
+      }
+      else {
+        if (linktypes == "all") #todo: simplify this
+          linktypes=getLinkTypes(rv$thenetworkinfo)
+        setUndoPoint()
+        rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
+      }
+    }
   } )
+
   
   # hide event
   observeEvent(input$removenode, {
@@ -1102,46 +1117,33 @@ server <- function(input, output, session) {
       rv$activeview = addCloneOfNodeToView(rv$activeview, selectedNodeId())
   })
   
-# Settings and action handling for view node menu -------------------------
+# # Settings and action handling for view node menu -------------------------
+# 
+#   
+#   output$viewnodeselectmenu <- renderUI({
+#     tagList(
+#       HTML(
+#         c (
+#           smallHTMLUIButton("a", "viewmenuclick", "actor", getLinkColor("actor")),
+#           smallHTMLUIButton("u", "viewmenuclick", "use", getLinkColor("use")),
+#           smallHTMLUIButton("s", "viewmenuclick", "system", getLinkColor("system")),
+#           smallHTMLUIButton("o", "viewmenuclick", "object", getLinkColor("object")),
+#           smallHTMLUIButton("r", "viewmenuclick", "refer", getLinkColor("refer")),
+#           smallHTMLUIButton("#", "viewmenuclick", "internal", "black"),
+#           smallHTMLUIButton("*", "viewmenuclick", "all", "black")
+#         )
+#       ),
+#       actionBttn("showall", label="All", size="xs", color="default"), 
+#       tags$br(),
+#       tags$small("Nodes in view")
+#     )
+#   })
+# 
 
   
-  output$viewnodeselectmenu <- renderUI({
-    tagList(
-      HTML(
-        c (
-          smallHTMLUIButton("a", "viewmenuclick", "actor", getLinkColor("actor")),
-          smallHTMLUIButton("u", "viewmenuclick", "use", getLinkColor("use")),
-          smallHTMLUIButton("s", "viewmenuclick", "system", getLinkColor("system")),
-          smallHTMLUIButton("o", "viewmenuclick", "object", getLinkColor("object")),
-          smallHTMLUIButton("r", "viewmenuclick", "refer", getLinkColor("refer")),
-          smallHTMLUIButton("#", "viewmenuclick", "internal", "black"),
-          smallHTMLUIButton("*", "viewmenuclick", "all", "black")
-        )
-      ),
-      actionBttn("showall", label="All", size="xs", color="default"), 
-      tags$br(),
-      tags$small("Nodes in view")
-    )
-  })
 
+# Visual options menu -----------------------------------------------------
 
-  
-  #click on linkmenu for all nodes in view
-  observeEvent(input$viewmenuclick, {
-    #cat('input menu click: ', input$viewmenuclick, '\n')
-    linktypes = c(input$viewmenuclick)
-    if (linktypes == "internal") {
-      setUndoPoint()
-      rv$activeview = addEdgesBetweenNodesInView(rv$activeview)
-    }
-    else {
-      if (linktypes == "all") #todo: simplify this
-        linktypes=getLinkTypes(rv$thenetworkinfo)
-      setUndoPoint()
-      rv$activeview = addFriendsAndEdgesOfNodesInView(rv$activeview, linktypes)
-    }
-  } )
-  
   
   output$visualoptionsmenu <-renderUI({
     tagList(fixedRow(
@@ -1245,15 +1247,21 @@ output$visualeditmenu <- renderUI ({
     actionBttn("ve_fix_node_position", label=NULL, size="xs", icon=icon("map-marker",lib="font-awesome"), color="warning"),
     actionBttn("ve_zoom_node", label=NULL, size="xs", icon=icon("search",lib="font-awesome"), color="warning"),
     actionBttn("ve_highlight_node", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
-    actionBttn("ve_highlight_edge", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
+    # actionBttn("ve_highlight_edge", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
   )
 })
   
-
- 
+  # highlight a node
+  observeEvent(input$ve_highlight_node, {
+    if (haveSelectedNode()) {
+      cat('todo: highlight node\n')
+    }
+  })
+  
+  
   # Zoom the focus on a node
   observeEvent(input$ve_zoom_node, {
-    if (haveSelectedNode) {
+    if (haveSelectedNode()) {
       visFocus(graph_panel_data$proxy, selectedNodeId())
     }
   })
