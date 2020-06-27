@@ -66,8 +66,8 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   actionButton(inputId = "interrupt", "Interrupt"),
-                   tags$hr(),
+                   # actionButton(inputId = "interrupt", "Interrupt"),
+                   # tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -307,8 +307,10 @@ server <- function(input, output, session) {
         return(NULL)
       }
       
-      visOptions(graph_panel_data$proxy, highlightNearest = visualcontrols$highlightselection)
-
+      visOptions(graph_panel_data$proxy, 
+                 manipulation = TRUE,
+                 highlightNearest = visualcontrols$highlightselection)
+xxx
     })
 
 
