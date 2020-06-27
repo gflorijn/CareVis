@@ -232,6 +232,13 @@ server <- function(input, output, session) {
       proxy = NULL,
       initialized = FALSE
     )
+ 
+    # the state of the selection   
+    graph_selection_state = reactiveValues(
+      nodeid = NULL,
+      edgeid = NULL,
+      coords = NULL
+    )
     
     
     # Controls that govern the presentation of the graph
@@ -261,16 +268,15 @@ server <- function(input, output, session) {
       vnt = visInteraction(vnt, 
         navigationButtons = TRUE)
       vnt = visEvents(vnt,
-        select = "function(data) {
-                          Shiny.onInputChange('select_current_nodes', data);
-                          Shiny.onInputChange('select_current_edges', data);
-                  ;}"
+         select = "function(data) {
+                           Shiny.onInputChange('select_current', data);
+                   ;}"
       )
       # vnt = visEvents(vnt,
-      #   select = "function(data) {
-      #                     Shiny.onInputChange('select_current_nodes', data.nodes);
-      #                     Shiny.onInputChange('select_current_edges', data.edges);
-      #             ;}"
+      #    select = "function(data) {
+      #                      Shiny.onInputChange('select_current_nodes', data.nodes);
+      #                      Shiny.onInputChange('select_current_edges', data.edges);
+      #              ;}"
       # )
       rv$thevisnet = vnt
       
@@ -525,31 +531,61 @@ server <- function(input, output, session) {
     # )
     
 
-# Node selection and menu handling ----------------------------------------
+# Node/Edge selection and menu handling ----------------------------------------
 
-  node_selection_state = reactiveValues(
-    nodeid = NULL,
-    coords = NULL 
-  ) 
-    # Node selection - see visEvents
-    observeEvent(input$select_current_nodes,  {
+    haveSelectedEdge <- function() {
+      if (is.null(graph_selection_state$edgeid))
+        return(FALSE)
+      if (graph_selection_state$edgeid == "")
+        return(FALSE)
+      return(TRUE)
+    }
+    selectedEdgeId <- function() {
+      if (!haveSelectedEdge()) {
+        cat('Warning: selectedEdgeId called without selection.')
+        return(NULL)
+      }
+      return(graph_selection_state$edgeid)
+    }
+    
+    haveSelectedNode <- function() {
+      if (is.null(graph_selection_state$nodeid))
+        return(FALSE)
+      if (graph_selection_state$nodeid == "")
+        return(FALSE)
+      return(TRUE)
+    }
+    selectedNodeId <- function() {
+      if (!haveSelectedNode()) {
+        cat('Warning: selectedNodeId called without selection.')
+        return(NULL)
+      }
+      return(graph_selection_state$nodeid)
+    }
+    
+    
+    #  selection - see visEvents. Nodes and edges are lists. 
+    observeEvent(input$select_current,  {
       # browser()
-      #cat("select_current_nodes ", input$select_current_nodes$nodes[1], "\n")
-      rv$thenodeselected = input$select_current_nodes$nodes
-#      browser()
-      cat('pick up the x, y and store them in a reactive value\n')
-      node_selection_state$nodeid = input$select_current_nodes$nodes[1]
-      node_selection_state$coords = input$select_current_nodes$pointer$canvas
-    })
+      graph_selection_state$nodeid = NULL
+      if (!is_empty(input$select_current$nodes))
+          graph_selection_state$nodeid = input$select_current$nodes[1]
+      graph_selection_state$edgeid = NULL
+      if (!is_empty(input$select_current$edges))
+          graph_selection_state$edgeid = input$select_current$edges[1]
+      rv$thenodeselected = graph_selection_state$nodeid
+      rv$theedgeselected = graph_selection_state$edgeid
+      graph_selection_state$coords = input$select_current$pointer$canvas
+     })
     
-    #Edge selection - see visEvents
-    observeEvent(input$select_current_edges,  {
-      # browser()
-      #cat("select_current_edges ", input$select_current_edges$edges, "\n")
-      rv$theedgeselected = input$select_current_edges$edges
-    })
-    
-    
+    # #Edge selection - see visEvents
+    # observeEvent(input$select_current_edges,  {
+    #   # browser()
+    #   rv$theedgeselected = input$select_current_edges
+    #   #cat("select_current_edges ", input$select_current_edges, "\n")
+    # })
+    # 
+    # 
     # Selection of a group - not used
     #  observeEvent(input$graph_panel_selectedBy, {
     #    cat("Observe-graph_panel_selectedBy ", input$graph_panel_selectedBy, "\n")
@@ -569,11 +605,12 @@ server <- function(input, output, session) {
     
     # == UI for node selection handling
     observeEvent(rv$thenodeselected, {
+      # browser()
       rv$themessage = " "
       rv$theurl = ""
-      if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
-          return()
-      rv$theurl = getNodeById(rv$activeview, rv$thenodeselected)$url
+      if (!haveSelectedNode())
+          return(NULL)
+      rv$theurl = getNodeById(rv$activeview, selectedNodeId())$url
       haveurl = FALSE
       if (rv$theurl != "") {
         haveurl = TRUE
@@ -776,16 +813,16 @@ server <- function(input, output, session) {
   
   # Launch editor on existing node
   observeEvent(input$exist_node_editor, {
-   if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
-     nodeChangeModal(getNodeById(rv$activeview, rv$thenodeselected), "nep_edit_node_done")
+   if (haveSelectedNode()) {
+     nodeChangeModal(getNodeById(rv$activeview, selectedNodeId()), "nep_edit_node_done")
    }
   })
   
   # Launch editor on existing edge
   observeEvent(input$exist_edge_editor, {
-    if (!is.null(rv$theedgeselected) & rv$theedgeselected != "") {
+    if (haveSelectedEdge) {
       # browser()
-       edgeChangeModal(getEdgeByEid(rv$activeview, rv$theedgeselected), "nep_edit_edge_done")
+       edgeChangeModal(getEdgeByEid(rv$activeview, selectedEdgeId()), "nep_edit_edge_done")
     }
    })
 
@@ -1004,47 +1041,47 @@ server <- function(input, output, session) {
     )
   })
   
-  # Onder node select menu
+  # Below node select menu
   output$selectionfield <- renderUI({
-    m = paste0("Selected node: <b>", ifelse(!is.null(rv$thenodeselected), rv$thenodeselected, "(none)"), "</b>")
+    m = paste0("Selected node: <b>", ifelse(haveSelectedNode(), selectedNodeId(), "(none)"), "</b>")
     HTML(m)
   })
   
   #react to click on linkmenu for selected node - the event has the link type to follow
   observeEvent(input$nodemenuclick, {
-    if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
-      return
+    if (!haveSelectedNode()) {
+      return(NULL)
     }
     linktypes = c(input$nodemenuclick)
     if (linktypes == "all")
       linktypes = getLinkTypes(rv$activeview$net)
     setUndoPoint()
-    rv$activeview = addFriendsOfNodeToView(rv$activeview, c(rv$thenodeselected), linktypes)
+    rv$activeview = addFriendsOfNodeToView(rv$activeview, c(selectedNodeId()), linktypes)
   } )
   
   # hide event
   observeEvent(input$removenode, {
-    if (is.null(rv$thenodeselected) | rv$thenodeselected == "") {
-      return
+    if (!haveSelectedNode()) {
+      return(NULL)
     }
     setUndoPoint()
-    rv$activeview = removeNodesFromViewById(rv$activeview, c(rv$thenodeselected))
+    rv$activeview = removeNodesFromViewById(rv$activeview, c(selectedNodeId()))
   })
 
   # hide event
   observeEvent(input$removeedge, {
-    if (is.null(rv$theedgeselected) | rv$theedgeselected == "") {
-      return
+    if (!haveSelectedEdge()) {
+      return(NULL)
     }
 #    browser()
     setUndoPoint()
-    rv$activeview = removeEdgesFromViewById(rv$activeview, c(rv$theedgeselected))
+    rv$activeview = removeEdgesFromViewById(rv$activeview, c(selectedEdgeId()))
   })
   
   # Focus view on a node
   observeEvent(input$switchfocus, {
     setUndoPoint()
-    rv$activeview = restartViewOnNodeIds(rv$activeview, c(rv$thenodeselected))
+    rv$activeview = restartViewOnNodeIds(rv$activeview, c(selectedNodeId()))
   }) 
   
   # View the whole underlying network
@@ -1061,9 +1098,8 @@ server <- function(input, output, session) {
   
   
   observeEvent(input$editclonenode, {
-    if (is.null(rv$thenodeselected) | rv$thenodeselected == "")
-      return()
-    rv$activeview = addCloneOfNodeToView(rv$activeview, rv$thenodeselected)
+    if (haveSelectedNode())
+      rv$activeview = addCloneOfNodeToView(rv$activeview, selectedNodeId())
   })
   
 # Settings and action handling for view node menu -------------------------
@@ -1201,12 +1237,12 @@ output$visualeditmenu <- renderUI ({
     actionBttn("ve_narrow_edge", label="edge", size="xs", icon=icon("chevron-down",lib="font-awesome"), color="success"),
     HTML("-"), 
     actionBttn("ve_dashes", label="", size="xs", icon=icon("minus",lib="font-awesome"), color="success"),
+    actionBttn("ve_arrows", label="", size="xs", icon=icon("arrow-right",lib="font-awesome"), color="success"),
     HTML("--"), 
     actionBttn("ve_color_node", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="warning"),
     actionBttn("ve_color_edge", label="color", size="xs", icon=icon("link",lib="font-awesome"), color="warning"),
     HTML("--"),
-    actionBttn("ve_fix_node_position", label=NULL, size="xs", icon=icon("dot-circle-o",lib="font-awesome"), color="warning"),
-    actionBttn("ve_mark_node_position", label=NULL, size="xs", icon=icon("map-marker",lib="font-awesome"), color="warning"),
+    actionBttn("ve_fix_node_position", label=NULL, size="xs", icon=icon("map-marker",lib="font-awesome"), color="warning"),
     actionBttn("ve_zoom_node", label=NULL, size="xs", icon=icon("search",lib="font-awesome"), color="warning"),
     actionBttn("ve_highlight_node", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
     actionBttn("ve_highlight_edge", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
@@ -1214,17 +1250,18 @@ output$visualeditmenu <- renderUI ({
 })
   
 
-  # Toggle the fixed property
+ 
+  # Zoom the focus on a node
   observeEvent(input$ve_zoom_node, {
-    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
-      visFocus(graph_panel_data$proxy, rv$thenodeselected)
+    if (haveSelectedNode) {
+      visFocus(graph_panel_data$proxy, selectedNodeId())
     }
   })
   
   # Toggle the fixed property
   observeEvent(input$ve_fix_node_position, {
-    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
-      node = getNodeById(rv$activeview, rv$thenodeselected)
+    if (haveSelectedNode()) {
+      node = getNodeById(rv$activeview, selectedNodeId())
       if (!("fixed" %in% colnames(node)))
         node = add_column(node, fixed=FALSE)
       newnode = node
@@ -1235,22 +1272,22 @@ output$visualeditmenu <- renderUI ({
       rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
     }
   })
-
-  addXYFromGraphPanel <- function(node) {
-    newnode = node
-    newnode$x = node_selection_state$x
-    newnode$y = node_selection_state$y
-    newnode
-  }
-  
-  # Store the current position in the node
-  observeEvent(input$ve_mark_node_position, {
-    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
-      node = getNodeById(rv$activeview, rv$thenodeselected)
-      newnode = addXYFromGraphPanel(node)
-      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
-    }
-  })
+# 
+#   addXYFromGraphPanel <- function(node) {
+#     newnode = node
+#     newnode$x = graph_selection_state$coords$x
+#     newnode$y = graph_selection_state$coords$y
+#     newnode
+#   }
+#   
+#   # Store the current position in the node
+#   observeEvent(input$ve_mark_node_position, {
+#     if (haveSelectedNode()) {
+#       node = getNodeById(rv$activeview, selectedNodeId())
+#       newnode = addXYFromGraphPanel(node)
+#       rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+#     }
+#   })
   
   # 
    observeEvent(input$undo, {
@@ -1258,10 +1295,10 @@ output$visualeditmenu <- renderUI ({
    })
    
    observeEvent(input$ve_grow_size, {
-     id = rv$thenodeselected
-     if (is.null(id) | id == "") 
-       return
-     node = getNodeById(rv$activeview, id)
+      if (!haveSelectedNode())
+        return(NULL)
+     node = getNodeById(rv$activeview, selectedNodeId())
+     
      if (!("size" %in% colnames(node)))
        node = add_column(node, size=25)
      newnode = node
@@ -1273,10 +1310,10 @@ output$visualeditmenu <- renderUI ({
    })
  
    observeEvent(input$ve_shrink_size, {
-     id = rv$thenodeselected
-     if (is.null(id) | id == "") 
-       return
-     node = getNodeById(rv$activeview, id)
+     if (!haveSelectedNode())
+       return(NULL)
+     node = getNodeById(rv$activeview, selectedNodeId())
+     
      if (!("size" %in% colnames(node)))
        node = add_column(node, size=25)
      newnode = node
@@ -1289,10 +1326,10 @@ output$visualeditmenu <- renderUI ({
    
    
    observeEvent(input$ve_grow_font, {
-     id = rv$thenodeselected
-     if (is.null(id) | id == "") 
-       return
-     node = getNodeById(rv$activeview, id)
+     if (!haveSelectedNode())
+       return(NULL)
+     node = getNodeById(rv$activeview, selectedNodeId())
+     
      if (!("font.size" %in% colnames(node)))
        node = add_column(node, font.size=14)
      newnode = node
@@ -1304,10 +1341,10 @@ output$visualeditmenu <- renderUI ({
    })
 
    observeEvent(input$ve_shrink_font, {
-     id = rv$thenodeselected
-     if (is.null(id) | id == "") 
-       return
-     node = getNodeById(rv$activeview, id)
+     if (!haveSelectedNode())
+       return(NULL)
+     node = getNodeById(rv$activeview, selectedNodeId())
+     
      if (!("font.size" %in% colnames(node)))
        node = add_column(node, font.size=14)
      newnode = node
@@ -1319,11 +1356,10 @@ output$visualeditmenu <- renderUI ({
    })
  
     observeEvent(input$ve_widen_edge, {
-     id = rv$theedgeselected
-     if (is.null(id) | id == "") 
-       return
-     edge = getEdgeByEid(rv$activeview, id)
-     if (!("width" %in% colnames(edge)))
+      if (!haveSelectedEdge())
+        return(NULL)
+      edge = getEdgeByEid(rv$activeview, selectedEdgeId())
+      if (!("width" %in% colnames(edge)))
        edge = add_column(edge, width=1)
      newedge = edge
      if(is.na(edge$width)) {
@@ -1334,10 +1370,9 @@ output$visualeditmenu <- renderUI ({
    })
 
    observeEvent(input$ve_narrow_edge, {
-     id = rv$theedgeselected
-     if (is.null(id) | id == "") 
-       return
-     edge = getEdgeByEid(rv$activeview, id)
+     if (!haveSelectedEdge())
+       return(NULL)
+     edge = getEdgeByEid(rv$activeview, selectedEdgeId())
      if (!("width" %in% colnames(edge)))
        edge = add_column(edge, width=1)
      edge = getEdgeByEid(rv$activeview, id)
@@ -1350,16 +1385,34 @@ output$visualeditmenu <- renderUI ({
    })
 
    observeEvent(input$ve_dashes, {
-     if (is.null(rv$theedgeselected) | rv$theedgeselected == "") 
+     if (!haveSelectedEdge())
        return(NULL)
-     edge = getEdgeByEid(rv$activeview, rv$theedgeselected)
+     edge = getEdgeByEid(rv$activeview, selectedEdgeId())
      if (!("dashes" %in% colnames(edge)))
-       edge = add_column(edge, dashes=FALSE)
+         edge = add_column(edge, dashes=FALSE)
      newedge = edge
      if(is.na(newedge$dashes)) {
        newedge$dashes = FALSE
      }
      newedge$dashes = !newedge$dashes
+     rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
+   })
+ 
+   # Toggle the fixed property
+   observeEvent(input$ve_arrows, {
+     if (!haveSelectedEdge())
+       return(NULL)
+     edge = getEdgeByEid(rv$activeview, selectedEdgeId())
+     if (!("arrows" %in% colnames(edge)))
+       edge = add_column(edge, arrows="")
+     newedge = edge
+     if(is.na(newedge$arrows)) {
+       newedge$arrows = ""
+     }
+     if (newedge$arrows == "")
+       newedge$arrows = "to"
+     else
+       newedge$arrows = ""
      rv$activeview = replaceEdgeInView(rv$activeview, edge, newedge)
    })
    
@@ -1371,13 +1424,13 @@ output$visualeditmenu <- renderUI ({
    )
    
    observeEvent(input$ve_color_node, {
-     if (!is.null(rv$thenodeselected) & rv$thenodeselected != "")
-       doColorSelect(getNodeById(rv$activeview, rv$thenodeselected), "ve_nodecolor_selected")
+     if (haveSelectedNode())
+       doColorSelect(getNodeById(rv$activeview, selectedNodeId()), "ve_nodecolor_selected")
    })
    
    observeEvent(input$ve_color_edge, {
-     if (!is.null(rv$theedgeselected) & rv$theedgeselected != "")
-       doColorSelect(getEdgeByEid(rv$activeview, rv$theedgeselected), "ve_edgecolor_selected")
+     if (haveSelectedEdge())
+       doColorSelect(getEdgeByEid(rv$activeview, selectedEdgeId()), "ve_edgecolor_selected")
    })
    
    doColorSelect <- function(obj, actionlabel) {

@@ -129,12 +129,23 @@ addActualColorForEdge <- function(view, edge) {
   return(newedge)
 }
 
+addActualArrowsForEdge <- function(view, edge, doarrows) {
+  if ("arrows" %in% colnames(edge)) {
+    if (!is.na(edge$arrows) & !is.null(edge$arrows)) {
+      return(edge)
+    }
+    edge$arrows=if_else(doarrows, "to", "")
+    return(edge)
+  }
+  newedge = add_column(edge, arrows=if_else(doarrows, "to", ""))
+  return(newedge)
+}
 
 addVisualSettingsToEdge <- function(view, edge, dolabel, doarrows, dofreeze) {
   newedge = edge
   
   newedge = addActualColorForEdge(view, newedge)
-  newedge = add_column(newedge, arrows=if_else(doarrows, "to", NULL))
+  newedge = addActualArrowsForEdge(view, newedge, doarrows)
   if (!dolabel)
     newedge$label = ""
   # if (dofreeze)
