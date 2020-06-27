@@ -1,21 +1,23 @@
 {
   "nodes": [
     {
+      "nv_id": "dokir-vipoj-togas",
       "nid": "Patient",
       "label": "Patient",
       "nodetype": "actor",
       "domain": "Patienten",
       "groups": "",
-      "icon": "Patient",
+      "nv_image": "Patient",
       "url": ""
     },
     {
+      "nv_id": "katus-lolis-gamob",
       "nid": "Mantelzorger",
       "label": "Mantelzorger",
       "nodetype": "actor",
       "domain": "Patienten",
       "groups": "",
-      "icon": "Mantelzorger",
+      "nv_image": "Mantelzorger",
       "url": ""
     }
   ],

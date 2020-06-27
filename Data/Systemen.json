@@ -1,235 +1,261 @@
 {
   "nodes": [
     {
+      "nv_id": "robik-piriz-pamij",
       "nid": "Systeem",
       "domain": "Systemen",
       "nodetype": "category",
-      "icon": "Systeem",
+      "nv_image": "Systeem",
       "url": "",
       "groups": "",
       "label": "Systeem"
     },
     {
+      "nv_id": "gorov-bamul-tinos",
       "nid": "HIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "HIS",
+      "nv_image": "HIS",
       "url": "",
       "groups": "",
       "label": "HIS"
     },
     {
+      "nv_id": "zohil-funih-hudak",
       "nid": "AIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "AIS",
+      "nv_image": "AIS",
       "url": "",
       "groups": "",
       "label": "AIS"
     },
     {
+      "nv_id": "josuf-lavaz-lofof",
       "nid": "FIS",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "FIS",
+      "nv_image": "FIS",
       "url": "",
       "groups": "",
       "label": "FIS"
     },
     {
+      "nv_id": "sodom-bavad-zabit",
       "nid": "EPD-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "EPD-z",
+      "nv_image": "EPD-z",
       "url": "",
       "groups": "",
       "label": "EPD-z"
     },
     {
+      "nv_id": "zigil-golar-zohak",
       "nid": "EPD-z2",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "EPD-z2",
+      "nv_image": "EPD-z2",
       "url": "",
       "groups": "",
       "label": "EPD-z2"
     },
     {
+      "nv_id": "zunim-napan-folok",
       "nid": "ECD-v",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "ECD-v",
+      "nv_image": "ECD-v",
       "url": "",
       "groups": "",
       "label": "ECD-v"
     },
     {
+      "nv_id": "sidup-jifap-piviz",
       "nid": "ECD-g",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "ECD-g",
+      "nv_image": "ECD-g",
       "url": "",
       "groups": "",
       "label": "ECD-g"
     },
     {
+      "nv_id": "lubuh-judup-jitup",
       "nid": "Uitslagenportaal",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Uitslagenportaal",
+      "nv_image": "Uitslagenportaal",
       "url": "",
       "groups": "",
       "label": "Uitslagenportaal"
     },
     {
+      "nv_id": "hofag-bunil-bogib",
       "nid": "Labsysteem",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Labsysteem",
+      "nv_image": "Labsysteem",
       "url": "",
       "groups": "",
       "label": "Labsysteem"
     },
     {
+      "nv_id": "kolas-ranar-judis",
       "nid": "Patientportaal-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Patientportaal-z",
+      "nv_image": "Patientportaal-z",
       "url": "",
       "groups": "",
       "label": "Patientportaal-z"
     },
     {
+      "nv_id": "laviv-hogor-bisog",
       "nid": "Patientportaal-g",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Patientportaal-g",
+      "nv_image": "Patientportaal-g",
       "url": "",
       "groups": "",
       "label": "Patientportaal-g"
     },
     {
+      "nv_id": "nuvag-lujag-manav",
       "nid": "Patientportaal-v",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Patientportaal-v",
+      "nv_image": "Patientportaal-v",
       "url": "",
       "groups": "",
       "label": "Patientportaal-v"
     },
     {
+      "nv_id": "lifus-tuvap-tamij",
       "nid": "Zorgverlenersportaal-z",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Zorgverlenersportaal-z",
+      "nv_image": "Zorgverlenersportaal-z",
       "url": "",
       "groups": "",
       "label": "Zorgverlenersportaal-z"
     },
     {
+      "nv_id": "fupar-musud-dazaz",
       "nid": "Zorgverlenersportaal-z2",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Zorgverlenersportaal-z2",
+      "nv_image": "Zorgverlenersportaal-z2",
       "url": "",
       "groups": "",
       "label": "Zorgverlenersportaal-z2"
     },
     {
+      "nv_id": "kohat-vagoj-kuriv",
       "nid": "Huisartsenportaal",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Huisartsenportaal",
+      "nv_image": "Huisartsenportaal",
       "url": "",
       "groups": "",
       "label": "Huisartsenportaal"
     },
     {
+      "nv_id": "gudit-kipag-sabif",
       "nid": "Ozis",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Ozis",
+      "nv_image": "Ozis",
       "url": "",
       "groups": "",
       "label": "Ozis"
     },
     {
+      "nv_id": "bupal-fotis-lamuf",
       "nid": "E-zorg",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "E-zorg",
+      "nv_image": "E-zorg",
       "url": "",
       "groups": "",
       "label": "E-zorg"
     },
     {
+      "nv_id": "buvit-dijot-numab",
       "nid": "Zorgmail",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Zorgmail",
+      "nv_image": "Zorgmail",
       "url": "",
       "groups": "",
       "label": "Zorgmail"
     },
     {
+      "nv_id": "havul-vodik-zifot",
       "nid": "LSP",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "LSP",
+      "nv_image": "LSP",
       "url": "",
       "groups": "",
       "label": "LSP"
     },
     {
+      "nv_id": "bomas-jorim-johip",
       "nid": "Papier-Fax",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Papier-Fax",
+      "nv_image": "Papier-Fax",
       "url": "",
       "groups": "",
       "label": "Papier-Fax"
     },
     {
+      "nv_id": "ruhos-dusok-pijon",
       "nid": "Labonline",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Labonline",
+      "nv_image": "Labonline",
       "url": "https://www.topicus-diagnostiek.nl",
       "groups": "",
       "label": "Labonline"
     },
     {
+      "nv_id": "dovon-gusur-subap",
       "nid": "Zorgdomein",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Zorgdomein",
+      "nv_image": "Zorgdomein",
       "url": "",
       "groups": "",
       "label": "Zorgdomein"
     },
     {
+      "nv_id": "tudin-pikoz-vivib",
       "nid": "Point",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Point",
+      "nv_image": "Point",
       "url": "",
       "groups": "",
       "label": "Point"
     },
     {
+      "nv_id": "gamos-jaruh-pugoj",
       "nid": "XDS-platform",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "XDS-platform",
+      "nv_image": "XDS-platform",
       "url": "",
       "groups": "",
       "label": "XDS-platform"
     },
     {
+      "nv_id": "rujut-bapuf-gujol",
       "nid": "Vecozo",
       "domain": "Systemen",
       "nodetype": "system",
-      "icon": "Vecozo",
+      "nv_image": "Vecozo",
       "url": "",
       "groups": "",
       "label": "Vecozo"
@@ -237,264 +263,308 @@
   ],
   "edges": [
     {
+      "nv_id": "kurol-boloz-jofar",
       "from": "Huisarts",
       "to": "HIS",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "paroh-tuvuk-madub",
       "from": "Ziekenhuis",
       "to": "EPD-z",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "zadar-hasim-tasir",
       "from": "Ziekenhuis2",
       "to": "EPD-z2",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "judun-juzut-manuv",
       "from": "VVT",
       "to": "ECD-v",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "danis-zuzos-mulul",
       "from": "GGZ",
       "to": "ECD-g",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "tupuv-tuzun-monor",
       "from": "Laboratorium",
       "to": "Labsysteem",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "koduk-jajaz-pivar",
       "from": "Laboratorium",
       "to": "Uitslagenportaal",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "zamaz-sojon-nojag",
       "from": "Ziekenhuis",
       "to": "Patientportaal-z",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "gazik-fujon-jotob",
       "from": "GGZ",
       "to": "Patientportaal-g",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "dagid-zabag-fidim",
       "from": "VVT",
       "to": "Patientportaal-v",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "ripam-digub-vupol",
       "from": "Ziekenhuis",
       "to": "Zorgverlenersportaal-z",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "jipik-homat-dodur",
       "from": "Ziekenhuis2",
       "to": "Zorgverlenersportaal-z2",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "jijus-milat-sanut",
       "from": "Apotheek",
       "to": "AIS",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "lisoh-ruham-bofor",
       "from": "Paramedici",
       "to": "FIS",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "busok-nalor-pojof",
       "from": "Huisarts",
       "to": "Huisartsenportaal",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "dazum-pidoz-kapir",
       "from": "Patient",
       "to": "Huisartsenportaal",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "sovun-purob-zamah",
       "from": "Patient",
       "to": "Patientportaal-z",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "dorup-vobam-paruh",
       "from": "Patient",
       "to": "Patientportaal-g",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "datig-sufun-kinun",
       "from": "Patient",
       "to": "Patientportaal-v",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "lobon-liviv-musuv",
       "from": "Huisarts",
       "to": "Uitslagenportaal",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "tipih-pokuk-babur",
       "from": "Patient",
       "to": "Uitslagenportaal",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "sagug-vihoj-pohog",
       "from": "Ziekenhuis2",
       "to": "Zorgverlenersportaal-z",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "vosij-fuzos-putom",
       "from": "Huisarts",
       "to": "Zorgverlenersportaal-z",
       "label": "",
       "linktype": "use"
     },
     {
+      "nv_id": "pizal-hizat-fapof",
       "from": "Zorgmail",
       "to": "i-Medicatie",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "fasot-viraf-limaz",
       "from": "LSP",
       "to": "i-Medicatie",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "kalag-bopov-larap",
       "from": "E-zorg",
       "to": "i-Medicatie",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "rihun-dugop-sijap",
       "from": "Huisartsenportaal",
       "to": "i-Medicatie",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "pasik-lutol-butak",
       "from": "Papier-Fax",
       "to": "i-Medicatie",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "tulir-dobom-biloj",
       "from": "Zorgmail",
       "to": "i-Waarnemen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "tupod-ladof-vajar",
       "from": "LSP",
       "to": "i-Waarnemen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "punuj-jajof-rogiv",
       "from": "Zorgmail",
       "to": "i-Onderzoek",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "farar-doviv-tilun",
       "from": "Labonline",
       "to": "i-Onderzoek",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "nisoz-dahig-japoj",
       "from": "Zorgdomein",
       "to": "i-Onderzoek",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "nopad-ripub-golup",
       "from": "Uitslagenportaal",
       "to": "i-Onderzoek",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "ginik-kahar-rudip",
       "from": "Zorgdomein",
       "to": "i-Verwijzen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "gugob-buvub-hilor",
       "from": "Zorgmail",
       "to": "i-Verwijzen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "somiz-jahil-pifit",
       "from": "Zorgverlenersportaal-z",
       "to": "i-Verwijzen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "tuvur-napir-gofoj",
       "from": "Papier-Fax",
       "to": "i-Verwijzen",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "rijig-fitum-tipov",
       "from": "Zorgdomein",
       "to": "i-Ziekenhuiszorg",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "rofod-rabul-pofon",
       "from": "Zorgmail",
       "to": "i-Ziekenhuiszorg",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "tahol-mapup-nuvut",
       "from": "Patientportaal-z",
       "to": "i-Ziekenhuiszorg",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "didob-narur-fikud",
       "from": "XDS-platform",
       "to": "i-Ziekenhuiszorg",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "bohit-sasam-givoz",
       "from": "XDS-platform",
       "to": "Beelden",
       "label": "",
       "linktype": "system"
     },
     {
+      "nv_id": "malol-tafim-gopov",
       "from": "Point",
       "to": "i-Overdracht",
       "label": "",

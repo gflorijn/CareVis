@@ -1,118 +1,131 @@
 {
   "nodes": [
     {
+      "nv_id": "ravap-guzur-gabal",
       "nid": "Standaard",
       "domain": "Standaarden",
       "nodetype": "category",
-      "icon": "Standaard",
+      "nv_image": "Standaard",
       "url": "",
       "groups": "",
       "label": "Standaard"
     },
     {
+      "nv_id": "kofif-dilus-pukij",
       "nid": "FHIR",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "FHIR",
+      "nv_image": "FHIR",
       "url": "",
       "groups": "",
       "label": "FHIR"
     },
     {
+      "nv_id": "ligub-sudav-rijad",
       "nid": "HL7",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "HL7",
+      "nv_image": "HL7",
       "url": "",
       "groups": "",
       "label": "HL7"
     },
     {
+      "nv_id": "jakur-mobur-jagin",
       "nid": "MedMij",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "MedMij",
+      "nv_image": "MedMij",
       "url": "https://www.medmij.nl",
       "groups": "",
       "label": "MedMij"
     },
     {
+      "nv_id": "rivoj-hifur-guluv",
       "nid": "XDS",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "XDS",
+      "nv_image": "XDS",
       "url": "",
       "groups": "",
       "label": "XDS"
     },
     {
+      "nv_id": "zofod-zamul-zujif",
       "nid": "ZIBS",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "ZIBS",
+      "nv_image": "ZIBS",
       "url": "",
       "groups": "",
       "label": "ZIBS"
     },
     {
+      "nv_id": "gazud-nimab-bonis",
       "nid": "eOverdracht",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "eOverdracht",
+      "nv_image": "eOverdracht",
       "url": "",
       "groups": "",
       "label": "eOverdracht"
     },
     {
+      "nv_id": "balot-firad-zipof",
       "nid": "BgZ",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "BgZ",
+      "nv_image": "BgZ",
       "url": "",
       "groups": "",
       "label": "BgZ"
     },
     {
+      "nv_id": "jisod-nuzun-visot",
       "nid": "MedicatieOverdracht",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "MedicatieOverdracht",
+      "nv_image": "MedicatieOverdracht",
       "url": "",
       "groups": "",
       "label": "MedicatieOverdracht"
     },
     {
+      "nv_id": "nafuv-kibit-noziv",
       "nid": "Labuitwisseling",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "Labuitwisseling",
+      "nv_image": "Labuitwisseling",
       "url": "",
       "groups": "",
       "label": "Labuitwisseling"
     },
     {
+      "nv_id": "zolam-solan-bapid",
       "nid": "Huisartswaarneming",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "Huisartswaarneming",
+      "nv_image": "Huisartswaarneming",
       "url": "",
       "groups": "",
       "label": "Huisartswaarneming"
     },
     {
+      "nv_id": "hojur-fabuk-vinut",
       "nid": "Edifact",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "Edifact",
+      "nv_image": "Edifact",
       "url": "",
       "groups": "",
       "label": "Edifact"
     },
     {
+      "nv_id": "tilag-fosuz-tagir",
       "nid": "Richtlijn HASP",
       "domain": "Standaarden",
       "nodetype": "standard",
-      "icon": "Richtlijn HASP",
+      "nv_image": "Richtlijn HASP",
       "url": "",
       "groups": "",
       "label": "Richtlijn HASP"
@@ -120,84 +133,98 @@
   ],
   "edges": [
     {
+      "nv_id": "vifaf-dapul-zobab",
       "from": "Edifact",
       "to": "Verstrekkingsbericht",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "jivok-jakid-lorud",
       "from": "Edifact",
       "to": "Recept",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "lorom-sabur-nuham",
       "from": "Edifact",
       "to": "Waarneming",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "fihun-girit-paros",
       "from": "Huisartswaarneming",
       "to": "Waarneembericht",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "pibus-jipul-roziv",
       "from": "Huisartswaarneming",
       "to": "Professionele samenvatting",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "maboj-gupul-rukip",
       "from": "Labuitwisseling",
       "to": "Uitslagen",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "mirov-gupir-sugas",
       "from": "Richtlijn HASP",
       "to": "Verwijzing",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "gahat-bogub-kusid",
       "from": "Edifact",
       "to": "Opname-Ontslagmelding",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "fitof-potom-silot",
       "from": "Edifact",
       "to": "Voortgangsmelding",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "datof-rijuf-ramol",
       "from": "BgZ",
       "to": "ZIBS",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "kujig-rozos-luzol",
       "from": "EPD-z",
       "to": "BgZ",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "luruv-sodov-zagur",
       "from": "EPD-z2",
       "to": "BgZ",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "razak-hutif-filaj",
       "from": "Labuitwisseling",
       "to": "HL7",
       "label": "",
       "linktype": "refer"
     },
     {
+      "nv_id": "zuboz-vozaz-pivup",
       "from": "i-Waarnemen",
       "to": "Huisartswaarneming",
       "label": "",

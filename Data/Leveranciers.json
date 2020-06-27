@@ -1,84 +1,68 @@
 {
+  "info": {
+    "name": ["Leveranciers"]
+  },
   "nodes": [
     {
-      "nid": "Leverancier",
-      "domain": "Leveranciers",
-      "nodetype": "category",
-      "icon": "Leverancier",
-      "url": "",
-      "groups": "",
-      "label": "Leverancier"
-    },
-    {
-      "nid": "Hinq",
-      "domain": "Leveranciers",
-      "nodetype": "party",
-      "icon": "Hinq",
-      "url": "",
-      "groups": "",
-      "label": "Hinq"
-    },
-    {
+      "nv_id": "nukaf-tason-varur",
       "nid": "EPIC",
-      "domain": "Leveranciers",
+      "label": "EPIC",
       "nodetype": "party",
-      "icon": "EPIC",
-      "url": "",
+      "domain": "Leveranciers",
       "groups": "",
-      "label": "EPIC"
+      "nv_image": "EPIC",
+      "url": ""
     },
     {
+      "nv_id": "tubis-diluh-bapok",
       "nid": "Chipsoft",
-      "domain": "Leveranciers",
+      "label": "Chipsoft",
       "nodetype": "party",
-      "icon": "Chipsoft",
-      "url": "",
+      "domain": "Leveranciers",
       "groups": "",
-      "label": "Chipsoft"
+      "nv_image": "Chipsoft",
+      "url": ""
     },
     {
+      "nv_id": "jitof-rason-hapok",
       "nid": "Enovation",
-      "domain": "Leveranciers",
+      "label": "Enovation",
       "nodetype": "party",
-      "icon": "Enovation",
-      "url": "",
+      "domain": "Leveranciers",
       "groups": "",
-      "label": "Enovation"
+      "nv_image": "Enovation",
+      "url": ""
     },
     {
-      "nid": "Ivido",
+      "nv_id": "durih-mopij-dujaj",
+      "nid": "Leverancier",
+      "label": "Leverancier",
+      "nodetype": "category",
       "domain": "Leveranciers",
-      "nodetype": "party",
-      "icon": "Ivido",
-      "url": "http://www.ivido.nl",
       "groups": "",
-      "label": "Ivido"
+      "nv_image": "Leverancier",
+      "url": ""
+    },
+    {
+      "nv_id": "gadik-mifud-mubus",
+      "nid": "Hinq",
+      "label": "Hinq",
+      "nodetype": "party",
+      "domain": "Leveranciers",
+      "groups": "",
+      "nv_image": "Leverancier",
+      "url": ""
+    },
+    {
+      "nv_id": "kimag-pozuj-jujur",
+      "nid": "Ivido",
+      "label": "Ivido",
+      "nodetype": "party",
+      "domain": "Leveranciers",
+      "groups": "",
+      "nv_image": "Leverancier",
+      "url": "http://www.ivido.nl"
     }
   ],
-  "edges": [
-    {
-      "from": "EPIC",
-      "to": "EPD-z",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "Chipsoft",
-      "to": "EPD-z",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "EPIC",
-      "to": "EPD-z2",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "Chipsoft",
-      "to": "EPD-z2",
-      "label": "",
-      "linktype": "refer"
-    }
-  ]
+  "edges": []
 }

@@ -1,37 +1,41 @@
 {
   "nodes": [
     {
+      "nv_id": "kagur-rokov-basit",
       "nid": "CIZ",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "CIZ",
+      "nv_image": "CIZ",
       "url": "http://www.ciz.nl",
       "groups": "",
       "label": "CIZ"
     },
     {
+      "nv_id": "rinud-vozim-vulil",
       "nid": "Gemeente",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "Gemeente",
+      "nv_image": "Gemeente",
       "url": "",
       "groups": "",
       "label": "Gemeente"
     },
     {
+      "nv_id": "talul-dazoz-rison",
       "nid": "Zorgverzekeraar",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "Zorgverzekeraar",
+      "nv_image": "Zorgverzekeraar",
       "url": "",
       "groups": "",
       "label": "Zorgverzekeraar"
     },
     {
+      "nv_id": "vulud-zajoj-luful",
       "nid": "Zorgkantoor",
       "domain": "Administratie",
       "nodetype": "party",
-      "icon": "Zorgkantoor",
+      "nv_image": "Zorgkantoor",
       "url": "",
       "groups": "",
       "label": "Zorgkantoor"

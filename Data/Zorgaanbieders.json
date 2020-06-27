@@ -1,140 +1,88 @@
 {
+  "info": {
+    "name": ["Zorgaanbieders"]
+  },
   "nodes": [
     {
+      "nv_id": "jomud-hudaz-fagal",
       "nid": "Zorgaanbieder",
-      "domain": "Zorgaanbieders",
+      "label": "Zorgaanbieder",
       "nodetype": "category",
-      "icon": "Zorgaanbieder",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Zorgaanbieder"
-    },
-    {
-      "nid": "Huisarts",
-      "domain": "Zorgverleners",
-      "nodetype": "actor",
-      "icon": "Huisarts",
-      "url": "",
-      "groups": "",
-      "label": "Huisarts"
-    },
-    {
-      "nid": "Verpleegkundige",
-      "label": "Verpleegkundige",
-      "nodetype": "actor",
-      "domain": "Zorgverleners",
-      "groups": "",
-      "icon": "Verpleegkundige",
+      "nv_image": "Zorgaanbieder",
       "url": ""
     },
     {
-      "nid": "Paramedici",
-      "label": "Paramedici",
-      "nodetype": "actor",
-      "domain": "Zorgverleners",
-      "groups": "",
-      "icon": "Paramedici",
-      "url": ""
-    },
-    {
-      "nid": "Specialist",
-      "label": "Specialist",
-      "nodetype": "actor",
-      "domain": "Zorgverleners",
-      "groups": "",
-      "icon": "Arts",
-      "url": ""
-    },
-    {
-      "nid": "Wijkverpleger",
-      "label": "Wijkverpleger",
-      "nodetype": "actor",
-      "domain": "Zorgverleners",
-      "groups": "",
-      "icon": "Persoon2",
-      "url": ""
-    },
-    {
-      "nid": "Psychiater",
-      "label": "Psychiater",
-      "nodetype": "actor",
-      "domain": "Zorgverleners",
-      "groups": "",
-      "icon": "Persoon4",
-      "url": ""
-    },
-
-    {
+      "nv_id": "dazup-nalom-kuhaz",
       "nid": "Ziekenhuis",
-      "domain": "Zorgaanbieders",
+      "label": "Ziekenhuis",
       "nodetype": "party",
-      "icon": "Ziekenhuis",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Ziekenhuis"
+      "nv_image": "Ziekenhuis",
+      "url": ""
     },
     {
+      "nv_id": "bajor-vavok-ludam",
       "nid": "Apotheek",
-      "domain": "Zorgaanbieders",
+      "label": "Apotheek",
       "nodetype": "party",
-      "icon": "Apotheek",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Apotheek"
+      "nv_image": "Apotheek",
+      "url": ""
     },
     {
-      "nid": "Fysiotherapeut",
-      "domain": "Zorgverlener",
-      "nodetype": "actor",
-      "icon": "Paramedici",
-      "url": "",
-      "groups": "",
-      "label": "Fysiotherapeut"
-    },
-    {
+      "nv_id": "vopur-rakib-fabav",
       "nid": "VVT",
-      "domain": "Zorgaanbieders",
+      "label": "VVT",
       "nodetype": "party",
-      "icon": "VVT",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "VVT"
+      "nv_image": "VVT",
+      "url": ""
     },
     {
+      "nv_id": "nomib-dukus-maduv",
       "nid": "Ziekenhuis2",
-      "domain": "Zorgaanbieders",
+      "label": "Ziekenhuis2",
       "nodetype": "party",
-      "icon": "Ziekenhuis2",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Ziekenhuis2"
+      "nv_image": "Ziekenhuis2",
+      "url": ""
     },
     {
+      "nv_id": "hulif-jusor-pojik",
       "nid": "Laboratorium",
-      "domain": "Zorgaanbieders",
+      "label": "Laboratorium",
       "nodetype": "party",
-      "icon": "Laboratorium",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Laboratorium"
+      "nv_image": "Laboratorium",
+      "url": ""
     },
     {
+      "nv_id": "fugit-gosig-bonot",
       "nid": "GGZ",
-      "domain": "Zorgaanbieders",
+      "label": "GGZ",
       "nodetype": "party",
-      "icon": "GGZ",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "GGZ"
+      "nv_image": "GGZ",
+      "url": ""
     },
     {
+      "nv_id": "sukil-pahof-fubon",
       "nid": "Huisartsenpost",
-      "domain": "Zorgaanbieders",
+      "label": "Huisartsenpost",
       "nodetype": "party",
-      "icon": "Huisartsenpost",
-      "url": "",
+      "domain": "Zorgaanbieders",
       "groups": "",
-      "label": "Huisartsenpost"
+      "nv_image": "Huisartsenpost",
+      "url": ""
     }
-  ]
+  ],
+  "edges": []
 }

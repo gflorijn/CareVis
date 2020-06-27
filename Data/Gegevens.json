@@ -1,184 +1,197 @@
 {
+  "info": {
+    "name": ["Gegevens"]
+  },
   "nodes": [
     {
+      "nv_id": "kosag-rolof-jadul",
       "nid": "Medicatieoverzicht",
-      "domain": "Gegevens",
+      "label": "Medicatieoverzicht",
       "nodetype": "object",
-      "icon": "Medicatieoverzicht",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Medicatieoverzicht"
+      "nv_image": "Medicatieoverzicht",
+      "url": ""
     },
     {
+      "nv_id": "zalis-togaf-vadod",
       "nid": "Recept",
-      "domain": "Gegevens",
+      "label": "Recept",
       "nodetype": "object",
-      "icon": "Recept",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Recept"
+      "nv_image": "Recept",
+      "url": ""
     },
     {
+      "nv_id": "guhib-hunih-lupaj",
       "nid": "Verstrekkingsbericht",
-      "domain": "Gegevens",
+      "label": "Verstrekkingsbericht",
       "nodetype": "object",
-      "icon": "Verstrekkingsbericht",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Verstrekkingsbericht"
+      "nv_image": "Verstrekkingsbericht",
+      "url": ""
     },
     {
+      "nv_id": "bibad-hariv-savag",
       "nid": "Waarneembericht",
-      "domain": "Gegevens",
+      "label": "Waarneembericht",
       "nodetype": "object",
-      "icon": "Waarneembericht",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Waarneembericht"
+      "nv_image": "Waarneembericht",
+      "url": ""
     },
     {
+      "nv_id": "kihuf-tokig-vitan",
       "nid": "Waarneming",
-      "domain": "Gegevens",
+      "label": "Waarneming",
       "nodetype": "object",
-      "icon": "Waarneming",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Waarneming"
+      "nv_image": "Waarneming",
+      "url": ""
     },
     {
+      "nv_id": "kutas-zolas-rihas",
       "nid": "Professionele samenvatting",
-      "domain": "Gegevens",
+      "label": "Professionele samenvatting",
       "nodetype": "object",
-      "icon": "Professionele samenvatting",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Professionele samenvatting"
+      "nv_image": "Professionele samenvatting",
+      "url": ""
     },
     {
+      "nv_id": "mamad-bitir-dirat",
       "nid": "Verwijzing",
-      "domain": "Gegevens",
+      "label": "Verwijzing",
       "nodetype": "object",
-      "icon": "Verwijzing",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Verwijzing"
+      "nv_image": "Verwijzing",
+      "url": ""
     },
     {
+      "nv_id": "pavap-guvud-dadih",
       "nid": "Opname-Ontslagmelding",
-      "domain": "Gegevens",
+      "label": "Opname-Ontslagmelding",
       "nodetype": "object",
-      "icon": "Opname-Ontslagmelding",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Opname-Ontslagmelding"
+      "nv_image": "Opname-Ontslagmelding",
+      "url": ""
     },
     {
+      "nv_id": "tutaz-sorom-fulol",
       "nid": "Voortgangsmelding",
-      "domain": "Gegevens",
+      "label": "Voortgangsmelding",
       "nodetype": "object",
-      "icon": "Voortgangsmelding",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Voortgangsmelding"
+      "nv_image": "Voortgangsmelding",
+      "url": ""
     },
     {
+      "nv_id": "lumok-baduz-furas",
       "nid": "Afspraken",
-      "domain": "Gegevens",
+      "label": "Afspraken",
       "nodetype": "object",
-      "icon": "Afspraken",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Afspraken"
+      "nv_image": "Afspraken",
+      "url": ""
     },
     {
-      "nid": "eConsult",
-      "domain": "Gegevens",
-      "nodetype": "object",
-      "icon": "eConsult",
-      "url": "",
-      "groups": "",
-      "label": "eConsult"
-    },
-    {
+      "nv_id": "morun-gosin-sonaf",
       "nid": "Metingen",
-      "domain": "Gegevens",
+      "label": "Metingen",
       "nodetype": "object",
-      "icon": "Metingen",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Metingen"
+      "nv_image": "Metingen",
+      "url": ""
     },
     {
+      "nv_id": "junuz-fagib-vapaj",
       "nid": "Orders",
-      "domain": "Gegevens",
+      "label": "Orders",
       "nodetype": "object",
-      "icon": "Orders",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Orders"
+      "nv_image": "Orders",
+      "url": ""
     },
     {
+      "nv_id": "jurup-pafob-lunah",
       "nid": "Uitslagen",
-      "domain": "Gegevens",
+      "label": "Uitslagen",
       "nodetype": "object",
-      "icon": "Uitslagen",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Uitslagen"
+      "nv_image": "Uitslagen",
+      "url": ""
     },
     {
+      "nv_id": "komid-pijik-larik",
       "nid": "Overdrachtdossier",
-      "domain": "Gegevens",
+      "label": "Overdrachtdossier",
       "nodetype": "object",
-      "icon": "Overdrachtdossier",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Overdrachtdossier"
+      "nv_image": "Overdrachtdossier",
+      "url": ""
     },
     {
+      "nv_id": "gilaf-makoj-vigor",
       "nid": "Beelden",
-      "domain": "Gegevens",
+      "label": "Beelden",
       "nodetype": "object",
-      "icon": "Beelden",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Beelden"
+      "nv_image": "Beelden",
+      "url": ""
     },
     {
+      "nv_id": "zijot-sohap-julup",
       "nid": "Dossier",
-      "domain": "Gegevens",
+      "label": "Dossier",
       "nodetype": "object",
-      "icon": "Dossier",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Dossier"
+      "nv_image": "Dossier",
+      "url": ""
     },
     {
+      "nv_id": "satuv-gisab-mutus",
       "nid": "Huisartsdossier",
-      "domain": "Gegevens",
+      "label": "Huisartsdossier",
       "nodetype": "object",
-      "icon": "Huisartsdossier",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Huisartsdossier"
+      "nv_image": "Huisartsdossier",
+      "url": ""
     },
     {
+      "nv_id": "jaroz-togim-riraz",
       "nid": "Monitoring",
-      "domain": "Gegevens",
+      "label": "Monitoring",
       "nodetype": "object",
-      "icon": "Monitoring",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Monitoring"
+      "nv_image": "Monitoring",
+      "url": ""
     },
     {
+      "nv_id": "nulis-rihuv-huvan",
       "nid": "Autorisaties",
-      "domain": "Gegevens",
+      "label": "Autorisaties",
       "nodetype": "object",
-      "icon": "Autorisaties",
-      "url": "",
+      "domain": "Gegevens",
       "groups": "",
-      "label": "Autorisaties"
+      "nv_image": "Autorisaties",
+      "url": ""
     }
   ],
   "edges": []

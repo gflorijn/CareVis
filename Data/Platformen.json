@@ -1,117 +1,77 @@
 {
   "nodes": [
     {
+      "nv_id": "hilah-farok-zihih",
       "nid": "Platform",
       "domain": "Platformen",
       "nodetype": "category",
-      "icon": "Platform",
+      "nv_image": "Platform",
       "url": "",
       "groups": "",
       "label": "Platform"
     },
     {
+      "nv_id": "gumol-zijil-tusap",
       "nid": "Sananet",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "Sananet",
+      "nv_image": "Sananet",
       "url": "",
       "groups": "",
       "label": "Sananet"
     },
     {
+      "nv_id": "hutib-mijal-dofan",
       "nid": "Luscii",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "Luscii",
+      "nv_image": "Luscii",
       "url": "",
       "groups": "",
       "label": "Luscii"
     },
     {
+      "nv_id": "ganol-kukud-hapap",
       "nid": "KIS",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "KIS",
+      "nv_image": "KIS",
       "url": "https://www.ketenzorgfriesland.nl/portal-kz-zorgverlener-pagina/kis",
       "groups": "",
       "label": "KIS"
     },
     {
+      "nv_id": "gilom-hojuj-jugoh",
       "nid": "Zorgplatform",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "Zorgplatform",
+      "nv_image": "Zorgplatform",
       "url": "",
       "groups": "",
       "label": "Zorgplatform"
     },
     {
+      "nv_id": "guval-fohuk-hilag",
       "nid": "Covid-19 Portaal",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "Covid-19 Portaal",
+      "nv_image": "Covid-19 Portaal",
       "url": "",
       "groups": "",
       "label": "Covid-19 Portaal"
     },
     {
+      "nv_id": "tonon-roruz-pigif",
       "nid": "Minddistrict",
       "domain": "Platformen",
       "nodetype": "platform",
-      "icon": "Minddistrict",
+      "nv_image": "Minddistrict",
       "url": "",
       "groups": "",
       "label": "Minddistrict"
     }
   ],
   "edges": [
-    {
-      "from": "Sananet",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Zorgplatform",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Luscii",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Minddistrict",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Ziekenhuis",
-      "to": "Covid-19 Portaal",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Ziekenhuis2",
-      "to": "Covid-19 Portaal",
-      "label": "",
-      "linktype": "system"
-    },
-    {
-      "from": "Covid-19 Portaal",
-      "to": "Beelden",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Covid-19 Portaal",
-      "to": "Dossier",
-      "label": "",
-      "linktype": "object"
-    }
+ 
   ]
 }

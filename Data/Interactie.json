@@ -1,483 +1,158 @@
 {
+  "info": {
+    "name": ["Interacties"]
+  },
   "nodes": [
     {
+      "nv_id": "rapon-tupaj-gubub",
       "nid": "i-Verwijzen",
-      "domain": "Interactie",
+      "label": "i-Verwijzen",
       "nodetype": "interaction",
-      "icon": "i-Verwijzen",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Verwijzen"
+      "nv_image": "i-Verwijzen",
+      "url": ""
     },
     {
+      "nv_id": "sabot-ragon-sodig",
       "nid": "i-Medicatie",
-      "domain": "Interactie",
+      "label": "i-Medicatie",
       "nodetype": "interaction",
-      "icon": "i-Medicatie",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Medicatie"
+      "nv_image": "i-Medicatie",
+      "url": ""
     },
     {
+      "nv_id": "katat-nasas-gahub",
       "nid": "i-Onderzoek",
-      "domain": "Interactie",
+      "label": "i-Onderzoek",
       "nodetype": "interaction",
-      "icon": "i-Onderzoek",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Onderzoek"
+      "nv_image": "i-Onderzoek",
+      "url": ""
     },
     {
+      "nv_id": "sinoh-hibuh-fukom",
       "nid": "i-Order",
-      "domain": "Interactie",
+      "label": "i-Order",
       "nodetype": "interaction",
-      "icon": "i-Order",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Order"
+      "nv_image": "i-Order",
+      "url": ""
     },
     {
+      "nv_id": "vazor-tomak-kokih",
       "nid": "i-Uitslagen",
-      "domain": "Interactie",
+      "label": "i-Uitslagen",
       "nodetype": "interaction",
-      "icon": "i-Uitslagen",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Uitslagen"
+      "nv_image": "i-Uitslagen",
+      "url": ""
     },
     {
+      "nv_id": "bavob-fipih-fimop",
       "nid": "i-Ziekenhuiszorg",
-      "domain": "Interactie",
+      "label": "i-Ziekenhuiszorg",
       "nodetype": "interaction",
-      "icon": "i-Ziekenhuiszorg",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Ziekenhuiszorg"
+      "nv_image": "i-Ziekenhuiszorg",
+      "url": ""
     },
     {
+      "nv_id": "duvob-lokil-suriv",
       "nid": "i-Overdracht",
-      "domain": "Interactie",
+      "label": "i-Overdracht",
       "nodetype": "interaction",
-      "icon": "i-Overdracht",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Overdracht"
+      "nv_image": "i-Overdracht",
+      "url": ""
     },
     {
+      "nv_id": "nonod-limud-sisif",
       "nid": "i-Waarnemen",
-      "domain": "Interactie",
+      "label": "i-Waarnemen",
       "nodetype": "interaction",
-      "icon": "i-Waarnemen",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Waarnemen"
+      "nv_image": "i-Waarnemen",
+      "url": ""
     },
     {
+      "nv_id": "zivuj-lotir-vonit",
       "nid": "i-eHealth",
-      "domain": "Interactie",
+      "label": "i-eHealth",
       "nodetype": "interaction",
-      "icon": "i-eHealth",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-eHealth"
+      "nv_image": "i-eHealth",
+      "url": ""
     },
     {
+      "nv_id": "patan-tupol-gahuf",
       "nid": "i-Administratie",
-      "domain": "Interactie",
+      "label": "i-Administratie",
       "nodetype": "interaction",
-      "icon": "i-Administratie",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Administratie"
+      "nv_image": "i-Administratie",
+      "url": ""
     },
     {
+      "nv_id": "tudit-putur-lifib",
       "nid": "i-Aanvraagzorg",
-      "domain": "Interactie",
+      "label": "i-Aanvraagzorg",
       "nodetype": "interaction",
-      "icon": "i-Aanvraagzorg",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Aanvraagzorg"
+      "nv_image": "i-Aanvraagzorg",
+      "url": ""
     },
     {
+      "nv_id": "komad-zumud-gipar",
       "nid": "i-COV",
-      "domain": "Interactie",
+      "label": "i-COV",
       "nodetype": "interaction",
-      "icon": "i-COV",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-COV"
+      "nv_image": "i-COV",
+      "url": ""
     },
     {
+      "nv_id": "gadim-vipop-rizan",
       "nid": "i-Declareren",
-      "domain": "Interactie",
+      "label": "i-Declareren",
       "nodetype": "interaction",
-      "icon": "i-Declareren",
-      "url": "",
+      "domain": "Interactie",
       "groups": "",
-      "label": "i-Declareren"
+      "nv_image": "i-Declareren",
+      "url": ""
+    },
+    {
+      "nv_id": "tifil-safar-gukal",
+      "nid": "eConsult",
+      "label": "eConsult",
+      "nodetype": "object",
+      "domain": "Interactie",
+      "groups": "",
+      "nv_image": "eConsult",
+      "url": ""
+    },
+    {
+      "nv_id": "tifil-safar-gukal",
+      "nid": "consult",
+      "label": "consult",
+      "nodetype": "interaction",
+      "domain": "Interactie",
+      "groups": "",
+      "nv_image": "users_relation2",
+      "url": ""
     }
   ],
-  "edges": [
-    {
-      "from": "Huisarts",
-      "to": "i-Medicatie",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Apotheek",
-      "to": "i-Medicatie",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Patient",
-      "to": "i-Medicatie",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Medicatie",
-      "to": "Recept",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Medicatie",
-      "to": "Medicatieoverzicht",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Medicatie",
-      "to": "Verstrekkingsbericht",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Huisartsenpost",
-      "to": "i-Waarnemen",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-Waarnemen",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Waarnemen",
-      "to": "Professionele samenvatting",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Waarnemen",
-      "to": "Waarneming",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Waarnemen",
-      "to": "Waarneembericht",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-Onderzoek",
-      "label": "1",
-      "linktype": "actor"
-    },
-    {
-      "from": "Laboratorium",
-      "to": "i-Onderzoek",
-      "label": "2",
-      "linktype": "actor"
-    },
-    {
-      "from": "Patient",
-      "to": "i-Onderzoek",
-      "label": "3",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Onderzoek",
-      "to": "i-Order",
-      "label": "1",
-      "linktype": "refer"
-    },
-    {
-      "from": "i-Onderzoek",
-      "to": "i-Uitslagen",
-      "label": "2",
-      "linktype": "refer"
-    },
-    {
-      "from": "i-Uitslagen",
-      "to": "Uitslagen",
-      "label": "2",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Order",
-      "to": "Orders",
-      "label": "1",
-      "linktype": "object"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-Verwijzen",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Ziekenhuis",
-      "to": "i-Verwijzen",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Paramedici",
-      "to": "i-Verwijzen",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Verwijzen",
-      "to": "Verwijzing",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Verwijzen",
-      "to": "Opname-Ontslagmelding",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Verwijzen",
-      "to": "Voortgangsmelding",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Ziekenhuis",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Paramedici",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "VVT",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Ziekenhuis2",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Patient",
-      "to": "i-Ziekenhuiszorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Verwijzing",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Opname-Ontslagmelding",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Voortgangsmelding",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Afspraken",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "eConsult",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Dossier",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Ziekenhuiszorg",
-      "to": "Beelden",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Ziekenhuis",
-      "to": "i-Overdracht",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-Overdracht",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "VVT",
-      "to": "i-Overdracht",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Overdracht",
-      "to": "Overdrachtdossier",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "Patient",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Huisarts",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Ziekenhuis",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "GGZ",
-      "to": "i-eHealth",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-eHealth",
-      "to": "eConsult",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-eHealth",
-      "to": "Metingen",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-eHealth",
-      "to": "Monitoring",
-      "label": "",
-      "linktype": "object"
-    },
-    {
-      "from": "i-Administratie",
-      "to": "i-Aanvraagzorg",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "i-Administratie",
-      "to": "i-COV",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "i-Administratie",
-      "to": "i-Declareren",
-      "label": "",
-      "linktype": "refer"
-    },
-    {
-      "from": "Patient",
-      "to": "i-Aanvraagzorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Mantelzorger",
-      "to": "i-Aanvraagzorg",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Aanvraagzorg",
-      "to": "CIZ",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Aanvraagzorg",
-      "to": "Gemeente",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Zorgaanbieder",
-      "to": "i-COV",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-COV",
-      "to": "Zorgverzekeraar",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "Zorgaanbieder",
-      "to": "i-Declareren",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Declareren",
-      "to": "Zorgverzekeraar",
-      "label": "",
-      "linktype": "actor"
-    },
-    {
-      "from": "i-Declareren",
-      "to": "Zorgkantoor",
-      "label": "",
-      "linktype": "actor"
-    }
-  ]
+  "edges": []
 }

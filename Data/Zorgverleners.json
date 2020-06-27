@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": ["Zorgverleners"]
+  },
+  "nodes": [
+    {
+      "nv_id": "hulif-jusor-pojik",
+      "nid": "Laboratorium",
+      "label": "Laboratorium",
+      "nodetype": "party",
+      "domain": "Zorgaanbieders",
+      "groups": "",
+      "nv_image": "Laboratorium",
+      "url": ""
+    },
+    {
+      "nv_id": "viral-davat-papah",
+      "nid": "Fysiotherapeut",
+      "label": "Fysiotherapeut",
+      "nodetype": "actor",
+      "domain": "Zorgverlener",
+      "groups": "",
+      "nv_image": "Paramedici",
+      "url": ""
+    },
+    {
+      "nv_id": "misuf-gituh-jifaj",
+      "nid": "Huisarts",
+      "label": "Huisarts",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Huisarts",
+      "url": ""
+    },
+    {
+      "nv_id": "mapol-suhim-nutok",
+      "nid": "Verpleegkundige",
+      "label": "Verpleegkundige",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Verpleegkundige",
+      "url": ""
+    },
+    {
+      "nv_id": "pafam-borut-sudah",
+      "nid": "Paramedici",
+      "label": "Paramedici",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Paramedici",
+      "url": ""
+    },
+    {
+      "nv_id": "topat-sonaf-jozog",
+      "nid": "Specialist",
+      "label": "Specialist",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Arts",
+      "url": ""
+    },
+    {
+      "nv_id": "zuruj-hanaz-higuj",
+      "nid": "Wijkverpleger",
+      "label": "Wijkverpleger",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Persoon2",
+      "url": ""
+    },
+    {
+      "nv_id": "kahik-nujov-hojuh",
+      "nid": "Psychiater",
+      "label": "Psychiater",
+      "nodetype": "actor",
+      "domain": "Zorgverleners",
+      "groups": "",
+      "nv_image": "Persoon4",
+      "url": ""
+    },
+    {
+      "nv_id": "bajor-vavok-ludam",
+      "nid": "Apotheker",
+      "label": "Apotheker",
+      "nodetype": "party",
+      "domain": "Zorgaanbieders",
+      "groups": "",
+      "nv_image": "Apotheker",
+      "url": ""
+    }
+  ],
+  "edges": []
+}
