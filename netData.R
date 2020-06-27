@@ -2,6 +2,7 @@
 
 require("jsonlite", quietly=T)
 require("tidyverse", quietly=T)
+require("ids", quietly=T)
 
 # laad de data  een bepaald perspectief. Elk perspectief omvat nodes.
 #de functie levert een list op van twee dataframes - de nodes en de links.
@@ -94,9 +95,16 @@ getEidForEdge <- function(from, to, label) {
 # $nodes - the vertices
 # $edges - the edges
 readViewFromJSON <-  function(jsonfile) {
+  cat('check json input for nv_ids\n')
   view = fromJSON(jsonfile)
   view$nodes = as_tibble(view$nodes)
+  if (!("nv_id" %in% colnames(view$nodes))) {
+    view$nodes = add_column(view$nodes, nv_id= ids::proquint(n=nrow(view$nodes), n_words=3), .before=1)
+  }
   view$edges = as_tibble(view$edges)
+  if (!("nv_id" %in% colnames(view$edges))) {
+    view$edges = add_column(view$edges, nv_id= ids::proquint(n=nrow(view$edges), n_words=3), .before=1)
+  }
   view$edges$eid = getEidForEdge(view$edges$from,view$edges$to, view$edges$label)
   return(view)
 }
@@ -152,28 +160,52 @@ makeNewUniqueNodeIdFor <- function(net, nid) {
 #produce a clone of node. Give it a unique id in the network
 createCloneOfNode <- function(view, node) {
   net = view$net
-  onid = node$nid
-  newnid = makeNewUniqueNodeIdFor(view$net, onid)
   newnode = node
-  newnode$nid = newnid$name
-  newnode$label = newnode$nid
+  newnode$nv_id = ids::proquint(n=1, n_words=3)
+
+  news = makeNewUniqueNodeIdFor(view$net, node$nid)
+  newnode$nid = news$name
+  newnode$label = paste0(node$label,"_", news$cnt)
   return(newnode)
 }
 
 createNewUndefinedNode <- function(nid) {
-  return(tibble(nid=nid, label=nid, icon="", url="", groups="", domain="Undefined", nodetype="undefined"))
+  nvid = ids::proquint(n=1, n_words=3)
+  return(tibble(nv_id=nvid, nid=nid, label=nid, nv_image="", url="", groups="", domain="Undefined", nodetype="undefined"))
 }
 
 # create a new edge and handle id translation
-genNewEdgeWithDefaults <- function(view, from,to) {
+genNewEdgeWithDefaults <- function(view, from,to) { 
+  cat("Need to fix from/to\n")
   fname = from
   tname = to
-  return(tibble(from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
+  nvid = ids::proquint(1, n_words=3)
+  return(tibble(nv_id=nvid, from=fname, to=tname,  label="", linktype="refer", eid=getEidForEdge(fname,tname,"") ))
 }
 
 #Make a new node give the id
 genNewNodeForIdWithDefaults <- function(view, nid) {
   return(createNewUndefinedNode(nid))
+}
+
+
+
+# == Fix generated ids
+
+fixid = function(name) {
+  data = fromJSON(paste0(name, ".json"))
+  data$nodes = tibble(data$nodes)
+  data$nodes = add_column(data$nodes, nv_id = ids::proquint(n=nrow(data$nodes), n_words=3), .before=1)
+  data$nodes = dplyr::rename(data$nodes,nv_image=icon)
+  data$edges = tibble(data$edges)
+  data$edges = add_column(data$edges, nv_id = ids::proquint(n=nrow(data$edges), n_words=3), .before=1)
+  write_file(toJSON(data, pretty=T), paste0("new-", name, ".json"))
+}
+
+fixidmultiple <- function(names) {
+  for (i in names) {
+    fixid(i)
+  }
 }
 
 

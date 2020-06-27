@@ -32,7 +32,7 @@ getNodeShapeFor <- function(view, node) {
 }
 
 getImageForNode <- function(view, node) {
-  return(str_c(getImagePath(view), "Images/", if_else( (node$icon!=""), node$icon, node$label), ".png"))
+  return(str_c(getImagePath(view), "Images/", if_else( (node$nv_image!=""), node$nv_image, node$label), ".png"))
 }
 
 getBrokenImageForNode <- function(view, node) {

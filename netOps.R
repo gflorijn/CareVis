@@ -7,17 +7,17 @@ require("tidyverse", quietly = TRUE)
 # The network  has the full list of nodes and edges, the view a selection.
 #
 defaultNodeTibble <- function() {
-  return(tribble(~nid, ~label, ~nodetype, ~domain, ~groups, ~icon, ~url))
+  return(tribble(~nv_id, ~nid, ~label, ~nodetype, ~domain, ~groups, ~nv_image, ~url))
 }
 
 defaultEdgeTibble <- function() {
-  return(tribble(~eid, ~from, ~to, ~label, ~linktype))
+  return(tribble(~nv_id, ~eid, ~from, ~to, ~label, ~linktype))
 }
 
 # create a view on a network
 newViewOnNetwork <- function(net, name) {
   return(
-    list(info=list(name = name), net = net, nodes = tribble(~nid), edges = tribble(~eid, ~from, ~to))
+    list(info=list(name = name), net = net, nodes = tribble(~nv_id, ~nid), edges = tribble(~nv_id, ~eid, ~from, ~to))
   )
 }
 

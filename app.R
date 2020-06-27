@@ -4,7 +4,7 @@ library(shinyjs)
 library(shinyWidgets)
 library(editData)
 library(colourpicker)
-library(listviewer)
+library(ids)
 
 library(DT)
 
@@ -169,9 +169,9 @@ server <- function(input, output, session) {
 # Initialisation ----------------------------------------------------------
 
         
-    slicestoload = c("Patienten", "Zorgaanbieders", "Administratie", "Gegevens",
+    slicestoload = c("Patienten", "Zorgaanbieders", "Zorgverleners", "Administratie", "Gegevens",
                      "Interactie", "Systemen","Platformen",  "Standaarden",
-                     "Leveranciers", "PGO")
+                     "Leveranciers")
     
     
     initializeApplication <- function(networkdata) {
@@ -254,7 +254,7 @@ server <- function(input, output, session) {
     #
     output$graph_panel <- renderVisNetwork({
       
-      nds = tribble(~id, ~label, ~nodetype, ~domain, ~groups, ~icon, ~url)
+      nds = tribble(~id, ~label, ~nodetype, ~domain, ~groups, ~nv_image, ~url)
       eds = tribble(~id, ~from, ~to, ~label, ~linktype)
 
       vnt = visNetwork(nodes = nds, edges = eds)
@@ -425,6 +425,7 @@ server <- function(input, output, session) {
  
     makeGraphPanelNodeForNid <- function(nid) {
       # browser()
+      #cat('fix id')
       row =  addVisualSettingsToNode(rv$activeview, getNodeById(rv$activeview, nid), visualcontrols$images)
       row$id = row$nid
       return(row)
@@ -434,8 +435,6 @@ server <- function(input, output, session) {
       row = addVisualSettingsToEdge(rv$activeview, getEdgeByEid(rv$activeview, eid), visualcontrols$linklabels, visualcontrols$arrows,)
       row$id = row$eid
       # not needed, we're working on copy
-      # row$orglabel = row$label #hack attempt to support switch show label
-      # row$label = row$vislabel
       return(row)
     }
     
@@ -612,6 +611,7 @@ server <- function(input, output, session) {
           return(NULL)
       rv$theurl = getNodeById(rv$activeview, selectedNodeId())$url
       haveurl = FALSE
+      if (is.null(rv$theurl)) return(NULL)
       if (rv$theurl != "") {
         haveurl = TRUE
         rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
@@ -621,7 +621,6 @@ server <- function(input, output, session) {
 # Data view output --------------------------------------------------------
  
     output$dataviewnodes <-  DT::renderDataTable(
-      #select(rv$activeview$nodes, nid, label, nodetype, domain, groups, icon, url),
       rv$activeview$net$nodes,
               style="Bootstrap", rownames=F, 
               server=T, selection="single", options=list(pageLength=20)
@@ -629,7 +628,6 @@ server <- function(input, output, session) {
     
     output$dataviewedges <- DT::renderDataTable(
 #      browser()
-      # select(rv$activeview$edges,from, to, label, linktype, eid),
       rv$activeview$net$edges,
         style="Bootstrap", rownames=F, 
         server=T, selection="single", options=list(pageLength=20)
@@ -740,10 +738,6 @@ server <- function(input, output, session) {
     },
     content <- function(file) {
       d = rv$activeview
-      # if (nrow(d$nodes) > 0)
-      #   d$nodes = select(d$nodes, nid, label, nodetype, domain, groups, icon, url)
-      # if (nrow(d$edges) > 0)
-      #   d$edges = select(d$edges,from, to, label, linktype, eid)
       d$net = NULL
       writeLines(
         toJSON(
@@ -791,8 +785,10 @@ server <- function(input, output, session) {
   
   replaceNodeInView <- function(view, oldnode, newnode) {
     # should handle the case where nid has changed and update edges...
-    if (oldnode$nid != newnode$nid)
+    if (oldnode$nid != newnode$nid) {
       cat("Warning: replace node needs to change relations\n")
+      removeNodesFromViewById(oldnode$nid)
+    }
     #for now:
     return(addNewNodeToView(view, newnode))   
   }
@@ -877,7 +873,7 @@ server <- function(input, output, session) {
     newnode$nid=input$nep_nid
     newnode$label=input$nep_label
     newnode$nodetype=input$nep_nodetype 
-    newnode$icon=input$nep_icon
+    newnode$nv_image=input$nep_nv_image
     newnode$domain=input$nep_domain
     newnode$groups=input$nep_groups
     newnode$url=input$nep_url
@@ -925,7 +921,7 @@ server <- function(input, output, session) {
       fixedRow(column(3, HTML("nid:")), column(7, textInput("nep_nid", value = node$nid , label=NULL))),
       fixedRow(column(3, HTML("label:")), column(7, textInput("nep_label", value = node$label , label=NULL))),
       fixedRow(column(3, HTML("nodetype:")), column(7, textInput("nep_nodetype", value = node$nodetype , label=NULL))),
-      fixedRow(column(3, HTML("icon:")), column(7, textInput("nep_icon", value = node$icon , label=NULL))),
+      fixedRow(column(3, HTML("nv_image:")), column(7, textInput("nep_nv_image", value = node$nv_image , label=NULL))),
       fixedRow(column(3, HTML("domain:")), column(7, textInput("nep_domain", value = node$domain , label=NULL))),
       fixedRow(column(3, HTML("groups:")), column(7, textInput("nep_groups", value = node$groups , label=NULL))),
       fixedRow(column(3, HTML("url:")), column(7, textInput("nep_url", value = node$url , label=NULL))),
