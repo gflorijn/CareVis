@@ -262,10 +262,16 @@ server <- function(input, output, session) {
         navigationButtons = TRUE)
       vnt = visEvents(vnt,
         select = "function(data) {
-                          Shiny.onInputChange('select_current_nodes', data.nodes);
-                          Shiny.onInputChange('select_current_edges', data.edges);
+                          Shiny.onInputChange('select_current_nodes', data);
+                          Shiny.onInputChange('select_current_edges', data);
                   ;}"
       )
+      # vnt = visEvents(vnt,
+      #   select = "function(data) {
+      #                     Shiny.onInputChange('select_current_nodes', data.nodes);
+      #                     Shiny.onInputChange('select_current_edges', data.edges);
+      #             ;}"
+      # )
       rv$thevisnet = vnt
       
       vnt
@@ -521,17 +527,26 @@ server <- function(input, output, session) {
 
 # Node selection and menu handling ----------------------------------------
 
-    
+  node_selection_state = reactiveValues(
+    nodeid = NULL,
+    coords = NULL 
+  ) 
     # Node selection - see visEvents
     observeEvent(input$select_current_nodes,  {
-      #cat("select_current_nodes ", input$select_current_nodes, "\n")
-      rv$thenodeselected = input$select_current_nodes
+      # browser()
+      #cat("select_current_nodes ", input$select_current_nodes$nodes[1], "\n")
+      rv$thenodeselected = input$select_current_nodes$nodes
+#      browser()
+      cat('pick up the x, y and store them in a reactive value\n')
+      node_selection_state$nodeid = input$select_current_nodes$nodes[1]
+      node_selection_state$coords = input$select_current_nodes$pointer$canvas
     })
     
     #Edge selection - see visEvents
     observeEvent(input$select_current_edges,  {
-#      cat("select_current_edges ", input$select_current_edges, "\n")
-      rv$theedgeselected = input$select_current_edges
+      # browser()
+      #cat("select_current_edges ", input$select_current_edges$edges, "\n")
+      rv$theedgeselected = input$select_current_edges$edges
     })
     
     
@@ -1189,9 +1204,53 @@ output$visualeditmenu <- renderUI ({
     HTML("--"), 
     actionBttn("ve_color_node", label=NULL, size="xs", icon=icon("edit",lib="font-awesome"), color="warning"),
     actionBttn("ve_color_edge", label="color", size="xs", icon=icon("link",lib="font-awesome"), color="warning"),
+    HTML("--"),
+    actionBttn("ve_fix_node_position", label=NULL, size="xs", icon=icon("dot-circle-o",lib="font-awesome"), color="warning"),
+    actionBttn("ve_mark_node_position", label=NULL, size="xs", icon=icon("map-marker",lib="font-awesome"), color="warning"),
+    actionBttn("ve_zoom_node", label=NULL, size="xs", icon=icon("search",lib="font-awesome"), color="warning"),
+    actionBttn("ve_highlight_node", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
+    actionBttn("ve_highlight_edge", label=NULL, size="xs", icon=icon("magic",lib="font-awesome"), color="warning"),
   )
 })
   
+
+  # Toggle the fixed property
+  observeEvent(input$ve_zoom_node, {
+    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
+      visFocus(graph_panel_data$proxy, rv$thenodeselected)
+    }
+  })
+  
+  # Toggle the fixed property
+  observeEvent(input$ve_fix_node_position, {
+    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
+      node = getNodeById(rv$activeview, rv$thenodeselected)
+      if (!("fixed" %in% colnames(node)))
+        node = add_column(node, fixed=FALSE)
+      newnode = node
+      if(is.na(node$fixed)) {
+        newnode$fixed = FALSE
+      }
+      newnode$fixed = !newnode$fixed
+      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+    }
+  })
+
+  addXYFromGraphPanel <- function(node) {
+    newnode = node
+    newnode$x = node_selection_state$x
+    newnode$y = node_selection_state$y
+    newnode
+  }
+  
+  # Store the current position in the node
+  observeEvent(input$ve_mark_node_position, {
+    if (!is.null(rv$thenodeselected) & rv$thenodeselected != "") {
+      node = getNodeById(rv$activeview, rv$thenodeselected)
+      newnode = addXYFromGraphPanel(node)
+      rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+    }
+  })
   
   # 
    observeEvent(input$undo, {
