@@ -1,0 +1,482 @@
+{
+  "nodes": [
+  ],
+  "edges": [
+    {
+       "nv_id": "zamav-fikar-jodab",
+       "from": "Sananet",
+       "to": "i-eHealth",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "sukin-jufov-dobug",
+       "from": "Zorgplatform",
+       "to": "i-Ziekenhuiszorg",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "bigok-bidon-mizab",
+       "from": "Luscii",
+       "to": "i-eHealth",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "dujaj-dafiv-hurid",
+       "from": "Minddistrict",
+       "to": "i-eHealth",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "zifot-gavam-zipad",
+       "from": "Ziekenhuis",
+       "to": "Covid-19 Portaal",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "noluf-godig-kahuh",
+       "from": "Ziekenhuis2",
+       "to": "Covid-19 Portaal",
+       "label": "",
+       "linktype": "system"
+     },
+     {
+       "nv_id": "mufof-ravab-rijaf",
+       "from": "Covid-19 Portaal",
+       "to": "Beelden",
+       "label": "",
+       "linktype": "object"
+     },
+     {
+       "nv_id": "johoh-kutad-mozuk",
+       "from": "Covid-19 Portaal",
+       "to": "Dossier",
+       "label": "",
+       "linktype": "object"
+     },
+     {
+      "nv_id": "kuvoz-rakaf-gufor",
+      "from": "Huisarts",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "puvor-dutag-kakin",
+      "from": "Apotheek",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "mivik-zihul-fahad",
+      "from": "Patient",
+      "to": "i-Medicatie",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "sumuv-nofis-morin",
+      "from": "i-Medicatie",
+      "to": "Recept",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "gonif-tonan-jozam",
+      "from": "i-Medicatie",
+      "to": "Medicatieoverzicht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "tovof-rovig-sanos",
+      "from": "i-Medicatie",
+      "to": "Verstrekkingsbericht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "linup-jofiz-dafun",
+      "from": "Huisartsenpost",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "maluz-mudot-dobam",
+      "from": "Huisarts",
+      "to": "i-Waarnemen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "bamih-kisiz-zamok",
+      "from": "i-Waarnemen",
+      "to": "Professionele samenvatting",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "sahif-gagaz-himit",
+      "from": "i-Waarnemen",
+      "to": "Waarneming",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "fadal-vinan-pogor",
+      "from": "i-Waarnemen",
+      "to": "Waarneembericht",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "lovuv-gosut-ribim",
+      "from": "Huisarts",
+      "to": "i-Onderzoek",
+      "label": "1",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "zulaj-sudam-dimoz",
+      "from": "Laboratorium",
+      "to": "i-Onderzoek",
+      "label": "2",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "palik-ladof-sofol",
+      "from": "Patient",
+      "to": "i-Onderzoek",
+      "label": "3",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "vanol-vonum-norup",
+      "from": "i-Onderzoek",
+      "to": "i-Order",
+      "label": "1",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "tabuj-vorot-nubov",
+      "from": "i-Onderzoek",
+      "to": "i-Uitslagen",
+      "label": "2",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "jabus-vipan-fahiv",
+      "from": "i-Uitslagen",
+      "to": "Uitslagen",
+      "label": "2",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "bifok-dijam-vivav",
+      "from": "i-Order",
+      "to": "Orders",
+      "label": "1",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "rotal-zihus-tupip",
+      "from": "Huisarts",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "ginij-bimij-ruhip",
+      "from": "Ziekenhuis",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "bamuz-bohir-katop",
+      "from": "Paramedici",
+      "to": "i-Verwijzen",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "kadan-nipuj-danin",
+      "from": "i-Verwijzen",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "solik-kobol-gafoh",
+      "from": "i-Verwijzen",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "dajan-sovil-famij",
+      "from": "i-Verwijzen",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "horit-hotak-hilik",
+      "from": "Ziekenhuis",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "sorad-kuhar-nipuz",
+      "from": "Huisarts",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "vovub-saruz-nudah",
+      "from": "Paramedici",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "zarom-giral-huhim",
+      "from": "VVT",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "nadob-sozar-nodop",
+      "from": "Ziekenhuis2",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "lagob-nugud-norid",
+      "from": "Patient",
+      "to": "i-Ziekenhuiszorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "vufod-rorus-bomug",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Verwijzing",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "babul-tikuv-dutav",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Opname-Ontslagmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "bivok-sisin-ramaf",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Voortgangsmelding",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "vibon-panaj-dokuj",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Afspraken",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "vodov-jivib-hozud",
+      "from": "i-Ziekenhuiszorg",
+      "to": "eConsult",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "vomor-tarag-hijan",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Dossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "susur-nuguz-bigup",
+      "from": "i-Ziekenhuiszorg",
+      "to": "Beelden",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "pokum-bilof-niruj",
+      "from": "Ziekenhuis",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "masuv-jisim-zohup",
+      "from": "Huisarts",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "voson-zikod-tiloj",
+      "from": "VVT",
+      "to": "i-Overdracht",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "dizom-vilil-kajab",
+      "from": "i-Overdracht",
+      "to": "Overdrachtdossier",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "parat-digim-himin",
+      "from": "Patient",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "gozov-zukog-gufop",
+      "from": "Huisarts",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "timij-tadub-potam",
+      "from": "Ziekenhuis",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "dalom-zalir-dafus",
+      "from": "GGZ",
+      "to": "i-eHealth",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "rotit-suvuh-pohas",
+      "from": "i-eHealth",
+      "to": "eConsult",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "fubul-vorah-favoz",
+      "from": "i-eHealth",
+      "to": "Metingen",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "mabam-vogoj-sujiz",
+      "from": "i-eHealth",
+      "to": "Monitoring",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "hikun-zafit-latun",
+      "from": "i-Administratie",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "fuvij-fipuj-varov",
+      "from": "i-Administratie",
+      "to": "i-COV",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "zojis-kupof-rahur",
+      "from": "i-Administratie",
+      "to": "i-Declareren",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "huvar-buvom-vutot",
+      "from": "Patient",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "rakoz-jogig-sumup",
+      "from": "Mantelzorger",
+      "to": "i-Aanvraagzorg",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "sarov-viruh-najat",
+      "from": "i-Aanvraagzorg",
+      "to": "CIZ",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "pafub-kogif-fogam",
+      "from": "i-Aanvraagzorg",
+      "to": "Gemeente",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "fotak-tivig-vofat",
+      "from": "Zorgaanbieder",
+      "to": "i-COV",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "tihip-mojuv-motip",
+      "from": "i-COV",
+      "to": "Zorgverzekeraar",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "nihud-bojov-tuvaf",
+      "from": "Zorgaanbieder",
+      "to": "i-Declareren",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "hovud-nuput-vatif",
+      "from": "i-Declareren",
+      "to": "Zorgverzekeraar",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "zohov-diruh-vakos",
+      "from": "i-Declareren",
+      "to": "Zorgkantoor",
+      "label": "",
+      "linktype": "actor"
+    }
+  ]
+}

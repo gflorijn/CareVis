@@ -1,0 +1,244 @@
+{
+  "info": {
+    "name": ["PGO"]
+  },
+  "nodes": [
+    {
+      "nv_id": "podim-zobub-huzif",
+      "nid": "PGO",
+      "label": "PGO",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "nv_image": "Platform",
+      "url": "",
+      "groups": "PGO systeem"
+    },
+    {
+      "nv_id": "gusih-kuzim-hofuz",
+      "nid": "PGO UI",
+      "label": "PGO UI",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "Systeem",
+      "url": "",
+      "groups": "PGO systeem"
+    },
+    {
+      "nv_id": "zifod-motin-sosam",
+      "nid": "PGO Server",
+      "label": "PGO Server",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "ResourceServer",
+      "url": "",
+      "groups": "PGO systeem"
+    },
+    {
+      "nv_id": "tipub-lolad-luzam",
+      "nid": "PGO Autorisaties",
+      "label": "PGO Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "AutorisatieServer",
+      "url": "",
+      "groups": "PGO systeem"
+    },
+    {
+      "nv_id": "dubod-sitol-zirup",
+      "nid": "DVZA",
+      "label": "DVZA",
+      "domain": "PGO",
+      "nodetype": "interaction",
+      "nv_image": "Koppelvlak",
+      "url": "",
+      "groups": "PGO systeem, PGO ZA"
+    },
+    {
+      "nv_id": "nidoh-janob-bulag",
+      "nid": "ZA Zorgaanbieder",
+      "label": "ZA Zorgaanbieder",
+      "domain": "PGO",
+      "nodetype": "party",
+      "nv_image": "Ziekenhuis",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "nuvip-manih-jilim",
+      "nid": "ZA Resources",
+      "label": "ZA Resources",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "ResourceServer",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "bopat-lolum-vihal",
+      "nid": "ZA Autorisaties",
+      "label": "ZA Autorisaties",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "AutorisatieServer",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "tamoz-bamad-zotos",
+      "nid": "ZA Systeem",
+      "label": "ZA Systeem",
+      "domain": "PGO",
+      "nodetype": "system",
+      "nv_image": "Systeem",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "hukuf-nuzob-sogij",
+      "nid": "ZA Data",
+      "label": "ZA Data",
+      "domain": "PGO",
+      "nodetype": "object",
+      "nv_image": "Databases",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "mimuj-nupan-gihiz",
+      "nid": "ZA Interface",
+      "label": "ZA Interface",
+      "domain": "PGO",
+      "nodetype": "platform",
+      "nv_image": "Platform",
+      "url": "",
+      "groups": "PGO ZA"
+    },
+    {
+      "nv_id": "hilom-pomok-jazus",
+      "nid": "PGO Gebruiker",
+      "label": "PGO Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "nv_image": "Patient",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "fizuh-bugos-hamuh",
+      "nid": "ZA Gebruiker",
+      "label": "ZA Gebruiker",
+      "domain": "PGO",
+      "nodetype": "party",
+      "nv_image": "Huisarts",
+      "url": "",
+      "groups": ""
+    }
+  ],
+  "edges": [
+    {
+      "nv_id": "jipur-soniv-rolid",
+      "from": "PGO Gebruiker",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "nv_id": "fosif-fovuz-togul",
+      "from": "PGO",
+      "to": "PGO UI",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "zafir-loval-zodav",
+      "from": "PGO",
+      "to": "PGO Server",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "nibav-nusin-vopij",
+      "from": "PGO",
+      "to": "PGO Autorisaties",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "hihol-kolab-lurah",
+      "from": "PGO",
+      "to": "DVZA",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "hujar-pikon-nizar",
+      "from": "DVZA",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "lazam-dujag-mijoh",
+      "from": "ZA Interface",
+      "to": "ZA Resources",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "vadin-sihib-ritas",
+      "from": "ZA Interface",
+      "to": "ZA Autorisaties",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "kohod-jidif-kuvuf",
+      "from": "ZA Systeem",
+      "to": "ZA Interface",
+      "label": "",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "padah-hopib-humov",
+      "from": "ZA Systeem",
+      "to": "ZA Data",
+      "label": "",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "hirim-rulut-mazin",
+      "from": "ZA Gebruiker",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "use"
+    },
+    {
+      "nv_id": "vapuf-gidug-zazuz",
+      "from": "PGO",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "lodin-lohad-muruf",
+      "from": "DVZA",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "tabok-tinaf-vopuj",
+      "from": "ZA Interface",
+      "to": "MedMij",
+      "label": "",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "zasam-hifod-lolok",
+      "from": "ZA Zorgaanbieder",
+      "to": "ZA Systeem",
+      "label": "",
+      "linktype": "system"
+    }
+  ]
+}

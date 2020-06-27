@@ -1,57 +1,321 @@
-{"nodes":[{"nid":"_tutorial","label":"_tutorial",
-"domain":"Tutorial","nodetype":"category","icon":"","url":"","groups":""},"label":"_tutorial","domain":"Tutorial","nodetype":"category","icon":"","url":"","groups":""},
-{"nid":"_Persoon1","label":"_Persoon1",
-"domain":"Tutorial","nodetype":"party","icon":"Persoon","url":"","groups":""},
-{"nid":"_Persoon2","label":"_Persoon2",
-"domain":"Tutorial","nodetype":"party","icon":"Persoon","url":"","groups":""},
-{"nid":"_Organisatie1","label":"_Organisatie1",
-"domain":"Tutorial","nodetype":"party","icon":"Ziekenhuis","url":"","groups":""},
-{"nid":"_Organisatie2","label":"_Organisatie2",
-"domain":"Tutorial","nodetype":"party","icon":"Kantoor","url":"","groups":""},
-{"nid":"_Professional1","label":"_Professional1",
-"domain":"Tutorial","nodetype":"party","icon":"Medicus","url":"","groups":""},
-{"nid":"_Professional2","label":"_Professional2",
-"domain":"Tutorial","nodetype":"party","icon":"Medicus","url":"","groups":""},
-{"nid":"_Interactie1","label":"_Interactie1",
-"domain":"Tutorial","nodetype":"interaction","icon":"Interactie","url":"","groups":""},
-{"nid":"_Interactie2","label":"_Interactie2",
-"domain":"Tutorial","nodetype":"interaction","icon":"Interactie","url":"","groups":""},
-{"nid":"_Systeem1","label":"_Systeem1",
-"domain":"Tutorial","nodetype":"system","icon":"Systeem","url":"","groups":""},
-{"nid":"_Systeem2","label":"_Systeem2",
-"domain":"Tutorial","nodetype":"system","icon":"Systeem","url":"","groups":""},
-{"nid":"_Platform1","label":"_Platform1",
-"domain":"Tutorial","nodetype":"platform","icon":"Platform","url":"","groups":""},
-{"nid":"_Platform2","label":"_Platform2",
-"domain":"Tutorial","nodetype":"platform","icon":"Platform","url":"","groups":""},
-{"nid":"_Standaard1","label":"_Standaard1",
-"domain":"Tutorial","nodetype":"standard","icon":"Standaard","url":"","groups":""},
-{"nid":"_Standaard2","label":"_Standaard2",
-"domain":"Tutorial","nodetype":"standard","icon":"Standaard","url":"","groups":""},
-{"nid":"_Object1","label":"_Object1",
-"domain":"Tutorial","nodetype":"object","icon":"Text","url":"","groups":""},
-{"nid":"_Object2","label":"_Object2",
-"domain":"Tutorial","nodetype":"object","icon":"Beelden","url":"","groups":""},
-{"nid":"_Object3","label":"_Object3",
-"domain":"Tutorial","nodetype":"object","icon":"Dossier","url":"","groups":""},
-{"nid":"_Leverancier1","label":"_Leverancier1",
-"domain":"Tutorial","nodetype":"party","icon":"Kantoor","url":"","groups":""},
-{"nid":"_Administratie1","label":"_Administratie1",
-"domain":"Tutorial","nodetype":"party","icon":"DomeinAdministratie","url":"","groups":""}
-],
-"edges":[{"from":"_Persoon1","to":"_Interactie1","label":"actor","linktype":"actor"},
-{"from":"_Professional1","to":"_Interactie1","label":"actor","linktype":"actor"},
-{"from":"_Organisatie1","to":"_Interactie1","label":"actor","linktype":"actor"},
-{"from":"_Interactie1","to":"_Platform1","label":"system","linktype":"system"},
-{"from":"_Interactie1","to":"_Object1","label":"object","linktype":"object"},
-{"from":"_Interactie1","to":"_Object2","label":"object","linktype":"object"},
-{"from":"_Object2","to":"_Standaard1","label":"refer","linktype":"refer"},
-{"from":"_Interactie1","to":"_Interactie2","label":"part","linktype":"part"},
-{"from":"_Persoon2","to":"_Interactie2","label":"actor","linktype":"actor"},
-{"from":"_Organisatie1","to":"_Interactie2","label":"actor","linktype":"actor"},
-{"from":"_Interactie2","to":"_Object3","label":"object","linktype":"object"},
-{"from":"_Interactie2","to":"_Platform2","label":"system","linktype":"system"},
-{"from":"_Professional1","to":"_Systeem1","label":"system","linktype":"system"},
-{"from":"_Organisatie1","to":"_Systeem2","label":"system","linktype":"system"},
-{"from":"_Persoon1","to":"_Systeem1","label":"use","linktype":"use"},
-{"from":"_Platform2","to":"_Leverancier1","label":"refer","linktype":"refer"}]}
+{
+  "info": {
+    "name": ["Tutorial1"]
+  },
+  "nodes": [
+    {
+      "nv_id": "vavar-kuzuk-nuhof",
+      "nid": "_tutorial",
+      "label": "_tutorial",
+      "domain": "Tutorial",
+      "nodetype": "category",
+      "nv_image": "",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "fugah-zitad-tovul",
+      "nid": "_Persoon1",
+      "label": "_Persoon1",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Persoon",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "gozaz-nupoj-luhuh",
+      "nid": "_Persoon2",
+      "label": "_Persoon2",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Persoon",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "nofiz-rikok-mozun",
+      "nid": "_Organisatie1",
+      "label": "_Organisatie1",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Ziekenhuis",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "buhuj-duvas-kogud",
+      "nid": "_Organisatie2",
+      "label": "_Organisatie2",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Kantoor",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "jopun-luzas-gazug",
+      "nid": "_Professional1",
+      "label": "_Professional1",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Medicus",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "josir-kitoz-mupaz",
+      "nid": "_Professional2",
+      "label": "_Professional2",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Medicus",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "romus-pisir-sipih",
+      "nid": "_Interactie1",
+      "label": "_Interactie1",
+      "domain": "Tutorial",
+      "nodetype": "interaction",
+      "nv_image": "Interactie",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "kuhos-nanof-hovur",
+      "nid": "_Interactie2",
+      "label": "_Interactie2",
+      "domain": "Tutorial",
+      "nodetype": "interaction",
+      "nv_image": "Interactie",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "hikin-vutop-kajor",
+      "nid": "_Systeem1",
+      "label": "_Systeem1",
+      "domain": "Tutorial",
+      "nodetype": "system",
+      "nv_image": "Systeem",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "sajid-dihup-pogah",
+      "nid": "_Systeem2",
+      "label": "_Systeem2",
+      "domain": "Tutorial",
+      "nodetype": "system",
+      "nv_image": "Systeem",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "mofos-kosaf-votod",
+      "nid": "_Platform1",
+      "label": "_Platform1",
+      "domain": "Tutorial",
+      "nodetype": "platform",
+      "nv_image": "Platform",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "kapas-magon-migub",
+      "nid": "_Platform2",
+      "label": "_Platform2",
+      "domain": "Tutorial",
+      "nodetype": "platform",
+      "nv_image": "Platform",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "juhap-figud-pimov",
+      "nid": "_Standaard1",
+      "label": "_Standaard1",
+      "domain": "Tutorial",
+      "nodetype": "standard",
+      "nv_image": "Standaard",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "vahin-nupuk-gigok",
+      "nid": "_Standaard2",
+      "label": "_Standaard2",
+      "domain": "Tutorial",
+      "nodetype": "standard",
+      "nv_image": "Standaard",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "torud-pasoz-jizon",
+      "nid": "_Object1",
+      "label": "_Object1",
+      "domain": "Tutorial",
+      "nodetype": "object",
+      "nv_image": "Text",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "tihav-dajah-pigad",
+      "nid": "_Object2",
+      "label": "_Object2",
+      "domain": "Tutorial",
+      "nodetype": "object",
+      "nv_image": "Beelden",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "gabaf-horuk-lofot",
+      "nid": "_Object3",
+      "label": "_Object3",
+      "domain": "Tutorial",
+      "nodetype": "object",
+      "nv_image": "Dossier",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "nigig-dumit-dovas",
+      "nid": "_Leverancier1",
+      "label": "_Leverancier1",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "Kantoor",
+      "url": "",
+      "groups": ""
+    },
+    {
+      "nv_id": "zopos-dugik-himih",
+      "nid": "_Administratie1",
+      "label": "_Administratie1",
+      "domain": "Tutorial",
+      "nodetype": "party",
+      "nv_image": "DomeinAdministratie",
+      "url": "",
+      "groups": ""
+    }
+  ],
+  "edges": [
+    {
+      "nv_id": "kapin-kojib-razog",
+      "from": "_Persoon1",
+      "to": "_Interactie1",
+      "label": "actor",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "vakus-jopap-tafiz",
+      "from": "_Professional1",
+      "to": "_Interactie1",
+      "label": "actor",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "vivut-mutop-nuhum",
+      "from": "_Organisatie1",
+      "to": "_Interactie1",
+      "label": "actor",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "rilob-hozag-nonut",
+      "from": "_Interactie1",
+      "to": "_Platform1",
+      "label": "system",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "nigoz-tudal-husul",
+      "from": "_Interactie1",
+      "to": "_Object1",
+      "label": "object",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "jisiv-zuduj-bagod",
+      "from": "_Interactie1",
+      "to": "_Object2",
+      "label": "object",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "papid-vahar-hifah",
+      "from": "_Object2",
+      "to": "_Standaard1",
+      "label": "refer",
+      "linktype": "refer"
+    },
+    {
+      "nv_id": "rinuh-sazar-harod",
+      "from": "_Interactie1",
+      "to": "_Interactie2",
+      "label": "part",
+      "linktype": "part"
+    },
+    {
+      "nv_id": "hidiz-jitug-bumid",
+      "from": "_Persoon2",
+      "to": "_Interactie2",
+      "label": "actor",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "subav-nisom-lihif",
+      "from": "_Organisatie1",
+      "to": "_Interactie2",
+      "label": "actor",
+      "linktype": "actor"
+    },
+    {
+      "nv_id": "bibab-guzar-purud",
+      "from": "_Interactie2",
+      "to": "_Object3",
+      "label": "object",
+      "linktype": "object"
+    },
+    {
+      "nv_id": "duhok-digor-vajur",
+      "from": "_Interactie2",
+      "to": "_Platform2",
+      "label": "system",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "dijug-hagat-mapud",
+      "from": "_Professional1",
+      "to": "_Systeem1",
+      "label": "system",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "rosap-todun-pabog",
+      "from": "_Organisatie1",
+      "to": "_Systeem2",
+      "label": "system",
+      "linktype": "system"
+    },
+    {
+      "nv_id": "mituj-pahuh-rotur",
+      "from": "_Persoon1",
+      "to": "_Systeem1",
+      "label": "use",
+      "linktype": "use"
+    },
+    {
+      "nv_id": "gosuz-difot-mipal",
+      "from": "_Platform2",
+      "to": "_Leverancier1",
+      "label": "refer",
+      "linktype": "refer"
+    }
+  ]
+}
