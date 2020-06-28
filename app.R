@@ -49,7 +49,7 @@ tagList(
 
   tabPanel("Browser",
            div(
-             class = "outer",
+             # class = "outer",
              tags$head(includeCSS("Styles.css")),
              
              sidebarLayout(
@@ -66,40 +66,38 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   actionButton(inputId = "interrupt", "Interrupt"),
-                   tags$hr(),
+                   # actionButton(inputId = "interrupt", "Interrupt"),
+                   # tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
                mainPanel(
                  width = 11,
                  fixedRow(
-                   column(11, uiOutput("statusbar"))
+                   column(12, uiOutput("statusbar"))
                  ),
                  fixedRow(
                    column(3, uiOutput("slicesmenu")),
                    column(3, uiOutput("searchnodemenu")),
                    column(3, uiOutput("singlenodeselectmenu")),
-                   # column(2, uiOutput("viewnodeselectmenu")),
                    column(2, uiOutput("visualoptionsmenu"))
                  ),
-                 tags$br(),
-                 # fixedRow(
-                 #   column(11, offset=1, uiOutput("visualeditmenu"))
-                 # ),
+                 fixedRow(
+                   column(12, offset=2, uiOutput("visualeditmenu"))
+                 ),
                  visNetworkOutput("graph_panel", height = "750px", width = "100%"),
-                 absolutePanel(
-                   id = "editcontrols",
-                   class = "panel panel-default",
-                   top = 170, left = 320,  width = 1100, fixed = TRUE,
-                   draggable = TRUE,
-                   height = "auto",
-                   tagList(
-                     fixedRow(
-                       uiOutput("visualeditmenu")
-                     )
-                   )
-                 )
+                 # absolutePanel(
+                 #   id = "editcontrols",
+                 #   class = "panel panel-default",
+                 #   top = 170, left = 320,  width = 1100, fixed = TRUE,
+                 #   draggable = TRUE,
+                 #   height = "auto",
+                 #   tagList(
+                 #     fixedRow(
+                 #       uiOutput("visualeditmenu")
+                 #     )
+                 #   )
+                 # )
                  
               )
             )
@@ -1202,8 +1200,8 @@ server <- function(input, output, session) {
 
 output$visualeditmenu <- renderUI ({
   tagList(
-    HTML("&nbsp;"), 
-    HTML("&nbsp;"), 
+    HTML("&nbsp;"), HTML("&nbsp;"), 
+    HTML("&nbsp;"), HTML("&nbsp;"), 
     actionBttn("undo", label=NULL, size="xs", icon=icon("undo",lib="font-awesome"), color="danger"),
     HTML("-"),
     actionBttn("removenode", label=NULL, size="xs", icon=icon("cut",lib="font-awesome"), color="danger"),
