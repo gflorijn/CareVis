@@ -476,6 +476,7 @@ server <- function(input, output, session) {
     #
     observeEvent(input$showgraph, {
       rv$forcerepaint = TRUE
+      # visRedraw(graph_panel_data$proxy)
     })
     
     
@@ -1143,31 +1144,6 @@ server <- function(input, output, session) {
 
   
 
-# Visual options menu -----------------------------------------------------
-
-  
-  output$visualoptionsmenu <-renderUI({
-    tagList(fixedRow(
-      column(10,
-             tagList(
-               tags$small(checkboxInput3("visualoptions", "Visual options", FALSE))
-             )
-      ),
-      column(10, offset=1,
-             conditionalPanel(
-               "input.visualoptions",
-               verticalLayout(
-                 tags$small(checkboxInput3("vo_images", "Icons", TRUE, width=80)),
-                 tags$small(checkboxInput3("vo_arrows", "Arrows", FALSE, width=80)),
-                 tags$small(checkboxInput3("vo_linklabels", "Link labels", TRUE, width=80))
-              )
-             )
-      )
-    ))
-    
-  })
-  
-  
 # Settings and action handling for draw mode ---------------------
 
   # If the user edits the graph (in manipulation mode), this shows up in
@@ -1199,18 +1175,30 @@ server <- function(input, output, session) {
 
 # Settings and action handling for visual options  ---------------------
 
-   observeEvent({
-    input$vo_arrows
-    input$vo_images
-    input$vo_linklabels
-  }, {
-    visualcontrols$images = input$vo_images
-    visualcontrols$arrows = input$vo_arrows
-    visualcontrols$linklabels = input$vo_linklabels
+  #toggle the options
+  observeEvent(input$vo_arrows, { visualcontrols$arrows = !visualcontrols$arrows })
+  observeEvent(input$vo_images, { visualcontrols$images = !visualcontrols$images })
+  observeEvent(input$vo_linklabels, { visualcontrols$linklabels = !visualcontrols$linklabels })
+
+  
+  # Visual options menu -----------------------------------------------------
+  
+  
+  output$visualoptionsmenu <-renderUI({
+    tagList(
+      actionBttn("vo_images", label=NULL, size="xs", icon=icon("picture-o",lib="font-awesome"), color="default"),
+      HTML("-"),
+      actionBttn("vo_arrows", label=NULL, size="xs", icon=icon("arrows-h",lib="font-awesome"), color="default"),
+      HTML("-"),
+      actionBttn("vo_linklabels", label=NULL, size="xs", icon=icon("underline",lib="font-awesome"), color="default"),
+      tags$br(),
+      tags$small("Visual controls")
+    )
+      
   })
-
-
-# Visual properties editing -----------------------------------------------
+    
+    
+# Visual  editing -----------------------------------------------
 
 output$visualeditmenu <- renderUI ({
   tagList(
