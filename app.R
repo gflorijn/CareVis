@@ -66,8 +66,8 @@ tagList(
                    tags$hr(),
                    # actionButton("restart", "Restart"),
                    # tags$hr(),
-                   # actionButton(inputId = "interrupt", "Interrupt"),
-                   # tags$hr(),
+                   actionButton(inputId = "interrupt", "Interrupt"),
+                   tags$hr(),
                    actionButton(inputId = "quit", "Quit")
                  )
                ),
@@ -141,6 +141,7 @@ server <- function(input, output, session) {
       theedgeselected = NULL,
       thevisnet = NULL,
       theurl = "",
+      haveurl = FALSE,
       themessage = NULL,
       theviewcounter = 0,
       forcerepaint = FALSE,
@@ -564,7 +565,7 @@ server <- function(input, output, session) {
     
     #  selection - see visEvents. Nodes and edges are lists. 
     observeEvent(input$select_current,  {
-      # browser()
+#       browser()
       graph_selection_state$nodeid = NULL
       if (!is_empty(input$select_current$nodes))
           graph_selection_state$nodeid = input$select_current$nodes[1]
@@ -602,18 +603,24 @@ server <- function(input, output, session) {
     
     
     # == UI for node selection handling
-    observeEvent(rv$thenodeselected, {
-      # browser()
+    observeEvent({
+        rv$thenodeselected
+        graph_selection_state
+        graph_selection_state$nodeid
+        graph_selection_state$edgeid
+        graph_selection_state$coords
+      }, {
+#   browser()
       rv$themessage = " "
+      rv$haveurl = FALSE
       rv$theurl = ""
       if (!haveSelectedNode())
           return(NULL)
       rv$theurl = getNodeById(rv$activeview, selectedNodeId())$url
-      haveurl = FALSE
       if (is.null(rv$theurl)) return(NULL)
       if (rv$theurl != "") {
-        haveurl = TRUE
-        rv$themessage = paste0("Zie voor meer informatie ", rv$theurl)
+        rv$haveurl = TRUE
+        rv$themessage = paste0("Zie <a target='_blank' href='", rv$theurl,"' <b>hier</b></a> voor meer informatie ")
       }
      })
 
@@ -1045,6 +1052,8 @@ server <- function(input, output, session) {
   # Below node select menu
   output$selectionfield <- renderUI({
     m = paste0("Selected node: <b>", ifelse(haveSelectedNode(), selectedNodeId(), "(none)"), "</b>")
+    if (rv$haveurl)
+      m = paste0(m, "&nbsp;&nbsp;<a target='_blank' href='", rv$theurl, "' <b>(url)</b>,</a>")
     HTML(m)
   })
   
@@ -1102,12 +1111,6 @@ server <- function(input, output, session) {
     setUndoPoint()
     rv$activeview = switchViewToNetwork(rv$activeview)
   }) 
-  
-  # Should launch a browser for nodes with an URL.
-  observeEvent(input$launchbrowser, {
-    rv$themessage("not available yet")
-    #browseURL(rv$theurl)
-  })
   
   
   observeEvent(input$editclonenode, {
