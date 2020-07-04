@@ -793,7 +793,7 @@ server <- function(input, output, session) {
     # should handle the case where nid has changed and update edges...
     if (oldnode$nid != newnode$nid) {
       cat("Warning: replace node needs to change relations\n")
-      removeNodesFromViewById(rv$activeview, oldnode$nid)
+      view = removeNodesFromViewById(view, oldnode$nid)
     }
     #for now:
     return(addNewNodeToView(view, newnode))   
