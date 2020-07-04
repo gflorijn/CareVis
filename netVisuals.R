@@ -1,7 +1,6 @@
 #
 # Visualisatie settings
 #
-require("igraph", quietly=T)
 require("RColorBrewer", quietly=T)
 require("plyr", quietly=T)
 require("png", quietly=T)
@@ -105,7 +104,7 @@ addVisualSettingsToNode <- function(view, node, doimage, dofreeze) {
   newnode = node
   
   # Experiment
-  newnode$label = str_wrap(newnode$label, width=20) #TODO: add explicit control in label
+  newnode$label = str_wrap(newnode$label, width=25) #TODO: add explicit control in label
 
   newnode = addActualShapeForNode(view, newnode, doimage)
   newnode = addActualImageForNode(view, newnode)
