@@ -1,30 +1,25 @@
 library(shiny)
-library(shinythemes)
-library(shinyjs)
-library(shinyWidgets)
-library(editData)
-library(colourpicker)
-library(ids)
+require("shinyjs", quietly=T)
+require("shinyWidgets", quietly=T)
+require("visNetwork", quietly=T)
+require("editData", quietly=T)
+require("colourpicker", quietly=T)
+require("shinythemes", quietly = T)
+require("RColorBrewer", quietly=T)
+require("plyr", quietly=T)
+require("png", quietly=T)
+require("RCurl", quietly=T)
+require("stringr", quietly=T)
+require("jsonlite", quietly=T)
+require("tidyverse", quietly=T)
+require("ids", quietly=T)
 
-library(DT)
 
 source("netData.R")
 source("netOps.R")
 source("netVisuals.R")
 source("uploadView.R")
 source("helppage.R")
-
-
-smallHTMLUIButton <- function(label, eventid, eventdata, color) {
-  buttext = 
-    HTML(
-      paste0("<button id='",eventdata,"' style='border: none;display: inline-block; color: white; background-color:", 
-              color, "' type='button'
-                onclick ='Shiny.setInputValue(\"", eventid, "\",\"", eventdata, "\", {priority: \"event\"}
-                );'>", label, "</button>")
-    )
-    buttext
-}
 
 
 
@@ -615,8 +610,14 @@ server <- function(input, output, session) {
       rv$theurl = ""
       if (!haveSelectedNode())
           return(NULL)
-      rv$theurl = getNodeById(rv$activeview, selectedNodeId())$url
-      if (is.null(rv$theurl)) return(NULL)
+      
+      node = getNodeById(rv$activeview, selectedNodeId())
+      if (is.null(node))
+          return(NULL)
+      rv$theurl = node$url
+      if (is.na(node$url)) return(NULL)
+      if (is.null(node$url)) return(NULL)
+      rv$theurl = node$url
       if (rv$theurl != "") {
         rv$haveurl = TRUE
         rv$themessage = paste0("Zie <a target='_blank' href='", rv$theurl,"' <b>hier</b></a> voor meer informatie ")
@@ -792,7 +793,7 @@ server <- function(input, output, session) {
     # should handle the case where nid has changed and update edges...
     if (oldnode$nid != newnode$nid) {
       cat("Warning: replace node needs to change relations\n")
-      removeNodesFromViewById(oldnode$nid)
+      removeNodesFromViewById(rv$activeview, oldnode$nid)
     }
     #for now:
     return(addNewNodeToView(view, newnode))   
@@ -1020,7 +1021,18 @@ server <- function(input, output, session) {
   
   
 # Settings and action handling for selected node menu ---------------------
-
+  
+  smallHTMLUIButton <- function(label, eventid, eventdata, color) {
+    buttext = 
+      HTML(
+        paste0("<button id='",eventdata,"' style='border: none;display: inline-block; color: white; background-color:", 
+               color, "' type='button'
+                onclick ='Shiny.setInputValue(\"", eventid, "\",\"", eventdata, "\", {priority: \"event\"}
+                );'>", label, "</button>")
+      )
+    buttext
+  }
+  
   
   getLinkColor <- function(l) {
     return(getEdgeColorForLinktype(rv$thenetworkinfo, l))
