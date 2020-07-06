@@ -35,7 +35,7 @@ tagList(
   useShinyjs(),
 
   navbarPage(
-    "NetVis",
+    "CareVis",
              
   #shinythemes::themeSelector(),
   theme=shinytheme("spacelab"),
@@ -485,7 +485,7 @@ server <- function(input, output, session) {
       showModal(modalDialog(
         easyClose = TRUE,
         title = "About NetVis",
-        tags$p("An experimental browser for network graphs, in this case communication in the care sector in the Netherlands"),
+        tags$p("NetVis is an interactive tool for visualising information networks, in this case communication in the care sector in the Netherlands"),
         tags$p("Gert Florijn, 2020")
       ))
     })
