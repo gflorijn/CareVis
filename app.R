@@ -185,16 +185,27 @@ server <- function(input, output, session) {
       return
     }
      
-    restartBrowserOnViewData <- function(viewdata) {
+    #
+    # add the given view data to the network and launch a new view.
+    # If add to current is TRUE, the view data is added to the current view
+    #
+    restartBrowserOnViewData <- function(viewdata, addtocurrent=FALSE) {
       # laad de data uit newview in het netwerk
       
       setUndoPoint()
+      #browser()
       
       rv$thenetworkinfo = combineNetworks(rv$thenetworkinfo, viewdata)
-      newview = newViewOnNetwork(rv$thenetworkinfo, viewdata$info$name)
+      if (addtocurrent == TRUE) {
+        newview = rv$activeview
+        newview$net = rv$thenetworkinfo
+      } else {
+        newview = newViewOnNetwork(rv$thenetworkinfo, viewdata$info$name)
+      }
       newview = addNodesToViewById(newview, viewdata$nodes$nid)
       newview = addEdgesToViewByEid(newview, viewdata$edges$eid)
-      newview$info = viewdata$info
+      if (!addtocurrent)
+          newview$info = viewdata$info
 
       rv$activeview = newview
       rv$forcerepaint = TRUE
@@ -645,27 +656,26 @@ server <- function(input, output, session) {
     observeEvent(input$uploadview, {
       showModal(modalDialog(
         easyClose = TRUE,
-        title = "Load view",
+        title = "Open view",
         tagList(
           uploadViewUI("upload"), #Call module done during initialization
-          actionButton("adduploadeddata", "Done"),
+          actionButton("opennewviewondata", "Replace current view"),
+          actionButton("extendviewwithdata", "Add to current view")
         )
       ))
     })
     
-    # Try to add a view
     #
-    observeEvent(input$adduploadeddata, {
-      #get the data from the module
-
-      removeModal()
+    # Handle uploading of view via the uploader
+    # 
+    handleViewUploading <- function() {
       thedata = rv$thedatauploader()
-      
-      # browser()
 
+      # browser()
+      
       rv$themessage = thedata$errors
       if (is.null(thedata$view))
-          return()
+        return(NULL)
       
       if (!is.null(thedata$missing)) {
         #add default nodes for missing
@@ -674,9 +684,36 @@ server <- function(input, output, session) {
           thedata$view$nodes = bind_rows(thedata$view$nodes, createNewUndefinedNode(i))
         }
       } else {
-        rv$themessage = "No issues - updating network."
+        rv$themessage = "No issues - updating."
       }
-      restartBrowserOnViewData(thedata$view)
+      return(thedata$view)
+    }
+    
+    # Try to add a view to the current one.
+    observeEvent(input$extendviewwithdata, {
+      removeModal()
+      thenewview = handleViewUploading()
+      if (is.null(thenewview)) {
+        return(NULL)
+      }
+      
+      # browser()
+      restartBrowserOnViewData(thenewview, addtocurrent = TRUE)
+    })
+    
+    # Try to switch to a new view
+    #
+    observeEvent(input$opennewviewondata, {
+      #get the data from the module
+
+      removeModal()
+      thenewview = handleViewUploading()
+      if (is.null(thenewview)) {
+        return(NULL)
+      }
+      
+      # browser()
+      restartBrowserOnViewData(thenewview)
       
     })
 
