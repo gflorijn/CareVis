@@ -97,16 +97,16 @@ tagList(
               )
             )
   )),
-  
-   tabPanel("Data view - Nodes",
-           tagList(tags$h2("Nodes"),
-                   tags$br(),
-                   DT::dataTableOutput("dataviewnodes"))),
-  
-  tabPanel("Data view - Edges",
-           tagList(tags$h2("Edges"),
-                   tags$br(),
-                   DT::dataTableOutput("dataviewedges"))),
+  # 
+  #  tabPanel("Data view - Nodes",
+  #          tagList(tags$h2("Nodes"),
+  #                  tags$br(),
+  #                  DT::dataTableOutput("dataviewnodes"))),
+  # 
+  # tabPanel("Data view - Edges",
+  #          tagList(tags$h2("Edges"),
+  #                  tags$br(),
+  #                  DT::dataTableOutput("dataviewedges"))),
   
   tabPanel("Help",
            tagList(
@@ -637,19 +637,19 @@ server <- function(input, output, session) {
 
 # Data view output --------------------------------------------------------
  
-    output$dataviewnodes <-  DT::renderDataTable(
-      rv$activeview$net$nodes,
-              style="Bootstrap", rownames=F, 
-              server=T, selection="single", options=list(pageLength=20)
-    )
-    
-    output$dataviewedges <- DT::renderDataTable(
-#      browser()
-      rv$activeview$net$edges,
-        style="Bootstrap", rownames=F, 
-        server=T, selection="single", options=list(pageLength=20)
-    )
-    
+#     output$dataviewnodes <-  DT::renderDataTable(
+#       rv$activeview$net$nodes,
+#               style="Bootstrap", rownames=F, 
+#               server=T, selection="single", options=list(pageLength=20)
+#     )
+#     
+#     output$dataviewedges <- DT::renderDataTable(
+# #      browser()
+#       rv$activeview$net$edges,
+#         style="Bootstrap", rownames=F, 
+#         server=T, selection="single", options=list(pageLength=20)
+#     )
+#     
 
 # Handle uploading data ----------------------------------------------------
 
@@ -1316,22 +1316,22 @@ HTML("-"),    actionBttn("ve_highlight_modus", label=NULL, size="xs", icon=icon(
     }
   })
 # 
-#   addXYFromGraphPanel <- function(node) {
-#     newnode = node
-#     newnode$x = graph_selection_state$coords$x
-#     newnode$y = graph_selection_state$coords$y
-#     newnode
-#   }
-#   
-#   # Store the current position in the node
-#   observeEvent(input$ve_mark_node_position, {
-#     if (haveSelectedNode()) {
-#       node = getNodeById(rv$activeview, selectedNodeId())
-#       newnode = addXYFromGraphPanel(node)
-#       rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
-#     }
-#   })
-  
+  # addXYFromGraphPanel <- function(node) {
+  #   newnode = node
+  #   newnode$x = graph_selection_state$coords$x
+  #   newnode$y = graph_selection_state$coords$y
+  #   newnode
+  # }
+  # 
+  # # Store the current position in the node
+  # observeEvent(input$ve_mark_node_position, {
+  #   if (haveSelectedNode()) {
+  #     node = getNodeById(rv$activeview, selectedNodeId())
+  #     newnode = addXYFromGraphPanel(node)
+  #     rv$activeview = replaceNodeInView(rv$activeview, node, newnode)
+  #   }
+  # })
+
   # 
    observeEvent(input$undo, {
      doUndo()
