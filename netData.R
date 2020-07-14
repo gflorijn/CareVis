@@ -175,7 +175,7 @@ createNewUndefinedNode <- function(nid) {
 
 # create a new edge and handle id translation
 genNewEdgeWithDefaults <- function(view, from,to) { 
-  cat("Need to fix from/to\n")
+#  cat("Need to fix from/to\n")
   fname = from
   tname = to
   nvid = ids::proquint(1, n_words=3)

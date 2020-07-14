@@ -75,10 +75,11 @@ tagList(
                    column(3, uiOutput("slicesmenu")),
                    column(3, uiOutput("searchnodemenu")),
                    column(3, uiOutput("singlenodeselectmenu")),
-                   column(2, uiOutput("visualoptionsmenu"))
+                   column(2, uiOutput("groupeditmenu"))
                  ),
                  fixedRow(
-                   column(12, offset=2, uiOutput("visualeditmenu"))
+                   column(9, offset=1, uiOutput("visualeditmenu")),
+                   column(2, uiOutput("visualoptionsmenu"))
                  ),
                  visNetworkOutput("graph_panel", height = "750px", width = "100%"),
                  # absolutePanel(
@@ -1244,7 +1245,54 @@ server <- function(input, output, session) {
       
   })
     
-    
+  
+
+# Group edit menu ---------------------------------------------------------
+  output$groupeditmenu <- renderUI ({
+    fixedRow(
+      column(7,
+             tags$small(textInput("groupname", NULL))),
+      column(5,
+             actionBttn("addnodetogroup", label="+g", size="xs", color="default"), 
+             actionBttn("removenodefromgroup", label="-g", size="xs", color="default")) 
+    )
+  })
+      
+  observeEvent(input$addnodetogroup, {
+    if (haveSelectedNode()) {
+      if (!is.null(input$groupname) && input$groupname != "") {
+        onode = getNodeById(rv$activeview, selectedNodeId())
+        m = str_split(onode$groups, ",")
+        currentgroups = c()
+        if (length(m) > 0) {
+          currentgroups = m[[1]]
+        }
+        currentgroups = unique(sort(c(input$groupname, currentgroups)))
+        currentgroups = stringi::stri_remove_empty(currentgroups)
+        nnode = onode
+        nnode$groups = paste(currentgroups, collapse=", ")
+        rv$activeview = replaceNodeInView(rv$activeview, onode, nnode)
+      }
+    }
+  })
+  observeEvent(input$removenodefromgroup, {
+    if (haveSelectedNode()) {
+      if (!is.null(input$groupname) && input$groupname != "") {
+        onode = getNodeById(rv$activeview, selectedNodeId())
+        m = str_split(onode$groups, ",")
+        if (length(m) >0) {
+          x = m[[1]]
+          newgroups = x[!(x %in% input$groupname)]
+          nnode = onode
+          nnode$groups = paste(newgroups, collapse=", ")
+          rv$activeview = replaceNodeInView(rv$activeview, onode, nnode)
+          
+        }
+      }
+    }
+  })
+  
+  
 # Visual  editing -----------------------------------------------
 
 output$visualeditmenu <- renderUI ({
